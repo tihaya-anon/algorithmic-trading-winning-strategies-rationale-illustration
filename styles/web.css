@@ -1,0 +1,74 @@
+@font-face {
+  font-family: "Maple Mono NF CN";
+  src: url("../assets/fonts/MapleMono-NF-CN-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  src: url("../assets/fonts/MapleMono-NF-CN-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  src: url("../assets/fonts/MapleMono-NF-CN-Italic.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Maple Mono NF CN";
+  src: url("../assets/fonts/MapleMono-NF-CN-BoldItalic.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+body {
+  font-family:
+    "Noto Sans",
+    "Noto Sans CJK SC",
+    "Source Han Sans SC",
+    "Microsoft YaHei",
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+  line-height: 1.65;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family:
+    "Maple Mono NF CN",
+    "Noto Sans Mono",
+    "Noto Sans Mono CJK SC",
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+}
+
+.navbar {
+  border-bottom: 1px solid #d6d3d1;
+}
+
+.quarto-title-block .title {
+  letter-spacing: 0;
+}
+
+img {
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px;
+}

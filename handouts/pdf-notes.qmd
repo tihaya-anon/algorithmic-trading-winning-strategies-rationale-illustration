@@ -1,0 +1,98 @@
+---
+title: "Lecture 01 PDF Notes"
+subtitle: "Printable quant handout"
+format:
+  pdf:
+    pdf-engine: lualatex
+    mainfont: "NotoSerifCJK-Regular.ttc"
+    mainfontoptions:
+      - "Path=/usr/share/fonts/opentype/noto/"
+      - "FontIndex=2"
+      - "BoldFont=NotoSerifCJK-Bold.ttc"
+    sansfont: "NotoSansCJK-Regular.ttc"
+    sansfontoptions:
+      - "Path=/usr/share/fonts/opentype/noto/"
+      - "FontIndex=2"
+      - "BoldFont=NotoSansCJK-Bold.ttc"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Role Of The PDF
+
+Use the PDF output when you want:
+
+- an offline handout
+- something that reads more like notes than slides
+- easy annotation during study or review
+
+# Minimal Content Pattern
+
+Each lecture can keep the same section order:
+
+1. Objective
+2. Signal definition
+3. Risk model
+4. Backtest protocol
+5. Main chart set
+6. Failure analysis
+
+# Example Equation
+
+$$
+\text{Turnover}_t = |w_t - w_{t-1}|
+$$
+
+$$
+c_t = \alpha \cdot \text{Turnover}_t + \beta \cdot \sigma_t
+$$
+
+The point is not the exact model here.
+The point is that Quarto gives you a clean math-capable path to a printable handout.
+
+# Figure Placement
+
+For PDF handouts, prefer raster or PDF-native figures when you want zero extra system dependencies.
+
+Example placeholders:
+
+- cumulative PnL chart generated to `png` by your Python pipeline
+- return histogram generated to `png`
+- drawdown chart generated to `png`
+
+\newpage
+
+```python
+fig_pnl.savefig("figures/pnl.png", dpi=180, bbox_inches="tight")
+fig_hist.savefig("figures/returns-hist.png", dpi=180, bbox_inches="tight")
+```
+
+Then include them in the PDF handout with:
+
+```markdown
+![](figures/pnl.png){width="90%"}
+![](figures/returns-hist.png){width="80%"}
+```
+
+# Notes
+
+This file is intentionally simple.
+For a real course, you would likely include:
+
+- brief derivations
+- parameter tables
+- benchmark comparisons
+- reading references

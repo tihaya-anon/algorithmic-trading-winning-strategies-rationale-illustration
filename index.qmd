@@ -1,0 +1,44 @@
+---
+title: "Algorithmic Trading: Winning Strategies and Their Rationale"
+subtitle: "By Ernest P. Chan"
+page-layout: article
+---
+
+# Purpose
+
+This directory is a minimal Quarto stack for a quant lecture workflow:
+
+- `slides/video-lesson.qmd` for video-first reveal.js slides
+- `handouts/web-notes.qmd` for GitHub Pages style reading notes
+- `handouts/pdf-notes.qmd` for printable notes
+
+The goal is one content stack with different presentation styles:
+
+- video output favors pacing, fragments, notes, and autoplay
+- web/PDF output favors completeness, readability, and review
+
+# Why This Stack
+
+It covers the constraints that matter for a quant course:
+
+- LaTeX-style math without writing full Beamer
+- executable Python code blocks when you want them
+- chart-heavy content: PnL, drawdown, histograms, rolling metrics
+- code snippets with syntax highlighting
+- speaker notes that can double as a TTS script source
+- web publishing and PDF export from the same project
+
+# Files
+
+- [Video Slides](slides/video-lesson.qmd)
+- [Web Notes](handouts/web-notes.qmd)
+- [PDF Notes](handouts/pdf-notes.qmd)
+- [Project README](README.md)
+
+# Suggested Workflow
+
+1. Write the main teaching flow in `slides/video-lesson.qmd`.
+2. Keep speaker script inside slide notes blocks.
+3. Move derivations, caveats, and extra charts into the handouts.
+4. Generate TTS audio from notes and align durations to slide `auto-slide`.
+5. Publish `_site/` to GitHub Pages and export PDF for offline reading.

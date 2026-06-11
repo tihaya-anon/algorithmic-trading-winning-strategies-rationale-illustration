@@ -1,0 +1,79 @@
+---
+title: "Lecture 01 Web Notes"
+subtitle: "Companion reading for the video deck"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+    code-tools: true
+---
+
+# Why A Separate Handout
+
+The slide deck is optimized for narration and timing.
+This page is optimized for reading after the video.
+
+Use the handout for:
+
+- fuller context
+- equations with more explanation
+- implementation notes
+- additional charts
+- references and caveats
+
+# Core Formula
+
+For a simple daily strategy:
+
+$$
+r^{\text{net}}_t = w_{t-1} r_t - c_t
+$$
+
+where:
+
+- $w_{t-1}$ is the position decided before return realization
+- $r_t$ is the asset return over the next step
+- $c_t$ aggregates fees, spread, and slippage assumptions
+
+# Example Research Snippet
+
+```python
+import numpy as np
+import pandas as pd
+
+def summarize_returns(returns: pd.Series) -> dict[str, float]:
+    ann_return = float(returns.mean() * 252)
+    ann_vol = float(returns.std() * np.sqrt(252))
+    sharpe = ann_return / ann_vol if ann_vol else 0.0
+    max_drawdown = float((returns.cumsum() - returns.cumsum().cummax()).min())
+    return {
+        "ann_return": ann_return,
+        "ann_vol": ann_vol,
+        "sharpe": sharpe,
+        "max_drawdown": max_drawdown,
+    }
+```
+
+# Example Figures
+
+## Cumulative PnL
+
+![](../assets/example-pnl.svg){width="85%"}
+
+## Return Distribution
+
+![](../assets/example-histogram.svg){width="75%"}
+
+# Suggested Production Workflow
+
+1. Keep slide-visible text minimal.
+2. Put narration into reveal.js notes blocks.
+3. Derive TTS timing from the notes text.
+4. Move detailed explanation into this handout.
+5. Export a PDF variant for people who prefer a printable reference.
+
+# Publishing
+
+This file is intended to be part of the Quarto website output and can be deployed to GitHub Pages through the generated `_site/` directory.
