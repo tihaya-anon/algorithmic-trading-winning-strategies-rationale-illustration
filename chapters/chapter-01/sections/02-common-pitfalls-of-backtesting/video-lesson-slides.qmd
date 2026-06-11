@@ -24,215 +24,183 @@ execute:
   echo: true
 ---
 
-## Gross Is Not Tradable
+## Most pitfalls make the simulated market easier than the live market.
 
-::: columns
-::: {.column width="52%"}
-Gross returns ask:
-
-**Did the signal point the right way?**
-:::
-
-::: {.column width="48%"}
-Net returns ask:
-
-**Did the edge survive trading?**
-:::
-:::
-
-The second question is the only one a portfolio can spend.
+| Backtest shortcut | Live-trading reality | Main risk |
+|---|---|---|
+| Future information | Only current information | look-ahead |
+| Surviving stocks | Delistings and failures | survivorship |
+| Convenient prices | Executable prices | price mismatch |
+| Generic quotes | Venue-specific quotes | venue mismatch |
 
 ::: {.notes}
-Start with the contrast. Gross performance is useful for research, but it is
-not a trading decision. Net performance is where costs, timing, and capacity
-meet the signal.
+Most backtesting pitfalls have the same direction of error: they make the
+simulated market easier than the live market. The backtest may see information
+too early, trade only securities that survived, use prices that were not
+available in size, or rely on quotes from venues the strategy cannot access.
+The result is not just noisy. It is biased toward performance that looks better
+than the strategy could have achieved.
 :::
 
-## The One-Period Test
-
-$$
-r^{\text{net}}_t = w_{t-1}r_t - c_t
-$$
-
-::: columns
-::: {.column width="33%"}
-**$w_{t-1}$**
-
-position already known
-:::
-
-::: {.column width="33%"}
-**$r_t$**
-
-next-period return
-:::
-
-::: {.column width="33%"}
-**$c_t$**
-
-cost of changing exposure
-:::
-:::
-
-::: {.notes}
-This formula forces two disciplines: position first, return second; trade
-first, cost second. Many inflated backtests violate one of those two
-relationships.
-:::
-
-## Costs Follow Change
-
-$$
-\text{Turnover}_t = |w_t - w_{t-1}|
-$$
+## Look-ahead bias enters when today's signal uses tomorrow's information.
 
 ::: columns
 ::: {.column width="50%"}
-No change:
-
-$$w_t = w_{t-1}$$
-
-low trading cost
+![](figures/look-ahead-timing.svg){fig-alt="Flow showing that same-day high and low are unknown at the morning decision, so the entry signal cannot use them" width="100%"}
 :::
 
 ::: {.column width="50%"}
-Big change:
+```python
+# unsafe in a same-day signal
+signal_t = high_t > threshold
 
-$$|w_t - w_{t-1}| \uparrow$$
-
-costs rise
+# safer shape
+signal_t = raw_signal.shift(1)
+```
 :::
 :::
 
 ::: {.notes}
-Costs are not charged because a position exists. They are mostly charged
-because the portfolio changes. This is why turnover is the first diagnostic
-after gross returns.
+Look-ahead bias means the backtest uses future information to make a current
+decision. A daily high or low is the cleanest example. Before the trading day is
+complete, the high and low are not known. If today's signal uses today's high,
+the backtest is making a decision with information the live program could not
+have. A safer implementation delays the raw signal so the position only uses
+information available before the return is earned.
 :::
 
-## A Useful First Cost Model
+## Shared backtest and live logic blocks one major source of look-ahead bias.
 
-$$
-c_t = \alpha \cdot \text{Turnover}_t + \beta \cdot \sigma_t
-$$
+![](figures/shared-strategy-function.svg){fig-alt="Historical feed and live feed both entering one strategy function that produces orders" width="82%"}
 
-::: columns
-::: {.column width="50%"}
-**Direct costs**
-
-commissions, fees, spread
-:::
-
-::: {.column width="50%"}
-**Liquidity costs**
-
-slippage, impact, volatility
-:::
-:::
+| If the code path differs | If only the data feed differs |
+|---|---|
+| future columns can enter backtest logic | live constraints discipline the rule |
+| simulated rule may not be tradable | backtest rule is closer to execution |
 
 ::: {.notes}
-This is intentionally simple. Alpha captures costs that scale with trading.
-Beta times volatility stands in for market impact or slippage that gets worse
-when the market is harder to trade.
+Chan's practical defense is to keep the backtest and live program as close as
+possible. If the strategy function is the same and only the data feed changes,
+future information has fewer places to enter. This design does not prove the
+strategy will make money, but it removes one major class of programming error:
+a backtest-only rule that could never run in the live market.
 :::
 
-## The Curve Is Evidence, Not Verdict
+## Validation stops being validation after the model is tuned to pass it.
 
-![](../../../../assets/example-pnl.svg){fig-alt="Example cumulative PnL line chart" width="86%"}
-
-Ask what would happen after:
-
-- realistic spread and slippage
-- borrow or financing cost
-- larger order size
+![](figures/holdout-tuning-loop.svg){fig-alt="Loop showing holdout testing, poor result, parameter tweaking, and retesting on the same holdout" width="68%"}
 
 ::: {.notes}
-The audience will naturally focus on the line. Redirect them to the missing
-assumptions. A smooth curve before costs is a hypothesis, not a conclusion.
+Data-snooping bias starts when a model has enough freedom to fit random
+historical patterns. The usual defense is an out-of-sample test, but that
+defense fails when we keep tuning after seeing the holdout result. At that
+point the holdout is no longer clean validation; it has become part of training.
+Cross-validation helps when data are limited, and a final walk-forward test is
+still needed after the rule is fixed.
 :::
 
-## Sharpe Can Hide the Pain
+## Simpler linear rules leave fewer places to memorize noise.
 
-::: columns
-::: {.column width="52%"}
-![](../../../../assets/example-histogram.svg){fig-alt="Example returns histogram" width="100%"}
-:::
-
-::: {.column width="48%"}
-Check what the average hides:
-
-- tail losses
-- skew
-- volatility clustering
-- rare event dependence
-:::
-:::
+| Design choice | Fitting freedom | Backtest risk |
+|---|---|---|
+| Many nonlinear rules | many thresholds and exceptions | high |
+| Few linear terms | fewer knobs to tune | lower |
+| Equal-weight ranks | sampling accidents matter less | lower |
 
 ::: {.notes}
-The distribution slide prevents the audience from over-reading a smooth
-cumulative PnL chart. The same mean return can come with very different tail
-risk.
+The beauty of linearity is not that linear models are always true. The point is
+that simple linear rules give the backtest fewer opportunities to memorize
+noise. A nonlinear model may fit the historical sample better, but that better
+fit does not guarantee better prediction. When a simple linear approximation is
+available, the more complicated model needs a strong reason to justify the
+extra data-snooping risk.
 :::
 
-## Capacity Is a Cost Test
+## Splits and dividends are accounting events, not trading signals.
 
-::: columns
-::: {.column width="50%"}
-**Small size**
-
-signal may clear the spread
-:::
-
-::: {.column width="50%"}
-**Larger size**
-
-fills move the market
-:::
-:::
-
-Net returns must be retested at the size you intend to trade.
+| Event | Price | Shares | Market value |
+|---|---:|---:|---:|
+| Before 2-for-1 split | 100 | 1 | 100 |
+| After 2-for-1 split | 50 | 2 | 100 |
+| Unadjusted price series | -50% |  | false signal |
 
 ::: {.notes}
-Capacity is where the cost model becomes practical. Doubling capital does not
-necessarily double net returns. It can increase impact and make fills less
-representative of the backtest.
+A stock split changes the share count and the quoted price, but it does not
+change the shareholder's market value. Dividends create a related issue because
+the price drops while the shareholder receives a distribution. If the backtest
+looks only at an unadjusted price series, these accounting events can look like
+economic moves and trigger false trades. The historical series must be adjusted
+before the signal uses it.
 :::
 
-## Summary Before You Trust Net Returns
+## A survivor-only database makes recovery look predictable.
 
-::: columns
-::: {.column width="33%"}
-**Timing**
+![](figures/survivorship-database.svg){fig-alt="Database filter showing survived stocks included and delisted or failed stocks missing" width="86%"}
 
-positions are shifted
-:::
-
-::: {.column width="33%"}
-**Trading**
-
-costs follow turnover
-:::
-
-::: {.column width="33%"}
-**Scale**
-
-capacity is stress-tested
-:::
-:::
+| Mean-reversion trade | Bias direction |
+|---|---|
+| Long the biggest losers | performance inflated |
+| Short failed firms | profits omitted |
 
 ::: {.notes}
-This summary restates the three ideas the learner should keep: timing,
-turnover, and scale. Then move into the closing checklist as the action step.
+Survivorship bias appears when the database contains only securities that still
+exist today. For a long-only mean-reversion rule, this is especially dangerous.
+The strategy may buy stocks that fell sharply, but the database keeps the names
+that later recovered and removes many names that failed. The backtest then
+acts as if the trader knew which beaten-down stocks would survive, which is
+exactly the information the live trader did not have.
 :::
 
-## Review Before Trust
+## Auction strategies need primary-exchange prices, not consolidated outliers.
 
-- Is the position shifted before returns are applied?
-- Are costs applied to turnover?
-- Are borrow, spread, and slippage visible assumptions?
-- Does performance survive realistic capacity constraints?
+| Order in live trading | Price needed in the backtest |
+|---|---|
+| Market-on-open | primary opening auction |
+| Market-on-close | primary closing auction |
+| Signal from high/low | representative executable range |
+
+![](figures/auction-price-mismatch.svg){fig-alt="Comparison showing secondary venue odd print is not equal to primary auction fill" width="72%"}
 
 ::: {.notes}
-Close by turning the section into a checklist. This makes the next coding or
-research step clear.
+U.S. stocks trade across many venues, but market-on-open and market-on-close
+orders route to the primary exchange auction. A consolidated open or close may
+come from a different venue, and a small secondary-market print can be far from
+the auction price. A mean-reversion backtest can then profit from a price the
+strategy could not actually fill. Auction strategies need primary-exchange
+auction prices, or the result should be treated with skepticism.
+:::
+
+## Forex backtests are venue-specific because quotes and spreads are venue-specific.
+
+| Venue | Bid-ask quote | Tradable by our strategy? |
+|---|---|---|
+| Bank or ECN A | one spread | maybe |
+| Bank or ECN B | another spread | maybe |
+| Aggregated book | combined quotes | only if executable |
+
+::: {.notes}
+Currency markets are more fragmented than stock markets, and there is no rule
+requiring every venue to execute at the best bid or ask across all venues. That
+means a foreign-exchange backtest is realistic only when the historical quotes
+come from the same venue, or the same executable venue set, that the live
+strategy can trade. Because spreads differ by venue, transaction costs and
+apparent opportunities are venue-specific too.
+:::
+
+## A clean backtest matches live trading on information, universe, price, and venue.
+
+| Gate | Passing evidence |
+|---|---|
+| Information | no future fields in current signals |
+| Universe | delisted securities are represented |
+| Price | corporate actions and auction prices are handled |
+| Venue | historical quotes match executable venues |
+
+::: {.notes}
+The review checklist for this section has four gates. First, the information
+gate asks whether each signal uses only what was known at decision time.
+Second, the universe gate asks whether failed and delisted securities remain in
+the test. Third, the price gate asks whether corporate actions and auction
+prices are handled correctly. Fourth, the venue gate asks whether the historical
+quotes match venues the live strategy can actually trade.
 :::

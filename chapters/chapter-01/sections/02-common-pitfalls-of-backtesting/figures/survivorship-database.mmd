@@ -1,0 +1,38 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  A["All stocks visible<br/>at decision time"]
+
+  subgraph current["Survivor-only database"]
+    B["Survived to today"]
+    C["Included"]
+  end
+
+  subgraph missing["Missing history"]
+    D["Delisted"]
+    E["Bankrupt"]
+    F["Acquired"]
+  end
+
+  G["Long mean-reversion<br/>looks too good"]
+  H["Survivorship-free database<br/>keeps the failed names"]
+
+  A --> B --> C --> G
+  A --> D
+  A --> E
+  A --> F
+  D -. omitted .-> G
+  E -. omitted .-> G
+  F -. omitted .-> G
+  A --> H
+  D --> H
+  E --> H
+  F --> H
+
+  classDef universe fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef survivor fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef missing fill:#fef2f2,stroke:#b91c1c,stroke-width:2px,color:#7f1d1d;
+  classDef result fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
+  class A universe;
+  class B,C,H survivor;
+  class D,E,F missing;
+  class G result;

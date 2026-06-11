@@ -1,0 +1,26 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  subgraph explore["Research period"]
+    A["Try hypothesis"]
+    B["Tune details"]
+    C["Repair weak tests"]
+  end
+
+  F["Publication<br/>rule is frozen"]
+
+  subgraph validate["True out-of-sample period"]
+    G["New market data"]
+    H["Test fixed rule"]
+    I["Accept or reject evidence"]
+  end
+
+  A --> B --> C --> F --> G --> H --> I
+  H -. "do not tune backward" .-> B
+
+  classDef research fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef freeze fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
+  classDef validation fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef warning fill:#fef2f2,stroke:#b91c1c,stroke-width:2px,color:#7f1d1d,stroke-dasharray: 5 4;
+  class A,B,C research;
+  class F freeze;
+  class G,H,I validation;

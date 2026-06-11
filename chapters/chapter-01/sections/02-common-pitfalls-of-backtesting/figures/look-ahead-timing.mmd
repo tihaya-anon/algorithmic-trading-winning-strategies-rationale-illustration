@@ -1,0 +1,19 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  A["Before open<br/>decision time"]
+  B["During day<br/>path unfolds"]
+  C["After close<br/>high/low known"]
+  D["Unsafe signal<br/>uses high_t"]
+  E["Safe signal<br/>uses information already known"]
+  F["Shift position<br/>trade after signal is known"]
+
+  A --> B --> C
+  C -. "leaks backward" .-> D
+  A --> E --> F
+
+  classDef time fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef unsafe fill:#fef2f2,stroke:#b91c1c,stroke-width:3px,color:#7f1d1d;
+  classDef safe fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  class A,B,C time;
+  class D unsafe;
+  class E,F safe;

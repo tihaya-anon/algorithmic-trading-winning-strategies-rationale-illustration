@@ -24,254 +24,117 @@ execute:
   echo: true
 ---
 
-## Backtesting Is an Execution Rehearsal
+## A backtest is useful only when it rehearses the live strategy.
 
 ::: columns
-::: {.column width="58%"}
-Not:
-
-**"Did the chart go up?"**
-
-But:
-
-**"Could this exact rule have traded with only the information available then?"**
+::: {.column width="50%"}
+| Mode | Input | Output |
+|---|---|---|
+| Backtest | historical feed | simulated orders |
+| Live | market feed | executable orders |
 :::
 
-::: {.column width="42%"}
-| Research | Execution |
+::: {.column width="50%"}
+![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions" width="100%"}
+:::
+:::
+
+::: {.notes}
+A backtest is useful only when it rehearses the live strategy. Historical data
+and live data are different feeds, but the trading rule should be the same rule.
+That means the timing rule, the order type, the venue, and the price field have
+to be explicit. If the backtest uses assumptions that the live system cannot
+use, the performance estimate belongs to a strategy we are not actually going
+to trade.
+:::
+
+## Published performance still hides implementation choices.
+
+| Published phrase | Execution decision that changes returns |
 |---|---|
-| hypothesis | order type |
-| signal | timestamp |
-| history | venue |
-| result | constraint |
-:::
-:::
+| "buy at the open" | MOO auction or market order after the open |
+| "use the close" | primary auction, consolidated last, or settlement |
+| "trigger on price" | bid, ask, last trade, high, or low |
+| "trade S&P futures" | stock close at 4:00 or futures close at 4:15 |
 
 ::: {.notes}
-Open by reframing the job. A backtest is not a chart generator. It is a
-rehearsal for the live system. The question is whether the code could have made
-the same decision at the same time in the real market.
+Published strategies often report the idea and the historical result, but they
+cannot describe every execution choice without distracting from the main point.
+Those omitted choices matter. Buying at the open can mean an auction order or a
+market order after the open. Using the close can mean a primary exchange auction
+price, a consolidated last trade, or a futures settlement. Independent
+backtesting forces these choices into the strategy definition.
 :::
 
-## The Contract: One Rule, Two Feeds
+## Independent backtesting turns an idea into an executable rule.
 
-::: columns
-::: {.column width="50%"}
-**Backtest**
-
-historical data in<br>
-orders and fills out
-:::
-
-::: {.column width="50%"}
-**Live**
-
-live market data in<br>
-orders and fills out
-:::
-:::
-
-Same strategy function. Different feed.
+![](figures/executable-rule-pipeline.svg){fig-alt="Pipeline from published idea to executable rule through instrument, venue, timestamp, order type, backtest code, and execution code" width="82%"}
 
 ::: {.notes}
-This is the strongest guardrail against look-ahead bias from the chapter. If
-the same source can run in backtest and live mode, future information has no
-place to enter the decision path.
+Independent backtesting is not only a check on someone else's return number. It
+is the process that turns an informal strategy idea into an executable rule. We
+start with the published idea, then specify the instrument, venue, timestamp,
+and order type. Once those decisions are encoded in the backtest, the same
+logic can be carried toward automated execution. That continuity is what makes
+the backtest operational rather than decorative.
 :::
 
-## Details Move Returns
+## Pitfall checks must happen before the equity curve earns trust.
 
-::: columns
-::: {.column width="50%"}
-**"Close" is not one thing**
-
-- primary exchange auction
-- consolidated last trade
-- futures settlement
-:::
-
-::: {.column width="50%"}
-**"Entry" is not one thing**
-
-- market-on-open
-- just after the open
-- bid, ask, or last
-:::
-:::
-
-::: {.notes}
-Chan's warning is practical: the same strategy idea can look profitable or
-broken depending on these details. Published descriptions often omit them, so
-the backtest has to make them explicit.
-:::
-
-## Run the Research Loop
-
-1. state the hypothesis
-2. define instrument, venue, timestamp, and order
-3. create signals from available information
-4. convert signals into delayed positions
-5. subtract costs and constraints
-6. freeze before final validation
-
-::: {.notes}
-This slide gives the operating rhythm for the course. The loop is iterative,
-but the final validation cannot be repeatedly tuned against. Once the rule is
-changed after seeing the validation result, that data has become part of
-research.
-:::
-
-## Pitfall 1: Tomorrow Leaks Into Today
-
-::: columns
-::: {.column width="46%"}
-**Unsafe**
-
-```python
-signal_t = price_t.high > threshold
-position_t = signal_t
-```
-:::
-
-::: {.column width="54%"}
-**Safe shape**
-
-```python
-signal = raw_signal.shift(1)
-position = signal.clip(-1, 1)
-net_return = position * returns - costs
-```
-:::
-:::
-
-::: {.notes}
-Use the high/low example because it is concrete. The high and low of a daily
-bar are known only after the day is complete. The visible shift is the reminder
-that today's exposure must come from yesterday's known signal.
-:::
-
-## Pitfall 2: Validation Becomes Training
-
-::: columns
-::: {.column width="56%"}
-The trap:
-
-1. test a rule
-2. dislike the validation result
-3. tweak the rule
-4. repeat until it passes
-:::
-
-::: {.column width="44%"}
-The defense:
-
-- simple rules
-- fixed holdout periods
-- cross-validation when data are scarce
-- walk-forward testing before confidence
-:::
-:::
-
-::: {.notes}
-The chapter emphasizes that out-of-sample testing is easier to recommend than
-to practice. The moment we tune on the holdout, it is no longer a clean holdout.
-Keep this slide conversational: the audience should recognize the behavior.
-:::
-
-## Pitfall 3: The Data Was Never Tradable
-
-::: columns
-::: {.column width="50%"}
-**Stocks**
-
-- delisted names missing
-- splits and dividends unadjusted
-- primary exchange price replaced by consolidated price
-:::
-
-::: {.column width="50%"}
-**Other markets**
-
-- wrong futures roll or settlement
-- currency quotes from a different venue
-- short-sale rules ignored
-:::
-:::
-
-::: {.notes}
-This slide links data quality to actual execution. Survivorship bias can make a
-long-only mean-reversion strategy look better than it was. Primary exchange
-prices matter for market-on-open and market-on-close orders.
-:::
-
-## Trust Comes in Three Gates
-
-| Gate | What must be true? |
+| Strategy setting | Hidden feasibility check |
 |---|---|
-| Mechanical validity | no impossible information or impossible trade |
-| Statistical evidence | result is hard to explain under a clear null |
-| Future relevance | market structure has not made the edge stale |
+| Long-short stock book | Were the short names borrowable? |
+| Intermarket futures pair | Did both market closes occur together? |
+| Published rule after release | Did post-publication data still work? |
 
 ::: {.notes}
-Do not let one metric answer all three questions. A high Sharpe ratio cannot
-rescue a look-ahead bug, and a clean historical result can still fail after a
-regime shift.
+After a strategy is implemented, the first question is not whether the equity
+curve looks smooth. The first question is whether the test describes feasible
+trades. For a long-short stock book, the short side may depend on borrow
+availability. For an intermarket futures pair, two closing prices may not be
+observed at the same time. These checks belong before interpretation because
+most pitfalls make backtested performance look too good.
 :::
 
-## A Minimal Backtest Skeleton
+## True out-of-sample testing begins after the rule is frozen.
 
-```python
-def backtest_one_period(returns, raw_signal, cost_per_turnover):
-    signal = raw_signal.shift(1)
-    position = signal.clip(-1, 1)
-    turnover = position.diff().abs().fillna(position.abs())
-    costs = cost_per_turnover * turnover
-    net_return = position * returns - costs
-
-    return position, turnover, net_return
-```
+![](figures/out-of-sample-boundary.svg){fig-alt="Timeline showing research period, publication boundary, and validation period" width="90%"}
 
 ::: {.notes}
-Keep the code short. The teaching point is not Python syntax. The point is that
-the delay, turnover, and net return are visible in one place.
+The phrase out-of-sample can be misleading before the rule is frozen. If a
+researcher sees weak validation results and then changes the parameters, that
+validation period has become part of the research process. Publication creates
+a cleaner boundary because the rule is now cast in stone. Data arriving after
+that boundary can test the published rule without the same hidden opportunity
+for revision.
 :::
 
-## Summary Before You Trust a Curve
+## Backtesting is an experiment cycle with a hard validation boundary.
 
-::: columns
-::: {.column width="33%"}
-**Same rule**
-
-Could it run live?
-:::
-
-::: {.column width="33%"}
-**Same timing**
-
-Was information available?
-:::
-
-::: {.column width="33%"}
-**Same market**
-
-Was the venue tradable?
-:::
-:::
+![](figures/backtesting-experiment-cycle.svg){fig-alt="Experiment cycle from hypothesis to implementation to backtest result, revision, frozen rule, and walk-forward test" width="92%"}
 
 ::: {.notes}
-This is the Minto-style close: three checks that summarize the section. Same
-rule, same timing, same market. Transition to the next section by saying that
-even after these are true, gross performance is still not tradable.
+Backtesting follows the scientific method. We start with a hypothesis about an
+arbitrage opportunity or market inefficiency. We implement that hypothesis,
+test it, and revise it when the evidence is not good enough. That loop is
+valuable, but it is not unlimited. Once the rule is frozen, the next test is a
+walk-forward or post-publication test, not another chance to keep tuning the
+same validation data.
 :::
 
-## Review Question
+## A credible backtest can answer three live-trading questions.
 
-Before trusting the result, ask:
-
-**Could the same function run live if we replaced historical data with a live
-feed?**
+| Question | Evidence in the backtest |
+|---|---|
+| Can the same rule run live? | one strategy function, two data feeds |
+| Was the information available? | signals delayed to decision time |
+| Was the market access realistic? | venue, order, borrow, and clock checks |
 
 ::: {.notes}
-If the answer is no, the backtest may still be a research sketch, but it is not
-yet an execution-ready strategy.
+Before trusting a backtest, reduce the review to three live-trading questions.
+First, can the same strategy rule run live if we replace historical data with a
+live feed? Second, was every signal based on information available at the
+decision time? Third, did the backtest use market access that the live trader
+could actually obtain? If the answer to any of these questions is no, the result
+is still research, not execution evidence.
 :::

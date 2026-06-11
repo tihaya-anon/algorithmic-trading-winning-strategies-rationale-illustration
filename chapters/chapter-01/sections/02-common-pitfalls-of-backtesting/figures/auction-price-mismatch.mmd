@@ -1,0 +1,28 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  subgraph tape["Consolidated tape"]
+    A["Secondary venue<br/>odd print"]
+    B["Small size<br/>outlier price"]
+  end
+
+  subgraph auction["Primary exchange auction"]
+    C["MOO or MOC order"]
+    D["Primary auction fill"]
+  end
+
+  E["Mean-reversion backtest<br/>profits from unfillable price"]
+  F["Use primary-exchange<br/>open or close data"]
+
+  A --> B --> E
+  C --> D --> F
+  A -. "not equal to" .- D
+  E -. "inflated result" .-> F
+
+  classDef tape fill:#fef2f2,stroke:#b91c1c,stroke-width:2px,color:#7f1d1d;
+  classDef auction fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef risk fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
+  classDef fix fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  class A,B tape;
+  class C,D auction;
+  class E risk;
+  class F fix;
