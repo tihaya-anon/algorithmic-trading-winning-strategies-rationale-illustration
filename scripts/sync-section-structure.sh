@@ -301,6 +301,9 @@ jobs:
       - name: Check generated section routing
         run: scripts/sync-section-structure.sh --check
 
+      - name: Build generated Markdown downloads
+        run: bash scripts/build-markdown-downloads.sh
+
       - name: Set up Quarto and TinyTeX
         uses: quarto-dev/quarto-actions/setup@v2
         env:

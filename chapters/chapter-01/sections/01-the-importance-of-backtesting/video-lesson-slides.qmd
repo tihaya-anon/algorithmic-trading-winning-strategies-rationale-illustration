@@ -26,22 +26,12 @@ execute:
 
 ## A backtest is useful only when it rehearses the live strategy.
 
-::: {.split-visual-slide}
-::: columns
-::: {.column width="50%"}
 | Mode | Input | Output |
 |---|---|---|
 | Backtest | historical feed | simulated orders |
 | Live | market feed | executable orders |
-:::
 
-::: {.column width="50%"}
-::: {.visual-frame}
-![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions"}
-:::
-:::
-:::
-:::
+The feed changes. The strategy rule should not.
 
 ::: {.notes}
 A backtest is useful only when it rehearses the live strategy. Historical data
@@ -52,14 +42,30 @@ use, the performance estimate belongs to a strategy we are not actually going
 to trade.
 :::
 
+## Rehearsal means one strategy rule under two data feeds.
+
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions"}
+:::
+:::
+
+::: {.notes}
+The picture makes the same point in system form. A backtest is a rehearsal only
+when the same strategy rule survives the transition from historical data to a
+live feed. If timing, price field, order type, or venue assumptions change
+between the two modes, we are no longer validating the strategy we intend to
+trade.
+:::
+
 ## Published performance still hides implementation choices.
 
-| Published phrase | Execution decision that changes returns |
-|---|---|
-| "buy at the open" | MOO auction or market order after the open |
-| "use the close" | primary auction, consolidated last, or settlement |
-| "trigger on price" | bid, ask, last trade, high, or low |
-| "trade S&P futures" | stock close at 4:00 or futures close at 4:15 |
+| Published phrase    | Execution decision that changes returns           |
+| ------------------- | ------------------------------------------------- |
+| "buy at the open"   | MOO auction or market order after the open        |
+| "use the close"     | primary auction, consolidated last, or settlement |
+| "trigger on price"  | bid, ask, last trade, high, or low                |
+| "trade S&P futures" | stock close at 4:00 or futures close at 4:15      |
 
 ::: {.notes}
 Published strategies often report the idea and the historical result, but they
@@ -89,11 +95,11 @@ the backtest operational rather than decorative.
 
 ## Pitfall checks must happen before the equity curve earns trust.
 
-| Strategy setting | Hidden feasibility check |
-|---|---|
-| Long-short stock book | Were the short names borrowable? |
-| Intermarket futures pair | Did both market closes occur together? |
-| Published rule after release | Did post-publication data still work? |
+| Strategy setting             | Hidden feasibility check               |
+| ---------------------------- | -------------------------------------- |
+| Long-short stock book        | Were the short names borrowable?       |
+| Intermarket futures pair     | Did both market closes occur together? |
+| Published rule after release | Did post-publication data still work?  |
 
 ::: {.notes}
 After a strategy is implemented, the first question is not whether the equity
@@ -140,10 +146,10 @@ same validation data.
 
 ## A credible backtest can answer three live-trading questions.
 
-| Question | Evidence in the backtest |
-|---|---|
-| Can the same rule run live? | one strategy function, two data feeds |
-| Was the information available? | signals delayed to decision time |
+| Question                         | Evidence in the backtest               |
+| -------------------------------- | -------------------------------------- |
+| Can the same rule run live?      | one strategy function, two data feeds  |
+| Was the information available?   | signals delayed to decision time       |
 | Was the market access realistic? | venue, order, borrow, and clock checks |
 
 ::: {.notes}

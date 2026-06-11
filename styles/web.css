@@ -274,7 +274,7 @@ samp {
   margin: 4vh auto 0;
   border: 1px solid rgba(15, 118, 110, 0.14);
   border-radius: 26px;
-  background: #fffdfa;
+  background: #ffffff;
   box-shadow: 0 30px 90px rgba(20, 24, 31, 0.22);
   overflow: hidden;
 }
@@ -354,7 +354,7 @@ samp {
 .section-inline-modal__markdown {
   padding: 1rem;
   overflow: auto;
-  background: #fffdfa;
+  background: #ffffff;
 }
 
 @media (min-width: 992px) {
