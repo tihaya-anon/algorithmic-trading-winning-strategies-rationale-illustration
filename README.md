@@ -5,14 +5,18 @@ Chan's algorithmic trading text.
 
 ## Outputs
 
-- `chapters/`: chapter-section pages for the web reading experience
-- `slides/video-lesson.qmd`: reveal.js slides for recording or autoplay
-- `handouts/web-notes.qmd`: HTML handout for web publishing
-- `handouts/pdf-notes.qmd`: PDF handout for printing or offline reading
+- `video-lesson-slides.qmd`: reveal.js slides with narration notes
+- `web-notes.qmd`: HTML notes for browser reading
+- `pdf-notes.qmd`: PDF notes for printing or offline reading
+
+Each section owns all three outputs. Video slides should be visually strong and
+may simplify details; web and PDF notes should stay nearly identical in
+substance. Prefer SVG figures for web notes, and PNG or TIFF exports for PDF
+notes when final figures are available.
 
 ## Chapter-Section Structure
 
-Use `chapters/` as the canonical web content source:
+Use `chapters/` as the canonical content source:
 
 ```text
 chapters/
@@ -21,17 +25,29 @@ chapters/
   chapter-01/
     index.qmd
     sections/
-      01-research-loop.qmd
-      02-net-returns-costs.qmd
+      01-backtesting-as-research-loop/
+        video-lesson-slides.qmd
+        web-notes.qmd
+        pdf-notes.qmd
+      02-net-returns-costs/
+        video-lesson-slides.qmd
+        web-notes.qmd
+        pdf-notes.qmd
 ```
 
-Each chapter gets an `index.qmd` overview, and each section gets its own page
-under `sections/`. Prefix section filenames with two digits so the repository
-order matches the reading order.
+Each chapter gets an `index.qmd` overview, and each section gets its own folder
+under `sections/`. Prefix section folders with two digits so repository order
+matches reading order.
 
-After adding a new chapter or section, add it to `website.sidebar.contents` in
-`_quarto.yml`; the web frontend renders that sidebar as the chapter-section
-navigation.
+After adding, renaming, or removing a chapter or section folder, run:
+
+```bash
+scripts/sync-section-structure.sh
+```
+
+This regenerates `_quarto.yml`, `chapters/index.qmd`, and CI routing from the
+directory tree. Do not hand-maintain section links in `_quarto.yml` or the
+publish workflow.
 
 ## Local Setup
 
@@ -73,9 +89,9 @@ sudo apt-get update
 sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-mono
 ```
 
-The HTML and reveal.js outputs use a sans-serif font stack. The PDF handout uses
-Noto Serif CJK SC as the main serif font so English and Chinese text share a
-single stable LuaLaTeX font path.
+The HTML and reveal.js outputs use a sans-serif font stack. The PDF notes use
+XeLaTeX with Noto Serif CJK SC as the main serif font so English and Chinese
+text share a stable font path.
 Code blocks use Maple Mono NF CN from `assets/fonts/`, so the website and PDF do
 not depend on Maple Mono being installed on the runner.
 The bundled Maple Mono font files are licensed under the SIL Open Font License
@@ -97,13 +113,17 @@ anonymous GitHub API rate limits:
 
 ## GitHub Pages
 
-The workflow in `.github/workflows/publish.yml` renders the entire Quarto project
-in CI, including `handouts/pdf-notes.qmd`, then deploys the generated `_site/`
-directory as a static GitHub Pages artifact.
+The workflow in `.github/workflows/publish.yml` renders the entire Quarto
+project in CI, including section-level PDF notes, then deploys the generated
+`_site/` directory as a static GitHub Pages artifact.
+
+CI runs `scripts/sync-section-structure.sh --check` before rendering and
+`scripts/sync-section-structure.sh --verify-rendered` after rendering, so the
+artifact checks stay aligned with section folders automatically.
 
 Configure the repository under Settings -> Pages to use GitHub Actions as the
-source. The published site serves `handouts/pdf-notes.pdf` as a static file, so
-no PDF engine is needed at request time.
+source. The published site serves rendered section PDFs as static files, so no
+PDF engine is needed at request time.
 
 ## Sync to Course Repositories
 
@@ -146,30 +166,35 @@ The video deck and the reading material should not be the same artifact.
 
 Quarto lets you keep those outputs in one project without forcing you back into a full Beamer workflow.
 
-## Render Commands
+## Human Render Commands
+
+Agents should not execute Quarto render or preview commands. After content or
+structure changes, ask a human to run the relevant command:
 
 ```bash
 quarto render chapters/index.qmd
 quarto render chapters/chapter-01/index.qmd
-quarto render chapters/chapter-01/sections/01-research-loop.qmd
-quarto render chapters/chapter-01/sections/02-net-returns-costs.qmd
-quarto render slides/video-lesson.qmd
-quarto render handouts/web-notes.qmd
-quarto render handouts/pdf-notes.qmd
+quarto render chapters/chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd
+quarto render chapters/chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd
+quarto render chapters/chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd
+quarto render chapters/chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd
+quarto render chapters/chapter-01/sections/02-net-returns-costs/web-notes.qmd
+quarto render chapters/chapter-01/sections/02-net-returns-costs/pdf-notes.qmd
 quarto render
 ```
 
 ## Suggested Lecture Pattern
 
-1. Put the core story into `slides/video-lesson.qmd`.
+1. Put the core story into each section's `video-lesson-slides.qmd`.
 2. Keep narration in `::: {.notes}` blocks.
 3. Generate TTS from notes and align it with slide timing.
-4. Put extra derivations, assumptions, and figures into the handouts.
+4. Put extra derivations, assumptions, and figures into `web-notes.qmd` and
+   `pdf-notes.qmd`.
 5. Publish `_site/` to GitHub Pages and export PDF when needed.
 
 ## TTS / Video Notes
 
-The deck already demonstrates the key pieces:
+Section slide decks demonstrate the key pieces:
 
 - reveal.js `auto-slide` for automatic pacing
 - speaker notes as a clean source for narration text

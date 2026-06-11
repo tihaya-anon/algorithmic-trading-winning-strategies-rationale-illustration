@@ -1,0 +1,109 @@
+---
+title: "1.2 Net Returns and Costs"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    auto-slide: 9000
+    auto-slide-stoppable: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+execute:
+  echo: true
+---
+
+## Gross Is Not Tradable
+
+Gross returns answer:
+
+**Did the signal line up with future returns before practical constraints?**
+
+Net returns answer:
+
+**Did the edge survive implementation?**
+
+::: {.notes}
+This section is the bridge from a promising signal to a tradable strategy.
+:::
+
+## One-Period Model
+
+$$
+r^{\text{net}}_t = w_{t-1}r_t - c_t
+$$
+
+where $c_t$ includes costs paid because the portfolio changed.
+
+::: {.notes}
+The position is delayed and the cost is charged at the moment of exposure
+change. Those two details eliminate many inflated tests.
+:::
+
+## Turnover Drives Costs
+
+$$
+\text{Turnover}_t = |w_t - w_{t-1}|
+$$
+
+$$
+c_t = \alpha \cdot \text{Turnover}_t + \beta \cdot \sigma_t
+$$
+
+::: {.notes}
+Costs are tied to trading, not to the final position alone. The simple model can
+be expanded later for borrow, fees, spread, and impact.
+:::
+
+## Equity Curve Needs Context
+
+![](../../../../assets/example-pnl.svg){fig-alt="Example cumulative PnL line chart" width="86%"}
+
+::: {.notes}
+The curve is a starting point, not the conclusion. Always ask whether costs,
+capacity, and tail outcomes can explain the apparent smoothness.
+:::
+
+## Distribution Check
+
+::: columns
+::: {.column width="52%"}
+![](../../../../assets/example-histogram.svg){fig-alt="Example returns histogram" width="100%"}
+:::
+
+::: {.column width="48%"}
+Inspect:
+
+- tail losses
+- skew
+- volatility clustering
+- whether Sharpe hides rare events
+:::
+:::
+
+::: {.notes}
+The distribution slide prevents the audience from over-reading a smooth
+cumulative PnL chart.
+:::
+
+## Review Before Trust
+
+- Is the position shifted before returns are applied?
+- Are costs applied to turnover?
+- Are borrow, spread, and slippage visible assumptions?
+- Does performance survive realistic capacity constraints?
+
+::: {.notes}
+Close by turning the section into a checklist. This makes the next coding or
+research step clear.
+:::

@@ -1,37 +1,40 @@
 ---
 title: "Course Chapters"
-subtitle: "Chapter and section index for the web version"
+subtitle: "Generated chapter and section index"
 ---
 
 # Chapter Map
 
-Use `chapters/` as the canonical source for web reading pages.
-Each chapter owns an overview page and a set of section pages:
+Use `chapters/` as the canonical content source. Each section owns three
+outputs:
 
 ```text
 chapters/
-  chapter-01/
+  chapter-NN/
     index.qmd
     sections/
-      01-research-loop.qmd
-      02-net-returns-costs.qmd
+      NN-section-slug/
+        video-lesson-slides.qmd
+        web-notes.qmd
+        pdf-notes.qmd
 ```
 
-The sidebar in `_quarto.yml` controls the visible chapter-section order on the
-website.
+The directory tree is the router. Run `scripts/sync-section-structure.sh` after
+adding, renaming, or removing section folders.
 
 # Chapters
 
-## Chapter 01. A Minimal Quant Research Loop
+## Chapter 01. Backtesting and Automated Execution
 
 - [Overview](chapter-01/index.qmd)
-- [1.1 Research Loop](chapter-01/sections/01-research-loop.qmd)
-- [1.2 Net Returns and Costs](chapter-01/sections/02-net-returns-costs.qmd)
+- 1.1 Backtesting as a Research Loop: [video](chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd), [web](chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd), [PDF](chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd)
+- 1.2 Net Returns and Costs: [video](chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd), [web](chapter-01/sections/02-net-returns-costs/web-notes.qmd), [PDF](chapter-01/sections/02-net-returns-costs/pdf-notes.qmd)
 
 # Authoring Convention
 
 - Create one folder per chapter: `chapters/chapter-02/`.
 - Put the chapter landing page at `chapters/chapter-02/index.qmd`.
-- Put section pages under `chapters/chapter-02/sections/`.
-- Prefix section filenames with two digits so file order matches reading order.
-- Add the new pages to `website.sidebar.contents` in `_quarto.yml`.
+- Put each section under `chapters/chapter-02/sections/NN-section-slug/`.
+- Include `video-lesson-slides.qmd`, `web-notes.qmd`, and `pdf-notes.qmd` in
+  every section folder.
+- Run `scripts/sync-section-structure.sh`; do not hand-edit generated routing.

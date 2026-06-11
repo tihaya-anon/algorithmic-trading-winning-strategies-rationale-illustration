@@ -1,0 +1,144 @@
+---
+title: "1.1 Backtesting as a Research Loop"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    auto-slide: 9000
+    auto-slide-stoppable: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+execute:
+  echo: true
+---
+
+## The Backtest Contract
+
+::: columns
+::: {.column width="54%"}
+A backtest is useful only if it answers this question:
+
+**What would this exact executable rule have done with only historical
+information available at the time?**
+:::
+
+::: {.column width="46%"}
+$$
+r^{\text{net}}_t = w_{t-1}r_t - c_t
+$$
+:::
+:::
+
+::: {.notes}
+Start by making the backtest concrete. It is not an equity curve exercise.
+It is an execution rehearsal using historical data.
+:::
+
+## Details Move Returns
+
+Small choices can change the result:
+
+- market-on-open versus after-open order
+- primary exchange close versus consolidated close
+- bid, ask, last trade, high, or low
+- stock-market close versus futures-market close
+
+::: {.notes}
+The point from Chapter 1 is that published strategy descriptions often omit
+implementation details. The backtest has to make them explicit.
+:::
+
+## Three Gates
+
+| Gate | Question |
+|---|---|
+| Mechanical validity | Did we avoid impossible information and impossible trades? |
+| Statistical evidence | Is the result unlikely under a clear null model? |
+| Future relevance | Could a regime shift make the edge stale? |
+
+::: {.notes}
+Do not collapse these into one number. A high Sharpe ratio can still fail any
+one of the three gates.
+:::
+
+## Pitfall: Look-Ahead Bias
+
+The backtest must never use future information for today's decision.
+
+```python
+signal = raw_signal.shift(1)
+position = signal.clip(-1, 1)
+net_return = position * returns - costs
+```
+
+::: {.notes}
+The shift is the visible guardrail. Same-day high and low prices are common
+sources of accidental look-ahead because they are known only after the day ends.
+:::
+
+## Pitfall: Data Snooping
+
+Data snooping appears when the researcher keeps adjusting the rule until the
+validation set looks good.
+
+Best defenses:
+
+- simple rules
+- fixed validation periods
+- cross-validation or walk-forward testing
+- small live-money tests before scaling
+
+::: {.notes}
+The chapter's practical warning is that out-of-sample data stops being
+out-of-sample once it drives repeated model changes.
+:::
+
+## Pitfall: Execution Mismatch
+
+::: columns
+::: {.column width="50%"}
+Stocks:
+
+- delistings
+- dividends and splits
+- borrow availability
+- primary exchange prices
+:::
+
+::: {.column width="50%"}
+Other markets:
+
+- futures rolls
+- venue-specific FX quotes
+- order-book depth
+- microstructure response
+:::
+:::
+
+::: {.notes}
+This slide connects backtesting to automated execution. The strategy is not
+tradable until the assumptions match the venue and order type.
+:::
+
+## Review Question
+
+Before trusting the result, ask:
+
+**Could the same function run live if we replaced historical data with a live
+feed?**
+
+::: {.notes}
+If the answer is no, the backtest may still be a research sketch, but it is not
+yet an execution-ready strategy.
+:::

@@ -29,6 +29,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-mono
 
+      - name: Check generated section routing
+        run: scripts/sync-section-structure.sh --check
+
       - name: Set up Quarto and TinyTeX
         uses: quarto-dev/quarto-actions/setup@v2
         env:
@@ -36,11 +39,11 @@ jobs:
         with:
           tinytex: true
 
-      - name: Render site and prebuilt PDF
+      - name: Render site and section outputs
         run: quarto render
 
-      - name: Verify PDF artifact
-        run: test -f _site/handouts/pdf-notes.pdf
+      - name: Verify rendered section artifacts
+        run: scripts/sync-section-structure.sh --verify-rendered
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

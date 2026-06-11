@@ -1,0 +1,131 @@
+---
+title: "1.1 Backtesting as a Research Loop"
+subtitle: "PDF notes | Chapter 01. Backtesting and Automated Execution"
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJK-Regular.ttc"
+    mainfontoptions:
+      - "Path=/usr/share/fonts/opentype/noto/"
+      - "FontIndex=2"
+      - "BoldFont=NotoSerifCJK-Bold.ttc"
+    sansfont: "NotoSansCJK-Regular.ttc"
+    sansfontoptions:
+      - "Path=/usr/share/fonts/opentype/noto/"
+      - "FontIndex=2"
+      - "BoldFont=NotoSansCJK-Bold.ttc"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# The Job of a Backtest
+
+A backtest is a controlled experiment: feed historical market data into a
+trading rule and ask how that exact rule would have behaved.
+
+The word exact matters. Chapter 1 warns that profitability can depend on
+implementation details that articles and strategy summaries usually omit:
+market-on-open versus after-open orders, bid versus ask versus last trade,
+primary exchange close versus consolidated close, and the timestamp at which the
+decision is actually made.
+
+Treat every backtest as a bridge between research and automated execution. The
+closer the backtest code is to execution code, the fewer hidden assumptions can
+enter.
+
+# Research Loop
+
+1. State the hypothesis before looking at the result.
+2. Define the tradable instrument, venue, timestamp, and order type.
+3. Transform historical data into signals using only available information.
+4. Convert signals into positions and orders.
+5. Subtract realistic costs and execution constraints.
+6. Inspect failure modes before trusting summary metrics.
+7. Freeze the rule before the final out-of-sample or walk-forward test.
+
+The loop is iterative, but not unlimited. Changing a parameter after every
+disappointing result quietly turns out-of-sample data into in-sample data.
+
+# Baseline Return Model
+
+For a one-period strategy:
+
+$$
+r^{\text{net}}_t = w_{t-1} r_t - c_t
+$$
+
+where $w_{t-1}$ is the position known before return $r_t$ is realized, and
+$c_t$ includes fees, spread, slippage, borrow cost, and other constraints.
+
+# First Pitfalls to Eliminate
+
+## Look-Ahead Bias
+
+Look-ahead bias occurs when the program uses information that would not have
+been known at the decision time. Same-day high and low prices are common traps
+because they are known only after the day is complete.
+
+## Data-Snooping Bias
+
+Data-snooping bias appears when too many parameters or rules are fitted to
+historical noise. Prefer simple rules, fixed validation periods, and
+walk-forward tests.
+
+## Execution Mismatch
+
+A clean signal can still fail when execution assumptions are wrong. Check
+survivorship, corporate actions, primary versus consolidated stock prices,
+short-sale constraints, futures rolls, and venue-specific currency quotes.
+
+# Three Levels of Trust
+
+1. Is the backtest mechanically valid?
+2. Is the result statistically hard to explain as random noise?
+3. Is the result likely to remain predictive after markets change?
+
+Avoiding pitfalls answers only the first question. Monte Carlo or randomized
+trade tests address the second. Regime shifts answer the third.
+
+# Minimal Implementation Shape
+
+```python
+import pandas as pd
+
+def backtest_one_period(
+    returns: pd.Series,
+    raw_signal: pd.Series,
+    cost_per_turnover: float,
+) -> pd.DataFrame:
+    signal = raw_signal.shift(1)
+    position = signal.clip(-1, 1)
+    turnover = position.diff().abs().fillna(position.abs())
+    net_return = position * returns - cost_per_turnover * turnover
+    return pd.DataFrame({
+        "signal": signal,
+        "position": position,
+        "turnover": turnover,
+        "net_return": net_return,
+    })
+```
+
+# Review Checklist
+
+- What exact order would the live system send?
+- Which timestamp and venue does each input price represent?
+- Are corporate actions, delistings, and contract rolls handled explicitly?
+- Does the same rule work before and after plausible regime shifts?
+- Is the final validation period untouched by parameter tuning?

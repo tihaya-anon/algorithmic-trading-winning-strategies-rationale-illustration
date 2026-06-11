@@ -1,6 +1,13 @@
 ---
 title: "1.2 Net Returns and Costs"
-subtitle: "Chapter 01. A Minimal Quant Research Loop"
+subtitle: "Chapter 01. Backtesting and Automated Execution"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+    code-tools: true
 ---
 
 # Gross Versus Net Results
@@ -30,11 +37,11 @@ stands in for liquidity-sensitive slippage or market impact.
 
 ## Cumulative PnL
 
-![](../../../assets/example-pnl.svg){fig-alt="Example cumulative PnL line chart" width="85%"}
+![](../../../../assets/example-pnl.svg){fig-alt="Example cumulative PnL line chart" width="85%"}
 
 ## Return Distribution
 
-![](../../../assets/example-histogram.svg){fig-alt="Example returns histogram" width="75%"}
+![](../../../../assets/example-histogram.svg){fig-alt="Example returns histogram" width="75%"}
 
 # Review Checklist
 
@@ -45,5 +52,5 @@ stands in for liquidity-sensitive slippage or market impact.
 
 # Reading Path
 
-- Previous: [1.1 Research Loop](01-research-loop.qmd)
-- Next: [Chapter overview](../index.qmd)
+- Previous: [1.1 Backtesting as a Research Loop](../01-backtesting-as-research-loop/web-notes.qmd)
+- Next: [Chapter overview](../../index.qmd)

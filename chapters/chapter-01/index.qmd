@@ -1,37 +1,45 @@
 ---
-title: "Chapter 01. A Minimal Quant Research Loop"
+title: "Chapter 01. Backtesting and Automated Execution"
 subtitle: "Overview"
 ---
 
 # Objective
 
-This chapter introduces the minimum loop behind a testable trading idea:
+This chapter introduces the discipline behind a usable backtest:
 
-1. define a signal
-2. convert the signal into tradable positions
-3. simulate net returns
-4. review the result against risk and cost assumptions
+1. define a trading hypothesis before inspecting results
+2. implement the signal with only available historical information
+3. match the backtest assumptions to the execution venue and order type
+4. review costs, constraints, and statistical reliability before trusting the result
 
 # Sections
 
-## 1.1 Research Loop
+## 1.1 Backtesting as a Research Loop
 
-[Open section](sections/01-research-loop.qmd)
+[Open web notes](sections/01-backtesting-as-research-loop/web-notes.qmd)
 
-The first section explains the shape of the research loop and the decision
-points where false confidence usually enters a backtest.
+The first section explains why a backtest must specify implementation details,
+avoid look-ahead and data-snooping bias, and stay close to executable trading
+logic.
+
+Outputs:
+[video](sections/01-backtesting-as-research-loop/video-lesson-slides.qmd),
+[web](sections/01-backtesting-as-research-loop/web-notes.qmd),
+[PDF](sections/01-backtesting-as-research-loop/pdf-notes.qmd)
 
 ## 1.2 Net Returns and Costs
 
-[Open section](sections/02-net-returns-costs.qmd)
+[Open web notes](sections/02-net-returns-costs/web-notes.qmd)
 
 The second section separates gross signal behavior from transaction costs,
 slippage, and position timing.
 
+Outputs:
+[video](sections/02-net-returns-costs/video-lesson-slides.qmd),
+[web](sections/02-net-returns-costs/web-notes.qmd),
+[PDF](sections/02-net-returns-costs/pdf-notes.qmd)
+
 # Output Links
 
-The same topic also has presentation-oriented outputs:
-
-- [Video slides](../../slides/video-lesson.qmd)
-- [Web notes](../../handouts/web-notes.qmd)
-- [PDF notes](../../handouts/pdf-notes.qmd)
+Each section owns its own video slides, web notes, and PDF notes. Use the
+section folders as the source of truth; shared chapter pages are only indexes.

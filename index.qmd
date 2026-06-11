@@ -8,10 +8,10 @@ page-layout: article
 
 This directory is a minimal Quarto stack for a quant lecture workflow:
 
-- `chapters/` for chapter-section web reading pages
-- `slides/video-lesson.qmd` for video-first reveal.js slides
-- `handouts/web-notes.qmd` for GitHub Pages style reading notes
-- `handouts/pdf-notes.qmd` for printable notes
+- `chapters/` for chapter and section source files
+- `video-lesson-slides.qmd` for section-level reveal.js slides
+- `web-notes.qmd` for browser reading notes
+- `pdf-notes.qmd` for printable notes
 
 The goal is one content stack with different presentation styles:
 
@@ -33,9 +33,14 @@ It covers the constraints that matter for a quant course:
 
 - [Chapter Index](chapters/index.qmd)
 - [Chapter 01 Overview](chapters/chapter-01/index.qmd)
-- [Video Slides](slides/video-lesson.qmd)
-- [Web Notes](handouts/web-notes.qmd)
-- [PDF Notes](handouts/pdf-notes.qmd)
+- 1.1 Backtesting as a Research Loop:
+  [video](chapters/chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd),
+  [web](chapters/chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd),
+  [PDF](chapters/chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd)
+- 1.2 Net Returns and Costs:
+  [video](chapters/chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd),
+  [web](chapters/chapter-01/sections/02-net-returns-costs/web-notes.qmd),
+  [PDF](chapters/chapter-01/sections/02-net-returns-costs/pdf-notes.qmd)
 - [Project README](README.md)
 
 # Chapter-Section Structure
@@ -47,8 +52,10 @@ chapters/
   chapter-01/
     index.qmd
     sections/
-      01-research-loop.qmd
-      02-net-returns-costs.qmd
+      01-backtesting-as-research-loop/
+        video-lesson-slides.qmd
+        web-notes.qmd
+        pdf-notes.qmd
 ```
 
 Add new chapters by copying that pattern, then add the pages to the website
@@ -56,10 +63,11 @@ sidebar in `_quarto.yml`.
 
 # Suggested Workflow
 
-1. Write the web reading flow in `chapters/chapter-xx/sections/`.
+1. Create one folder per section under `chapters/chapter-xx/sections/`.
 2. Keep each chapter landing page at `chapters/chapter-xx/index.qmd`.
-3. Adapt the main teaching flow into `slides/video-lesson.qmd`.
+3. Adapt the main teaching flow into each section's `video-lesson-slides.qmd`.
 4. Keep speaker script inside slide notes blocks.
-5. Move derivations, caveats, and extra charts into the handouts.
+5. Move derivations, caveats, and extra charts into `web-notes.qmd` and
+   `pdf-notes.qmd`.
 6. Generate TTS audio from notes and align durations to slide `auto-slide`.
 7. Publish `_site/` to GitHub Pages and export PDF for offline reading.
