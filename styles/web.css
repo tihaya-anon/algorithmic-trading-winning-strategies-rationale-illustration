@@ -66,6 +66,38 @@ samp {
   letter-spacing: 0;
 }
 
+@media (min-width: 992px) {
+  #quarto-content.page-layout-article.page-columns {
+    grid-template-columns:
+      [screen-start] 1.5rem
+      [screen-start-inset page-start page-start-inset body-start-outset body-start] minmax(
+        clamp(12rem, 18vw, 16rem),
+        1fr
+      )
+      [body-content-start] minmax(0, 820px)
+      [body-content-end] 2rem
+      [body-end body-end-outset] minmax(9rem, 12rem)
+      [page-end-inset page-end] minmax(1.5rem, 1fr)
+      [screen-end-inset] 1.5rem
+      [screen-end];
+  }
+
+  body.docked #quarto-content.page-layout-article.page-columns {
+    grid-template-columns:
+      [screen-start] minmax(14rem, 16rem)
+      [screen-start-inset page-start page-start-inset body-start-outset body-start] minmax(
+        clamp(1rem, 6vw, 7rem),
+        1fr
+      )
+      [body-content-start] minmax(0, 820px)
+      [body-content-end] 2rem
+      [body-end body-end-outset] minmax(8rem, 11rem)
+      [page-end-inset page-end] minmax(1rem, 1fr)
+      [screen-end-inset] 1.5rem
+      [screen-end];
+  }
+}
+
 img {
   border: 1px solid #e7e5e4;
   border-radius: 8px;
