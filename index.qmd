@@ -8,6 +8,7 @@ page-layout: article
 
 This directory is a minimal Quarto stack for a quant lecture workflow:
 
+- `chapters/` for chapter-section web reading pages
 - `slides/video-lesson.qmd` for video-first reveal.js slides
 - `handouts/web-notes.qmd` for GitHub Pages style reading notes
 - `handouts/pdf-notes.qmd` for printable notes
@@ -30,15 +31,35 @@ It covers the constraints that matter for a quant course:
 
 # Files
 
+- [Chapter Index](chapters/index.qmd)
+- [Chapter 01 Overview](chapters/chapter-01/index.qmd)
 - [Video Slides](slides/video-lesson.qmd)
 - [Web Notes](handouts/web-notes.qmd)
 - [PDF Notes](handouts/pdf-notes.qmd)
 - [Project README](README.md)
 
+# Chapter-Section Structure
+
+Web reading pages live under `chapters/`:
+
+```text
+chapters/
+  chapter-01/
+    index.qmd
+    sections/
+      01-research-loop.qmd
+      02-net-returns-costs.qmd
+```
+
+Add new chapters by copying that pattern, then add the pages to the website
+sidebar in `_quarto.yml`.
+
 # Suggested Workflow
 
-1. Write the main teaching flow in `slides/video-lesson.qmd`.
-2. Keep speaker script inside slide notes blocks.
-3. Move derivations, caveats, and extra charts into the handouts.
-4. Generate TTS audio from notes and align durations to slide `auto-slide`.
-5. Publish `_site/` to GitHub Pages and export PDF for offline reading.
+1. Write the web reading flow in `chapters/chapter-xx/sections/`.
+2. Keep each chapter landing page at `chapters/chapter-xx/index.qmd`.
+3. Adapt the main teaching flow into `slides/video-lesson.qmd`.
+4. Keep speaker script inside slide notes blocks.
+5. Move derivations, caveats, and extra charts into the handouts.
+6. Generate TTS audio from notes and align durations to slide `auto-slide`.
+7. Publish `_site/` to GitHub Pages and export PDF for offline reading.

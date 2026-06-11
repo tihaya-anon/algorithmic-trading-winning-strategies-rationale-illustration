@@ -1,0 +1,37 @@
+---
+title: "Chapter 01. A Minimal Quant Research Loop"
+subtitle: "Overview"
+---
+
+# Objective
+
+This chapter introduces the minimum loop behind a testable trading idea:
+
+1. define a signal
+2. convert the signal into tradable positions
+3. simulate net returns
+4. review the result against risk and cost assumptions
+
+# Sections
+
+## 1.1 Research Loop
+
+[Open section](sections/01-research-loop.qmd)
+
+The first section explains the shape of the research loop and the decision
+points where false confidence usually enters a backtest.
+
+## 1.2 Net Returns and Costs
+
+[Open section](sections/02-net-returns-costs.qmd)
+
+The second section separates gross signal behavior from transaction costs,
+slippage, and position timing.
+
+# Output Links
+
+The same topic also has presentation-oriented outputs:
+
+- [Video slides](../../slides/video-lesson.qmd)
+- [Web notes](../../handouts/web-notes.qmd)
+- [PDF notes](../../handouts/pdf-notes.qmd)

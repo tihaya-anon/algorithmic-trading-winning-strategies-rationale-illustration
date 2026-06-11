@@ -1,0 +1,37 @@
+---
+title: "Course Chapters"
+subtitle: "Chapter and section index for the web version"
+---
+
+# Chapter Map
+
+Use `chapters/` as the canonical source for web reading pages.
+Each chapter owns an overview page and a set of section pages:
+
+```text
+chapters/
+  chapter-01/
+    index.qmd
+    sections/
+      01-research-loop.qmd
+      02-net-returns-costs.qmd
+```
+
+The sidebar in `_quarto.yml` controls the visible chapter-section order on the
+website.
+
+# Chapters
+
+## Chapter 01. A Minimal Quant Research Loop
+
+- [Overview](chapter-01/index.qmd)
+- [1.1 Research Loop](chapter-01/sections/01-research-loop.qmd)
+- [1.2 Net Returns and Costs](chapter-01/sections/02-net-returns-costs.qmd)
+
+# Authoring Convention
+
+- Create one folder per chapter: `chapters/chapter-02/`.
+- Put the chapter landing page at `chapters/chapter-02/index.qmd`.
+- Put section pages under `chapters/chapter-02/sections/`.
+- Prefix section filenames with two digits so file order matches reading order.
+- Add the new pages to `website.sidebar.contents` in `_quarto.yml`.

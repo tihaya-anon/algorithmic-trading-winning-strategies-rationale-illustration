@@ -5,9 +5,33 @@ Chan's algorithmic trading text.
 
 ## Outputs
 
+- `chapters/`: chapter-section pages for the web reading experience
 - `slides/video-lesson.qmd`: reveal.js slides for recording or autoplay
 - `handouts/web-notes.qmd`: HTML handout for web publishing
 - `handouts/pdf-notes.qmd`: PDF handout for printing or offline reading
+
+## Chapter-Section Structure
+
+Use `chapters/` as the canonical web content source:
+
+```text
+chapters/
+  index.qmd
+  _metadata.yml
+  chapter-01/
+    index.qmd
+    sections/
+      01-research-loop.qmd
+      02-net-returns-costs.qmd
+```
+
+Each chapter gets an `index.qmd` overview, and each section gets its own page
+under `sections/`. Prefix section filenames with two digits so the repository
+order matches the reading order.
+
+After adding a new chapter or section, add it to `website.sidebar.contents` in
+`_quarto.yml`; the web frontend renders that sidebar as the chapter-section
+navigation.
 
 ## Local Setup
 
@@ -125,6 +149,10 @@ Quarto lets you keep those outputs in one project without forcing you back into 
 ## Render Commands
 
 ```bash
+quarto render chapters/index.qmd
+quarto render chapters/chapter-01/index.qmd
+quarto render chapters/chapter-01/sections/01-research-loop.qmd
+quarto render chapters/chapter-01/sections/02-net-returns-costs.qmd
 quarto render slides/video-lesson.qmd
 quarto render handouts/web-notes.qmd
 quarto render handouts/pdf-notes.qmd

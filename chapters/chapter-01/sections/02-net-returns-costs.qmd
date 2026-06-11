@@ -1,0 +1,49 @@
+---
+title: "1.2 Net Returns and Costs"
+subtitle: "Chapter 01. A Minimal Quant Research Loop"
+---
+
+# Gross Versus Net Results
+
+Gross returns answer one question: did the signal line up with future returns
+before practical constraints?
+
+Net returns answer the question that matters for a tradable strategy: does the
+edge survive execution assumptions?
+
+# Cost Model
+
+A minimal cost model can start with turnover:
+
+$$
+\text{Turnover}_t = |w_t - w_{t-1}|
+$$
+
+$$
+c_t = \alpha \cdot \text{Turnover}_t + \beta \cdot \sigma_t
+$$
+
+Here $\alpha$ represents direct trading costs, while $\beta \cdot \sigma_t$
+stands in for liquidity-sensitive slippage or market impact.
+
+# Example Figures
+
+## Cumulative PnL
+
+![](../../../assets/example-pnl.svg){fig-alt="Example cumulative PnL line chart" width="85%"}
+
+## Return Distribution
+
+![](../../../assets/example-histogram.svg){fig-alt="Example returns histogram" width="75%"}
+
+# Review Checklist
+
+- Is the position shifted before returns are applied?
+- Are costs applied to turnover rather than final exposure?
+- Does the return distribution explain the headline Sharpe?
+- Does the strategy still work after realistic capacity constraints?
+
+# Reading Path
+
+- Previous: [1.1 Research Loop](01-research-loop.qmd)
+- Next: [Chapter overview](../index.qmd)

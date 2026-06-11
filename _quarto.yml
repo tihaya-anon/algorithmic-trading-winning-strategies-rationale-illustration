@@ -8,12 +8,40 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: slides/video-lesson.qmd
-        text: Video Slides
-      - href: handouts/web-notes.qmd
-        text: Web Notes
-      - href: handouts/pdf-notes.qmd
-        text: PDF Notes
+      - href: chapters/index.qmd
+        text: Chapters
+      - text: Outputs
+        menu:
+          - href: slides/video-lesson.qmd
+            text: Video Slides
+          - href: handouts/web-notes.qmd
+            text: Web Notes
+          - href: handouts/pdf-notes.qmd
+            text: PDF Notes
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - href: index.qmd
+        text: Home
+      - href: chapters/index.qmd
+        text: All Chapters
+      - section: "Chapter 01. A Minimal Quant Research Loop"
+        contents:
+          - href: chapters/chapter-01/index.qmd
+            text: Overview
+          - href: chapters/chapter-01/sections/01-research-loop.qmd
+            text: "1.1 Research Loop"
+          - href: chapters/chapter-01/sections/02-net-returns-costs.qmd
+            text: "1.2 Net Returns and Costs"
+      - section: Outputs
+        contents:
+          - href: slides/video-lesson.qmd
+            text: Video Slides
+          - href: handouts/web-notes.qmd
+            text: Web Notes
+          - href: handouts/pdf-notes.qmd
+            text: PDF Notes
 
 format:
   html:

@@ -1,0 +1,52 @@
+---
+title: "1.1 Research Loop"
+subtitle: "Chapter 01. A Minimal Quant Research Loop"
+---
+
+# Research Loop
+
+A compact quant research loop should make every assumption visible:
+
+1. define the signal
+2. turn the signal into a position
+3. shift the position so it is decided before the return is realized
+4. subtract explicit trading costs
+5. inspect the failure modes, not just the summary metrics
+
+# Baseline Return Model
+
+For a simple daily strategy:
+
+$$
+r^{\text{net}}_t = w_{t-1} r_t - c_t
+$$
+
+where:
+
+- $w_{t-1}$ is the position known before the return is realized
+- $r_t$ is the asset return over the next step
+- $c_t$ aggregates fees, spread, slippage, and market impact assumptions
+
+# Minimal Implementation Shape
+
+```python
+import numpy as np
+import pandas as pd
+
+def summarize_returns(returns: pd.Series) -> dict[str, float]:
+    ann_return = float(returns.mean() * 252)
+    ann_vol = float(returns.std() * np.sqrt(252))
+    sharpe = ann_return / ann_vol if ann_vol else 0.0
+    max_drawdown = float((returns.cumsum() - returns.cumsum().cummax()).min())
+    return {
+        "ann_return": ann_return,
+        "ann_vol": ann_vol,
+        "sharpe": sharpe,
+        "max_drawdown": max_drawdown,
+    }
+```
+
+# Reading Path
+
+- Previous: [Chapter overview](../index.qmd)
+- Next: [1.2 Net Returns and Costs](02-net-returns-costs.qmd)
