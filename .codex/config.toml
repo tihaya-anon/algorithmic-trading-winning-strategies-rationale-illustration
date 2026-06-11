@@ -1,0 +1,21 @@
+[mcp_servers.book-knowledge]
+command = "uv"
+args = [
+    "run",
+    "--directory",
+    "/home/yxluo/workspace/personal/algorithmic-trading-winning-strategies-rationale/knowledge",
+    "knowledge-mcp",
+]
+env = { UV_CACHE_DIR = "/tmp/uv-cache" }
+
+[mcp_servers.book-knowledge.tools.list_documents]
+approval_mode = "approve"
+
+[mcp_servers.book-knowledge.tools.search_chunks]
+approval_mode = "approve"
+
+[mcp_servers.book-knowledge.tools.read_chunk]
+approval_mode = "approve"
+
+[mcp_servers.book-knowledge.tools.read_page_range]
+approval_mode = "approve"
