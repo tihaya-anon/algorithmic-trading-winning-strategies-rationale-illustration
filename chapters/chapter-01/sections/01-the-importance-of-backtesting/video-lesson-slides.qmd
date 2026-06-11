@@ -1,0 +1,277 @@
+---
+title: "1.1 The Importance of Backtesting"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    auto-slide: 9000
+    auto-slide-stoppable: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+execute:
+  echo: true
+---
+
+## Backtesting Is an Execution Rehearsal
+
+::: columns
+::: {.column width="58%"}
+Not:
+
+**"Did the chart go up?"**
+
+But:
+
+**"Could this exact rule have traded with only the information available then?"**
+:::
+
+::: {.column width="42%"}
+| Research | Execution |
+|---|---|
+| hypothesis | order type |
+| signal | timestamp |
+| history | venue |
+| result | constraint |
+:::
+:::
+
+::: {.notes}
+Open by reframing the job. A backtest is not a chart generator. It is a
+rehearsal for the live system. The question is whether the code could have made
+the same decision at the same time in the real market.
+:::
+
+## The Contract: One Rule, Two Feeds
+
+::: columns
+::: {.column width="50%"}
+**Backtest**
+
+historical data in<br>
+orders and fills out
+:::
+
+::: {.column width="50%"}
+**Live**
+
+live market data in<br>
+orders and fills out
+:::
+:::
+
+Same strategy function. Different feed.
+
+::: {.notes}
+This is the strongest guardrail against look-ahead bias from the chapter. If
+the same source can run in backtest and live mode, future information has no
+place to enter the decision path.
+:::
+
+## Details Move Returns
+
+::: columns
+::: {.column width="50%"}
+**"Close" is not one thing**
+
+- primary exchange auction
+- consolidated last trade
+- futures settlement
+:::
+
+::: {.column width="50%"}
+**"Entry" is not one thing**
+
+- market-on-open
+- just after the open
+- bid, ask, or last
+:::
+:::
+
+::: {.notes}
+Chan's warning is practical: the same strategy idea can look profitable or
+broken depending on these details. Published descriptions often omit them, so
+the backtest has to make them explicit.
+:::
+
+## Run the Research Loop
+
+1. state the hypothesis
+2. define instrument, venue, timestamp, and order
+3. create signals from available information
+4. convert signals into delayed positions
+5. subtract costs and constraints
+6. freeze before final validation
+
+::: {.notes}
+This slide gives the operating rhythm for the course. The loop is iterative,
+but the final validation cannot be repeatedly tuned against. Once the rule is
+changed after seeing the validation result, that data has become part of
+research.
+:::
+
+## Pitfall 1: Tomorrow Leaks Into Today
+
+::: columns
+::: {.column width="46%"}
+**Unsafe**
+
+```python
+signal_t = price_t.high > threshold
+position_t = signal_t
+```
+:::
+
+::: {.column width="54%"}
+**Safe shape**
+
+```python
+signal = raw_signal.shift(1)
+position = signal.clip(-1, 1)
+net_return = position * returns - costs
+```
+:::
+:::
+
+::: {.notes}
+Use the high/low example because it is concrete. The high and low of a daily
+bar are known only after the day is complete. The visible shift is the reminder
+that today's exposure must come from yesterday's known signal.
+:::
+
+## Pitfall 2: Validation Becomes Training
+
+::: columns
+::: {.column width="56%"}
+The trap:
+
+1. test a rule
+2. dislike the validation result
+3. tweak the rule
+4. repeat until it passes
+:::
+
+::: {.column width="44%"}
+The defense:
+
+- simple rules
+- fixed holdout periods
+- cross-validation when data are scarce
+- walk-forward testing before confidence
+:::
+:::
+
+::: {.notes}
+The chapter emphasizes that out-of-sample testing is easier to recommend than
+to practice. The moment we tune on the holdout, it is no longer a clean holdout.
+Keep this slide conversational: the audience should recognize the behavior.
+:::
+
+## Pitfall 3: The Data Was Never Tradable
+
+::: columns
+::: {.column width="50%"}
+**Stocks**
+
+- delisted names missing
+- splits and dividends unadjusted
+- primary exchange price replaced by consolidated price
+:::
+
+::: {.column width="50%"}
+**Other markets**
+
+- wrong futures roll or settlement
+- currency quotes from a different venue
+- short-sale rules ignored
+:::
+:::
+
+::: {.notes}
+This slide links data quality to actual execution. Survivorship bias can make a
+long-only mean-reversion strategy look better than it was. Primary exchange
+prices matter for market-on-open and market-on-close orders.
+:::
+
+## Trust Comes in Three Gates
+
+| Gate | What must be true? |
+|---|---|
+| Mechanical validity | no impossible information or impossible trade |
+| Statistical evidence | result is hard to explain under a clear null |
+| Future relevance | market structure has not made the edge stale |
+
+::: {.notes}
+Do not let one metric answer all three questions. A high Sharpe ratio cannot
+rescue a look-ahead bug, and a clean historical result can still fail after a
+regime shift.
+:::
+
+## A Minimal Backtest Skeleton
+
+```python
+def backtest_one_period(returns, raw_signal, cost_per_turnover):
+    signal = raw_signal.shift(1)
+    position = signal.clip(-1, 1)
+    turnover = position.diff().abs().fillna(position.abs())
+    costs = cost_per_turnover * turnover
+    net_return = position * returns - costs
+
+    return position, turnover, net_return
+```
+
+::: {.notes}
+Keep the code short. The teaching point is not Python syntax. The point is that
+the delay, turnover, and net return are visible in one place.
+:::
+
+## Summary Before You Trust a Curve
+
+::: columns
+::: {.column width="33%"}
+**Same rule**
+
+Could it run live?
+:::
+
+::: {.column width="33%"}
+**Same timing**
+
+Was information available?
+:::
+
+::: {.column width="33%"}
+**Same market**
+
+Was the venue tradable?
+:::
+:::
+
+::: {.notes}
+This is the Minto-style close: three checks that summarize the section. Same
+rule, same timing, same market. Transition to the next section by saying that
+even after these are true, gross performance is still not tradable.
+:::
+
+## Review Question
+
+Before trusting the result, ask:
+
+**Could the same function run live if we replaced historical data with a live
+feed?**
+
+::: {.notes}
+If the answer is no, the backtest may still be a research sketch, but it is not
+yet an execution-ready strategy.
+:::

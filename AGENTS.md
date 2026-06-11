@@ -2,15 +2,17 @@
 
 ## Project Structure & Module Organization
 
-This is a Quarto course-material repository for `algorithmic-trading-winning-strategies-rationale`. `_quarto.yml` defines the website, navigation, formats, and shared execution settings. `index.qmd` is the site home. `chapters/` is the canonical source tree, using section folders such as `chapters/chapter-01/sections/01-backtesting-as-research-loop/`.
+This is a Quarto course-material repository for `algorithmic-trading-winning-strategies-rationale`. `_quarto.yml` defines the website, navigation, formats, and shared execution settings. `index.qmd` is the site home. `chapters/` is the canonical source tree, using section folders such as `chapters/chapter-01/sections/01-the-importance-of-backtesting/`.
 
 Content is organized by section. Each section has three deliverables: narration-backed `video-lesson-slides.qmd`, browser `web-notes.qmd`, and printable `pdf-notes.qmd`. Slides should be engaging, visually strong, and may simplify details. `web-notes` and `pdf-notes` should be nearly identical; prefer SVG for web images and TIFF or PNG for PDF images.
 
-Shared CSS is in `styles/`, figures and fonts are in `assets/`, and routing sync logic is in `scripts/sync-section-structure.sh`. Treat `_site/`, `.quarto/`, rendered HTML, PDF, TeX, and logs as generated output.
+Shared CSS is in `styles/`, figures and fonts are in `assets/`, routing sync logic is in `scripts/sync-section-structure.sh`, and output-format sync logic is in `scripts/sync-output-formats.sh`. Treat `_site/`, `.quarto/`, rendered HTML, PDF, TeX, and logs as generated output.
 
 ## Build, Test, and Development Commands
 
 - Agents must not run `quarto render` or `quarto preview`; ask a human to execute render/preview commands.
+- `scripts/sync-output-formats.sh` regenerates per-file Quarto `format`, `execute`, and PDF header settings for section outputs.
+- `scripts/sync-output-formats.sh --check` verifies section output settings are current without rendering.
 - `scripts/sync-section-structure.sh` regenerates `_quarto.yml`, `chapters/index.qmd`, and CI routing from section folders.
 - `scripts/sync-section-structure.sh --check` verifies generated routing is current without rendering.
 - `scripts/sync-section-structure.sh --verify-rendered` checks `_site` artifacts after a human has rendered.
@@ -18,11 +20,11 @@ Shared CSS is in `styles/`, figures and fonts are in `assets/`, and routing sync
 
 ## Coding Style & Naming Conventions
 
-Use Quarto Markdown with YAML front matter at the top of each `.qmd` file. Prefer clear ATX headings (`#`, `##`), short paragraphs, and two-space indentation in YAML. Name chapter directories `chapter-NN` and section directories `NN-descriptive-slug`. Use lowercase, hyphenated filenames unless an upstream asset requires otherwise. For shell scripts, keep the existing Bash style: `set -euo pipefail`, small helpers, and quoted paths.
+Use Quarto Markdown with YAML front matter at the top of each `.qmd` file. For section outputs, authors should only maintain descriptive metadata such as `title`, `subtitle`, `author`, and `date`; do not hand-edit generated `format`, `execute`, or `include-in-header` blocks. Prefer clear ATX headings (`#`, `##`), short paragraphs, and two-space indentation in YAML. Name chapter directories `chapter-NN` and section directories `NN-descriptive-slug`. Use lowercase, hyphenated filenames unless an upstream asset requires otherwise. For shell scripts, keep the existing Bash style: `set -euo pipefail`, small helpers, and quoted paths.
 
 ## Testing Guidelines
 
-There is no separate automated test suite. Agents should run non-render checks only: `bash -n scripts/sync-section-structure.sh` and `scripts/sync-section-structure.sh --check`. When adding chapters or sections, run the sync script instead of editing `_quarto.yml` or CI by hand. Ask a human to render the smallest affected `.qmd` file and then `quarto render`.
+There is no separate automated test suite. Agents should run non-render checks only: `bash -n scripts/sync-output-formats.sh`, `scripts/sync-output-formats.sh --check`, `bash -n scripts/sync-section-structure.sh`, and `scripts/sync-section-structure.sh --check`. When adding chapters or sections, run the sync scripts instead of editing formats, `_quarto.yml`, or CI by hand. Ask a human to render the smallest affected `.qmd` file and then `quarto render`.
 
 ## Agent-Specific Instructions
 

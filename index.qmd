@@ -33,14 +33,14 @@ It covers the constraints that matter for a quant course:
 
 - [Chapter Index](chapters/index.qmd)
 - [Chapter 01 Overview](chapters/chapter-01/index.qmd)
-- 1.1 Backtesting as a Research Loop:
-  [video](chapters/chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd),
-  [web](chapters/chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd),
-  [PDF](chapters/chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd)
-- 1.2 Net Returns and Costs:
-  [video](chapters/chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd),
-  [web](chapters/chapter-01/sections/02-net-returns-costs/web-notes.qmd),
-  [PDF](chapters/chapter-01/sections/02-net-returns-costs/pdf-notes.qmd)
+- 1.1 The Importance of Backtesting:
+  [video](chapters/chapter-01/sections/01-the-importance-of-backtesting/video-lesson-slides.qmd),
+  [web](chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.qmd),
+  [PDF](chapters/chapter-01/sections/01-the-importance-of-backtesting/pdf-notes.qmd)
+- 1.2 Common Pitfalls of Backtesting:
+  [video](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd),
+  [web](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd),
+  [PDF](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd)
 - [Project README](README.md)
 
 # Chapter-Section Structure
@@ -52,7 +52,7 @@ chapters/
   chapter-01/
     index.qmd
     sections/
-      01-backtesting-as-research-loop/
+      01-the-importance-of-backtesting/
         video-lesson-slides.qmd
         web-notes.qmd
         pdf-notes.qmd

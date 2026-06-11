@@ -7,37 +7,37 @@ subtitle: "Overview"
 
 This chapter introduces the discipline behind a usable backtest:
 
-1. define a trading hypothesis before inspecting results
-2. implement the signal with only available historical information
-3. match the backtest assumptions to the execution venue and order type
-4. review costs, constraints, and statistical reliability before trusting the result
+1. independently verify even published strategies
+2. connect backtesting assumptions to automated execution assumptions
+3. separate exploratory model revision from true out-of-sample testing
+4. audit the data, venue, and implementation pitfalls that inflate results
 
 # Sections
 
-## 1.1 Backtesting as a Research Loop
+## 1.1 The Importance of Backtesting
 
-[Open web notes](sections/01-backtesting-as-research-loop/web-notes.qmd)
+[Open web notes](sections/01-the-importance-of-backtesting/web-notes.qmd)
 
-The first section explains why a backtest must specify implementation details,
-avoid look-ahead and data-snooping bias, and stay close to executable trading
-logic.
-
-Outputs:
-[video](sections/01-backtesting-as-research-loop/video-lesson-slides.qmd),
-[web](sections/01-backtesting-as-research-loop/web-notes.qmd),
-[PDF](sections/01-backtesting-as-research-loop/pdf-notes.qmd)
-
-## 1.2 Net Returns and Costs
-
-[Open web notes](sections/02-net-returns-costs/web-notes.qmd)
-
-The second section separates gross signal behavior from transaction costs,
-slippage, and position timing.
+The first section explains why traders should independently backtest strategies,
+including published strategies, before trusting reported performance.
 
 Outputs:
-[video](sections/02-net-returns-costs/video-lesson-slides.qmd),
-[web](sections/02-net-returns-costs/web-notes.qmd),
-[PDF](sections/02-net-returns-costs/pdf-notes.qmd)
+[video](sections/01-the-importance-of-backtesting/video-lesson-slides.qmd),
+[web](sections/01-the-importance-of-backtesting/web-notes.qmd),
+[PDF](sections/01-the-importance-of-backtesting/pdf-notes.qmd)
+
+## 1.2 Common Pitfalls of Backtesting
+
+[Open web notes](sections/02-common-pitfalls-of-backtesting/web-notes.qmd)
+
+The second section reviews look-ahead bias, data-snooping bias, corporate
+actions, survivorship bias, consolidated stock prices, and venue-specific
+currency quotes.
+
+Outputs:
+[video](sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd),
+[web](sections/02-common-pitfalls-of-backtesting/web-notes.qmd),
+[PDF](sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd)
 
 # Output Links
 

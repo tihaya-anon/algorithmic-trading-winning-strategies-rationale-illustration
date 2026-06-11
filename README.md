@@ -14,6 +14,10 @@ may simplify details; web and PDF notes should stay nearly identical in
 substance. Prefer SVG figures for web notes, and PNG or TIFF exports for PDF
 notes when final figures are available.
 
+Section authors should maintain only descriptive front matter such as `title`,
+`subtitle`, `author`, and `date`. Do not hand-write output `format` blocks in
+section files; generate them with `scripts/sync-output-formats.sh`.
+
 ## Chapter-Section Structure
 
 Use `chapters/` as the canonical content source:
@@ -25,11 +29,11 @@ chapters/
   chapter-01/
     index.qmd
     sections/
-      01-backtesting-as-research-loop/
+      01-the-importance-of-backtesting/
         video-lesson-slides.qmd
         web-notes.qmd
         pdf-notes.qmd
-      02-net-returns-costs/
+      02-common-pitfalls-of-backtesting/
         video-lesson-slides.qmd
         web-notes.qmd
         pdf-notes.qmd
@@ -42,12 +46,15 @@ matches reading order.
 After adding, renaming, or removing a chapter or section folder, run:
 
 ```bash
+scripts/sync-output-formats.sh
 scripts/sync-section-structure.sh
 ```
 
-This regenerates `_quarto.yml`, `chapters/index.qmd`, and CI routing from the
-directory tree. Do not hand-maintain section links in `_quarto.yml` or the
-publish workflow.
+The first command regenerates per-file Quarto output settings for slides, web
+notes, and PDF notes. The second command regenerates `_quarto.yml`,
+`chapters/index.qmd`, and CI routing from the directory tree. Do not
+hand-maintain output formats, section links in `_quarto.yml`, or the publish
+workflow.
 
 ## Local Setup
 
@@ -117,7 +124,8 @@ The workflow in `.github/workflows/publish.yml` renders the entire Quarto
 project in CI, including section-level PDF notes, then deploys the generated
 `_site/` directory as a static GitHub Pages artifact.
 
-CI runs `scripts/sync-section-structure.sh --check` before rendering and
+CI runs `scripts/sync-output-formats.sh --check` and
+`scripts/sync-section-structure.sh --check` before rendering, then
 `scripts/sync-section-structure.sh --verify-rendered` after rendering, so the
 artifact checks stay aligned with section folders automatically.
 
@@ -174,12 +182,12 @@ structure changes, ask a human to run the relevant command:
 ```bash
 quarto render chapters/index.qmd
 quarto render chapters/chapter-01/index.qmd
-quarto render chapters/chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd
-quarto render chapters/chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd
-quarto render chapters/chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd
-quarto render chapters/chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd
-quarto render chapters/chapter-01/sections/02-net-returns-costs/web-notes.qmd
-quarto render chapters/chapter-01/sections/02-net-returns-costs/pdf-notes.qmd
+quarto render chapters/chapter-01/sections/01-the-importance-of-backtesting/video-lesson-slides.qmd
+quarto render chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.qmd
+quarto render chapters/chapter-01/sections/01-the-importance-of-backtesting/pdf-notes.qmd
+quarto render chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd
+quarto render chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd
+quarto render chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd
 quarto render
 ```
 

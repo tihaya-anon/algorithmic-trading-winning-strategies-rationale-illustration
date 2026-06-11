@@ -29,6 +29,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-mono
 
+      - name: Check generated output settings
+        run: scripts/sync-output-formats.sh --check
+
       - name: Check generated section routing
         run: scripts/sync-section-structure.sh --check
 

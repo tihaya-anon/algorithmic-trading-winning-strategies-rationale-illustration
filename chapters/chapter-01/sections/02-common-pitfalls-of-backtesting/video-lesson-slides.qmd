@@ -1,0 +1,238 @@
+---
+title: "1.2 Common Pitfalls of Backtesting"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    auto-slide: 9000
+    auto-slide-stoppable: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+execute:
+  echo: true
+---
+
+## Gross Is Not Tradable
+
+::: columns
+::: {.column width="52%"}
+Gross returns ask:
+
+**Did the signal point the right way?**
+:::
+
+::: {.column width="48%"}
+Net returns ask:
+
+**Did the edge survive trading?**
+:::
+:::
+
+The second question is the only one a portfolio can spend.
+
+::: {.notes}
+Start with the contrast. Gross performance is useful for research, but it is
+not a trading decision. Net performance is where costs, timing, and capacity
+meet the signal.
+:::
+
+## The One-Period Test
+
+$$
+r^{\text{net}}_t = w_{t-1}r_t - c_t
+$$
+
+::: columns
+::: {.column width="33%"}
+**$w_{t-1}$**
+
+position already known
+:::
+
+::: {.column width="33%"}
+**$r_t$**
+
+next-period return
+:::
+
+::: {.column width="33%"}
+**$c_t$**
+
+cost of changing exposure
+:::
+:::
+
+::: {.notes}
+This formula forces two disciplines: position first, return second; trade
+first, cost second. Many inflated backtests violate one of those two
+relationships.
+:::
+
+## Costs Follow Change
+
+$$
+\text{Turnover}_t = |w_t - w_{t-1}|
+$$
+
+::: columns
+::: {.column width="50%"}
+No change:
+
+$$w_t = w_{t-1}$$
+
+low trading cost
+:::
+
+::: {.column width="50%"}
+Big change:
+
+$$|w_t - w_{t-1}| \uparrow$$
+
+costs rise
+:::
+:::
+
+::: {.notes}
+Costs are not charged because a position exists. They are mostly charged
+because the portfolio changes. This is why turnover is the first diagnostic
+after gross returns.
+:::
+
+## A Useful First Cost Model
+
+$$
+c_t = \alpha \cdot \text{Turnover}_t + \beta \cdot \sigma_t
+$$
+
+::: columns
+::: {.column width="50%"}
+**Direct costs**
+
+commissions, fees, spread
+:::
+
+::: {.column width="50%"}
+**Liquidity costs**
+
+slippage, impact, volatility
+:::
+:::
+
+::: {.notes}
+This is intentionally simple. Alpha captures costs that scale with trading.
+Beta times volatility stands in for market impact or slippage that gets worse
+when the market is harder to trade.
+:::
+
+## The Curve Is Evidence, Not Verdict
+
+![](../../../../assets/example-pnl.svg){fig-alt="Example cumulative PnL line chart" width="86%"}
+
+Ask what would happen after:
+
+- realistic spread and slippage
+- borrow or financing cost
+- larger order size
+
+::: {.notes}
+The audience will naturally focus on the line. Redirect them to the missing
+assumptions. A smooth curve before costs is a hypothesis, not a conclusion.
+:::
+
+## Sharpe Can Hide the Pain
+
+::: columns
+::: {.column width="52%"}
+![](../../../../assets/example-histogram.svg){fig-alt="Example returns histogram" width="100%"}
+:::
+
+::: {.column width="48%"}
+Check what the average hides:
+
+- tail losses
+- skew
+- volatility clustering
+- rare event dependence
+:::
+:::
+
+::: {.notes}
+The distribution slide prevents the audience from over-reading a smooth
+cumulative PnL chart. The same mean return can come with very different tail
+risk.
+:::
+
+## Capacity Is a Cost Test
+
+::: columns
+::: {.column width="50%"}
+**Small size**
+
+signal may clear the spread
+:::
+
+::: {.column width="50%"}
+**Larger size**
+
+fills move the market
+:::
+:::
+
+Net returns must be retested at the size you intend to trade.
+
+::: {.notes}
+Capacity is where the cost model becomes practical. Doubling capital does not
+necessarily double net returns. It can increase impact and make fills less
+representative of the backtest.
+:::
+
+## Summary Before You Trust Net Returns
+
+::: columns
+::: {.column width="33%"}
+**Timing**
+
+positions are shifted
+:::
+
+::: {.column width="33%"}
+**Trading**
+
+costs follow turnover
+:::
+
+::: {.column width="33%"}
+**Scale**
+
+capacity is stress-tested
+:::
+:::
+
+::: {.notes}
+This summary restates the three ideas the learner should keep: timing,
+turnover, and scale. Then move into the closing checklist as the action step.
+:::
+
+## Review Before Trust
+
+- Is the position shifted before returns are applied?
+- Are costs applied to turnover?
+- Are borrow, spread, and slippage visible assumptions?
+- Does performance survive realistic capacity constraints?
+
+::: {.notes}
+Close by turning the section into a checklist. This makes the next coding or
+research step clear.
+:::

@@ -14,17 +14,17 @@ website:
         text: Chapters
       - text: Section Outputs
         menu:
-          - href: chapters/chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd
+          - href: chapters/chapter-01/sections/01-the-importance-of-backtesting/video-lesson-slides.qmd
             text: "1.1 Video Slides"
-          - href: chapters/chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd
+          - href: chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.qmd
             text: "1.1 Web Notes"
-          - href: chapters/chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd
+          - href: chapters/chapter-01/sections/01-the-importance-of-backtesting/pdf-notes.qmd
             text: "1.1 PDF Notes"
-          - href: chapters/chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd
+          - href: chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd
             text: "1.2 Video Slides"
-          - href: chapters/chapter-01/sections/02-net-returns-costs/web-notes.qmd
+          - href: chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd
             text: "1.2 Web Notes"
-          - href: chapters/chapter-01/sections/02-net-returns-costs/pdf-notes.qmd
+          - href: chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd
             text: "1.2 PDF Notes"
   sidebar:
     style: docked
@@ -38,21 +38,21 @@ website:
         contents:
           - href: chapters/chapter-01/index.qmd
             text: Overview
-          - section: "1.1 Backtesting as a Research Loop"
+          - section: "1.1 The Importance of Backtesting"
             contents:
-              - href: chapters/chapter-01/sections/01-backtesting-as-research-loop/video-lesson-slides.qmd
+              - href: chapters/chapter-01/sections/01-the-importance-of-backtesting/video-lesson-slides.qmd
                 text: Video Slides
-              - href: chapters/chapter-01/sections/01-backtesting-as-research-loop/web-notes.qmd
+              - href: chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.qmd
                 text: Web Notes
-              - href: chapters/chapter-01/sections/01-backtesting-as-research-loop/pdf-notes.qmd
+              - href: chapters/chapter-01/sections/01-the-importance-of-backtesting/pdf-notes.qmd
                 text: PDF Notes
-          - section: "1.2 Net Returns and Costs"
+          - section: "1.2 Common Pitfalls of Backtesting"
             contents:
-              - href: chapters/chapter-01/sections/02-net-returns-costs/video-lesson-slides.qmd
+              - href: chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd
                 text: Video Slides
-              - href: chapters/chapter-01/sections/02-net-returns-costs/web-notes.qmd
+              - href: chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd
                 text: Web Notes
-              - href: chapters/chapter-01/sections/02-net-returns-costs/pdf-notes.qmd
+              - href: chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd
                 text: PDF Notes
 
 format:

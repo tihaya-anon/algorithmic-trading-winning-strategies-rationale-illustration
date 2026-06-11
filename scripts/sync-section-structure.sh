@@ -251,6 +251,8 @@ chapters/
 
 The directory tree is the router. Run `scripts/sync-section-structure.sh` after
 adding, renaming, or removing section folders.
+Run `scripts/sync-output-formats.sh` after editing section front matter so
+generated output settings stay aligned with each file type.
 
 # Chapters
 
@@ -279,6 +281,8 @@ QMD
 - Put each section under `chapters/chapter-02/sections/NN-section-slug/`.
 - Include `video-lesson-slides.qmd`, `web-notes.qmd`, and `pdf-notes.qmd` in
   every section folder.
+- Keep section front matter focused on descriptive metadata such as `title` and
+  `subtitle`; run `scripts/sync-output-formats.sh` to add generated formats.
 - Run `scripts/sync-section-structure.sh`; do not hand-edit generated routing.
 QMD
   } > "$out"
@@ -317,6 +321,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-mono
+
+      - name: Check generated output settings
+        run: scripts/sync-output-formats.sh --check
 
       - name: Check generated section routing
         run: scripts/sync-section-structure.sh --check
