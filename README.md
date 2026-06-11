@@ -89,7 +89,7 @@ quarto install tinytex
 ```
 
 Install Noto fonts so English and Simplified Chinese render consistently in
-HTML, reveal.js slides, and PDF output:
+HTML and reveal.js slides:
 
 ```bash
 sudo apt-get update
@@ -97,15 +97,22 @@ sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-mono
 ```
 
 The HTML and reveal.js outputs use a sans-serif font stack. The PDF notes use
-XeLaTeX with Noto Serif CJK SC as the main serif font so English and Chinese
-text share a stable font path.
+XeLaTeX with repository-bundled Noto CJK fonts under `assets/fonts/` so PDF
+rendering does not depend on host font installation.
+Add these files to `assets/fonts/`:
+
+- `NotoSerifCJKsc-Regular.otf`
+- `NotoSerifCJKsc-Bold.otf`
+- `NotoSansCJKsc-Regular.otf`
+- `NotoSansCJKsc-Bold.otf`
+
 Code blocks use Maple Mono NF CN from `assets/fonts/`, so the website and PDF do
 not depend on Maple Mono being installed on the runner.
 The bundled Maple Mono font files are licensed under the SIL Open Font License
 1.1; keep `assets/fonts/OFL-MapleMono.txt` with the fonts when copying them into
 another repository. Upstream project: https://github.com/subframe7536/maple-font
-For GitHub Actions on Ubuntu runners, install the same font packages before
-`quarto render`.
+For GitHub Actions on Ubuntu runners, system Noto packages are still useful for
+HTML and reveal.js output, but PDF rendering should use the bundled font files.
 
 If TinyTeX setup happens in GitHub Actions, pass the workflow token to avoid
 anonymous GitHub API rate limits:

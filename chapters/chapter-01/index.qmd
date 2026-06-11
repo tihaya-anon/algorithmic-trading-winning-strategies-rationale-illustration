@@ -21,9 +21,8 @@ This chapter introduces the discipline behind a usable backtest:
 The first section explains why traders should independently backtest strategies,
 including published strategies, before trusting reported performance.
 
-Outputs:
+Alternate formats:
 [video](sections/01-the-importance-of-backtesting/video-lesson-slides.qmd),
-[web](sections/01-the-importance-of-backtesting/web-notes.qmd),
 [PDF](sections/01-the-importance-of-backtesting/pdf-notes.qmd)
 
 ## 1.2 Common Pitfalls of Backtesting
@@ -34,9 +33,8 @@ The second section reviews look-ahead bias, data-snooping bias, corporate
 actions, survivorship bias, consolidated stock prices, and venue-specific
 currency quotes.
 
-Outputs:
+Alternate formats:
 [video](sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd),
-[web](sections/02-common-pitfalls-of-backtesting/web-notes.qmd),
 [PDF](sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd)
 
 # Output Links

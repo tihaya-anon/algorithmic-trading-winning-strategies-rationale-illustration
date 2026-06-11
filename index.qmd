@@ -32,14 +32,13 @@ It covers the constraints that matter for a quant course:
 # Files
 
 - [Chapter Index](chapters/index.qmd)
-- [Chapter 01 Overview](chapters/chapter-01/index.qmd)
-- 1.1 The Importance of Backtesting:
+- [1.1 The Importance of Backtesting](chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.qmd)  
+  Alternate formats:
   [video](chapters/chapter-01/sections/01-the-importance-of-backtesting/video-lesson-slides.qmd),
-  [web](chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.qmd),
   [PDF](chapters/chapter-01/sections/01-the-importance-of-backtesting/pdf-notes.qmd)
-- 1.2 Common Pitfalls of Backtesting:
+- [1.2 Common Pitfalls of Backtesting](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd)  
+  Alternate formats:
   [video](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd),
-  [web](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd),
   [PDF](chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd)
 - [Project README](README.md)
 
@@ -59,7 +58,7 @@ chapters/
 ```
 
 Add new chapters by copying that pattern, then add the pages to the website
-sidebar in `_quarto.yml`.
+sidebar via `scripts/sync-section-structure.sh`.
 
 # Suggested Workflow
 

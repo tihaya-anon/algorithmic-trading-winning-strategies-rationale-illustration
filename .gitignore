@@ -11,6 +11,10 @@ site_libs/
 *.toc
 *.synctex.gz
 
+!styles/web-note-modal.html
+
+chapters/**/downloads/
+
 /.DS_Store
 Thumbs.db
 

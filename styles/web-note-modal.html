@@ -1,0 +1,19 @@
+<div id="section-inline-modal" class="section-inline-modal" hidden aria-hidden="true">
+  <div class="section-inline-modal__backdrop" data-modal-close></div>
+  <div class="section-inline-modal__panel" role="dialog" aria-modal="true" aria-labelledby="section-inline-modal-title">
+    <div class="section-inline-modal__header">
+      <button type="button" class="section-inline-modal__icon section-inline-modal__icon--back" data-modal-close aria-label="Back"></button>
+      <div id="section-inline-modal-title" class="section-inline-modal__title">Viewer</div>
+      <div class="section-inline-modal__actions">
+        <button type="button" class="section-inline-modal__icon section-inline-modal__icon--copy" id="section-inline-modal-copy" aria-label="Copy markdown" hidden></button>
+        <button type="button" class="section-inline-modal__icon section-inline-modal__icon--download" id="section-inline-modal-download" aria-label="Download markdown" hidden></button>
+        <button type="button" class="section-inline-modal__icon section-inline-modal__icon--expand" id="section-inline-modal-expand" aria-label="Toggle fullscreen"></button>
+      </div>
+    </div>
+    <iframe id="section-inline-modal-frame" class="section-inline-modal__frame" title="Embedded viewer"></iframe>
+    <div id="section-inline-modal-markdown" class="section-inline-modal__markdown" hidden>
+      <pre class="markdown-viewer"><code id="section-inline-modal-markdown-code"></code></pre>
+    </div>
+  </div>
+</div>
+<script src="../../../../styles/web-note-modal.js"></script>

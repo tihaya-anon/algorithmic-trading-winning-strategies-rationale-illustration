@@ -5,16 +5,14 @@ subtitle: "PDF notes | Chapter 01. Backtesting and Automated Execution"
 format:
   pdf:
     pdf-engine: xelatex
-    mainfont: "NotoSerifCJK-Regular.ttc"
+    mainfont: "NotoSerifCJKsc-Regular.otf"
     mainfontoptions:
-      - "Path=/usr/share/fonts/opentype/noto/"
-      - "FontIndex=2"
-      - "BoldFont=NotoSerifCJK-Bold.ttc"
-    sansfont: "NotoSansCJK-Regular.ttc"
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
     sansfontoptions:
-      - "Path=/usr/share/fonts/opentype/noto/"
-      - "FontIndex=2"
-      - "BoldFont=NotoSansCJK-Bold.ttc"
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
     monofont: "MapleMono-NF-CN-Regular.ttf"
     monofontoptions:
       - "Path=../../../../assets/fonts/"

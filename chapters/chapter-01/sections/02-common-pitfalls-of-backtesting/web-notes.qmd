@@ -8,8 +8,20 @@ format:
     toc-depth: 3
     number-sections: true
     code-fold: show
-    code-tools: true
+    code-tools: false
+include-after-body:
+  - ../../../../styles/web-note-modal.html
 ---
+
+::: {.section-output-links}
+[Slides](video-lesson-slides.qmd){.action-video aria-label="Open video lesson slides" data-modal="video" data-label="Video lesson slides" data-tooltip="Slides"}
+<span aria-hidden="true">/</span>
+[PDF](pdf-notes.qmd){.action-pdf aria-label="Open PDF notes" data-tooltip="PDF"}
+<span aria-hidden="true">/</span>
+[Markdown](downloads/section.json){.action-markdown aria-label="Open raw markdown viewer" data-modal="markdown" data-label="Markdown" data-tooltip="Markdown" data-markdown-src="downloads/section.json"}
+<span aria-hidden="true">/</span>
+[Bundle](downloads/section-bundle.zip){.action-bundle aria-label="Download markdown bundle" data-tooltip="Bundle"}
+:::
 
 # Why Pitfalls Matter
 
@@ -170,7 +182,4 @@ that transaction costs and apparent opportunities are venue-specific.
 - Do open, close, high, and low prices match the execution venue?
 - Do currency quotes and spreads come from venues the live strategy can access?
 
-# Reading Path
-
-- Previous: [1.1 The Importance of Backtesting](../01-the-importance-of-backtesting/web-notes.qmd)
 - Next: [Chapter overview](../../index.qmd)

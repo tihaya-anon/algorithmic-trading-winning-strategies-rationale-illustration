@@ -104,7 +104,7 @@ strip_generated_metadata() {
       return line ~ /^[^[:space:]#][^:]*:[[:space:]]*/
     }
     function is_generated_key(line) {
-      return line ~ /^(format|execute|include-in-header):[[:space:]]*/
+      return line ~ /^(format|execute|include-in-header|include-after-body):[[:space:]]*/
     }
     {
       if (skipping && is_top_level_key($0)) {
@@ -175,7 +175,9 @@ format:
     toc-depth: 3
     number-sections: true
     code-fold: show
-    code-tools: true
+    code-tools: false
+include-after-body:
+  - ../../../../styles/web-note-modal.html
 YAML
       ;;
     pdf-notes.qmd)
@@ -183,16 +185,14 @@ YAML
 format:
   pdf:
     pdf-engine: xelatex
-    mainfont: "NotoSerifCJK-Regular.ttc"
+    mainfont: "NotoSerifCJKsc-Regular.otf"
     mainfontoptions:
-      - "Path=/usr/share/fonts/opentype/noto/"
-      - "FontIndex=2"
-      - "BoldFont=NotoSerifCJK-Bold.ttc"
-    sansfont: "NotoSansCJK-Regular.ttc"
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
     sansfontoptions:
-      - "Path=/usr/share/fonts/opentype/noto/"
-      - "FontIndex=2"
-      - "BoldFont=NotoSansCJK-Bold.ttc"
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
     monofont: "MapleMono-NF-CN-Regular.ttf"
     monofontoptions:
       - "Path=../../../../assets/fonts/"

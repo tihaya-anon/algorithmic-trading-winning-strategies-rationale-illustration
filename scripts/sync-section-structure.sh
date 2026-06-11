@@ -156,24 +156,6 @@ website:
         text: Home
       - href: chapters/index.qmd
         text: Chapters
-      - text: Section Outputs
-        menu:
-YAML
-
-    while IFS= read -r chapter_dir; do
-      while IFS= read -r section_dir; do
-        label="$(section_label "$chapter_dir" "$section_dir")"
-        section_rel="$(relpath "$section_dir")"
-        printf '          - href: %s/video-lesson-slides.qmd\n' "$section_rel"
-        printf '            text: %s\n' "$(yaml_quote "$label Video Slides")"
-        printf '          - href: %s/web-notes.qmd\n' "$section_rel"
-        printf '            text: %s\n' "$(yaml_quote "$label Web Notes")"
-        printf '          - href: %s/pdf-notes.qmd\n' "$section_rel"
-        printf '            text: %s\n' "$(yaml_quote "$label PDF Notes")"
-      done < <(for_each_section "$chapter_dir")
-    done < <(for_each_chapter)
-
-    cat <<'YAML'
   sidebar:
     style: docked
     search: true
@@ -188,19 +170,11 @@ YAML
       chapter_title="$(front_matter_title "$chapter_dir/index.qmd" "$(basename -- "$chapter_dir")")"
       printf '      - section: %s\n' "$(yaml_quote "$chapter_title")"
       printf '        contents:\n'
-      printf '          - href: %s/index.qmd\n' "$(relpath "$chapter_dir")"
-      printf '            text: Overview\n'
       while IFS= read -r section_dir; do
         section_title="$(front_matter_title "$section_dir/web-notes.qmd" "$(basename -- "$section_dir")")"
         section_rel="$(relpath "$section_dir")"
-        printf '          - section: %s\n' "$(yaml_quote "$section_title")"
-        printf '            contents:\n'
-        printf '              - href: %s/video-lesson-slides.qmd\n' "$section_rel"
-        printf '                text: Video Slides\n'
-        printf '              - href: %s/web-notes.qmd\n' "$section_rel"
-        printf '                text: Web Notes\n'
-        printf '              - href: %s/pdf-notes.qmd\n' "$section_rel"
-        printf '                text: PDF Notes\n'
+        printf '          - href: %s/web-notes.qmd\n' "$section_rel"
+        printf '            text: %s\n' "$(yaml_quote "$section_title")"
       done < <(for_each_section "$chapter_dir")
     done < <(for_each_chapter)
 
@@ -260,15 +234,14 @@ QMD
 
     while IFS= read -r chapter_dir; do
       chapter_title="$(front_matter_title "$chapter_dir/index.qmd" "$(basename -- "$chapter_dir")")"
-      chapter_rel="$(relpath "$chapter_dir")"
       printf '## %s\n\n' "$chapter_title"
-      printf -- '- [Overview](%s/index.qmd)\n' "${chapter_rel#chapters/}"
       while IFS= read -r section_dir; do
         section_title="$(front_matter_title "$section_dir/web-notes.qmd" "$(basename -- "$section_dir")")"
         section_rel="$(relpath "$section_dir")"
         section_rel="${section_rel#chapters/}"
-        printf -- '- %s: [video](%s/video-lesson-slides.qmd), [web](%s/web-notes.qmd), [PDF](%s/pdf-notes.qmd)\n' \
-          "$section_title" "$section_rel" "$section_rel" "$section_rel"
+        printf -- '- [%s](%s/web-notes.qmd)  \n' "$section_title" "$section_rel"
+        printf -- '  Alternate formats: [video](%s/video-lesson-slides.qmd), [PDF](%s/pdf-notes.qmd)\n' \
+          "$section_rel" "$section_rel"
       done < <(for_each_section "$chapter_dir")
       printf '\n'
     done < <(for_each_chapter)
