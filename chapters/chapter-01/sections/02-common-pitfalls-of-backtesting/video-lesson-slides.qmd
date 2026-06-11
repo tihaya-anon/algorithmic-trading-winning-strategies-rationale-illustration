@@ -44,12 +44,16 @@ than the strategy could have achieved.
 
 ## Look-ahead bias enters when today's signal uses tomorrow's information.
 
+::: {.split-visual-slide}
 ::: columns
 ::: {.column width="50%"}
-![](figures/look-ahead-timing.svg){fig-alt="Flow showing that same-day high and low are unknown at the morning decision, so the entry signal cannot use them" width="100%"}
+::: {.visual-frame}
+![](figures/look-ahead-timing.svg){fig-alt="Flow showing that same-day high and low are unknown at the morning decision, so the entry signal cannot use them"}
+:::
 :::
 
 ::: {.column width="50%"}
+::: {.explain-card}
 ```python
 # unsafe in a same-day signal
 signal_t = high_t > threshold
@@ -57,6 +61,8 @@ signal_t = high_t > threshold
 # safer shape
 signal_t = raw_signal.shift(1)
 ```
+:::
+:::
 :::
 :::
 
@@ -71,7 +77,11 @@ information available before the return is earned.
 
 ## Shared backtest and live logic blocks one major source of look-ahead bias.
 
-![](figures/shared-strategy-function.svg){fig-alt="Historical feed and live feed both entering one strategy function that produces orders" width="82%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/shared-strategy-function.svg){fig-alt="Historical feed and live feed both entering one strategy function that produces orders"}
+:::
+:::
 
 | If the code path differs | If only the data feed differs |
 |---|---|
@@ -88,7 +98,11 @@ a backtest-only rule that could never run in the live market.
 
 ## Validation stops being validation after the model is tuned to pass it.
 
-![](figures/holdout-tuning-loop.svg){fig-alt="Loop showing holdout testing, poor result, parameter tweaking, and retesting on the same holdout" width="68%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/holdout-tuning-loop.svg){fig-alt="Loop showing holdout testing, poor result, parameter tweaking, and retesting on the same holdout"}
+:::
+:::
 
 ::: {.notes}
 Data-snooping bias starts when a model has enough freedom to fit random
@@ -135,7 +149,11 @@ before the signal uses it.
 
 ## A survivor-only database makes recovery look predictable.
 
-![](figures/survivorship-database.svg){fig-alt="Database filter showing survived stocks included and delisted or failed stocks missing" width="86%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/survivorship-database.svg){fig-alt="Database filter showing survived stocks included and delisted or failed stocks missing"}
+:::
+:::
 
 | Mean-reversion trade | Bias direction |
 |---|---|
@@ -159,7 +177,11 @@ exactly the information the live trader did not have.
 | Market-on-close | primary closing auction |
 | Signal from high/low | representative executable range |
 
-![](figures/auction-price-mismatch.svg){fig-alt="Comparison showing secondary venue odd print is not equal to primary auction fill" width="72%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/auction-price-mismatch.svg){fig-alt="Comparison showing secondary venue odd print is not equal to primary auction fill"}
+:::
+:::
 
 ::: {.notes}
 U.S. stocks trade across many venues, but market-on-open and market-on-close

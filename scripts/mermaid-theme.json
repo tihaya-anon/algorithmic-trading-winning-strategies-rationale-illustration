@@ -1,0 +1,7 @@
+{
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "\"Noto Sans\", \"Noto Sans CJK SC\", \"Source Han Sans SC\", \"Microsoft YaHei\", \"PingFang SC\", \"Hiragino Sans GB\", \"Avenir Next\", \"Segoe UI\", Arial, sans-serif"
+  },
+  "themeCSS": ".label, .cluster-label, .edgeLabel, .nodeLabel, foreignObject div, foreignObject span, text, tspan { font-family: \"Noto Sans\", \"Noto Sans CJK SC\", \"Source Han Sans SC\", \"Microsoft YaHei\", \"PingFang SC\", \"Hiragino Sans GB\", \"Avenir Next\", \"Segoe UI\", Arial, sans-serif !important; }"
+}

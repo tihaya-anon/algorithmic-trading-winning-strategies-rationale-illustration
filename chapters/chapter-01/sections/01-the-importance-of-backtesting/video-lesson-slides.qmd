@@ -26,6 +26,7 @@ execute:
 
 ## A backtest is useful only when it rehearses the live strategy.
 
+::: {.split-visual-slide}
 ::: columns
 ::: {.column width="50%"}
 | Mode | Input | Output |
@@ -35,7 +36,10 @@ execute:
 :::
 
 ::: {.column width="50%"}
-![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions" width="100%"}
+::: {.visual-frame}
+![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions"}
+:::
+:::
 :::
 :::
 
@@ -68,7 +72,11 @@ backtesting forces these choices into the strategy definition.
 
 ## Independent backtesting turns an idea into an executable rule.
 
-![](figures/executable-rule-pipeline.svg){fig-alt="Pipeline from published idea to executable rule through instrument, venue, timestamp, order type, backtest code, and execution code" width="82%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/executable-rule-pipeline.svg){fig-alt="Pipeline from published idea to executable rule through instrument, venue, timestamp, order type, backtest code, and execution code"}
+:::
+:::
 
 ::: {.notes}
 Independent backtesting is not only a check on someone else's return number. It
@@ -98,7 +106,11 @@ most pitfalls make backtested performance look too good.
 
 ## True out-of-sample testing begins after the rule is frozen.
 
-![](figures/out-of-sample-boundary.svg){fig-alt="Timeline showing research period, publication boundary, and validation period" width="90%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/out-of-sample-boundary.svg){fig-alt="Timeline showing research period, publication boundary, and validation period"}
+:::
+:::
 
 ::: {.notes}
 The phrase out-of-sample can be misleading before the rule is frozen. If a
@@ -111,7 +123,11 @@ for revision.
 
 ## Backtesting is an experiment cycle with a hard validation boundary.
 
-![](figures/backtesting-experiment-cycle.svg){fig-alt="Experiment cycle from hypothesis to implementation to backtest result, revision, frozen rule, and walk-forward test" width="92%"}
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/backtesting-experiment-cycle.svg){fig-alt="Experiment cycle from hypothesis to implementation to backtest result, revision, frozen rule, and walk-forward test"}
+:::
+:::
 
 ::: {.notes}
 Backtesting follows the scientific method. We start with a hypothesis about an

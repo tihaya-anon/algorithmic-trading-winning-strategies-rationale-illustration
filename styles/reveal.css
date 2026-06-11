@@ -35,6 +35,16 @@ body {
   color: #1f2430;
 }
 
+:root {
+  --slide-paper: #fbf8f1;
+  --slide-ink: #1f2430;
+  --slide-accent: #8f2d14;
+  --slide-accent-soft: #d9a441;
+  --slide-border: rgba(143, 45, 20, 0.18);
+  --slide-shadow: 0 16px 48px rgba(31, 36, 48, 0.09);
+  --slide-card-shadow: 0 10px 30px rgba(31, 36, 48, 0.08);
+}
+
 .reveal {
   font-family:
     "Noto Sans",
@@ -54,6 +64,10 @@ body {
 
 .reveal .slides {
   text-align: left;
+}
+
+.reveal .slides section {
+  box-sizing: border-box;
 }
 
 .reveal h1,
@@ -83,4 +97,93 @@ body {
     monospace;
   max-height: 520px;
   font-size: 0.8em;
+}
+
+.reveal .visual-slide {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.35em;
+}
+
+.reveal .visual-frame {
+  width: min(100%, 1200px);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5%;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(251, 248, 241, 0.96)),
+    radial-gradient(circle at top left, rgba(217, 164, 65, 0.18), transparent 38%);
+  border: 1px solid var(--slide-border);
+  border-radius: 28px;
+  box-shadow: var(--slide-shadow);
+  overflow: hidden;
+}
+
+.reveal .visual-frame img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  margin: 0;
+}
+
+.reveal .split-visual-slide {
+  margin-top: 0.25em;
+}
+
+.reveal .split-visual-slide .columns {
+  align-items: stretch;
+  gap: 1.2rem;
+}
+
+.reveal .split-visual-slide .column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reveal .split-visual-slide .visual-frame {
+  width: 100%;
+}
+
+.reveal .explain-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 100%;
+  padding: 1.1rem 1.25rem;
+  background: rgba(255, 252, 247, 0.94);
+  border: 1px solid rgba(143, 45, 20, 0.12);
+  border-left: 6px solid var(--slide-accent-soft);
+  border-radius: 24px;
+  box-shadow: var(--slide-card-shadow);
+}
+
+.reveal .explain-card > *:first-child {
+  margin-top: 0;
+}
+
+.reveal .explain-card > *:last-child {
+  margin-bottom: 0;
+}
+
+.reveal .explain-card p,
+.reveal .explain-card ul,
+.reveal .explain-card ol {
+  font-size: 0.9em;
+}
+
+.reveal .explain-card pre {
+  width: 100%;
+  margin: 0;
+  box-shadow: none;
+}
+
+.reveal .explain-card pre code {
+  max-height: 420px;
+  border-radius: 16px;
 }
