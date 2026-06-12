@@ -60,7 +60,6 @@ have.
 
 ## A one-period shift keeps the signal available before the trade.
 
-::: {.explain-card}
 ```python
 # unsafe in a same-day signal
 signal_t = high_t > threshold
@@ -68,7 +67,6 @@ signal_t = high_t > threshold
 # safer shape
 signal_t = raw_signal.shift(1)
 ```
-:::
 
 ::: {.notes}
 A safer implementation delays the raw signal so the position only uses

@@ -86,6 +86,45 @@ body {
   color: #6b7280;
 }
 
+.reveal .code-copy-outer-scaffold {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0.9em 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.reveal .code-copy-button {
+  display: none !important;
+}
+
+.reveal div.sourceCode {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto !important;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible !important;
+}
+
+.reveal pre {
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  font-size: 0.76em;
+}
+
 .reveal pre code {
   font-family:
     "Maple Mono NF CN",
@@ -95,8 +134,31 @@ body {
     Consolas,
     "Liberation Mono",
     monospace;
-  max-height: 520px;
-  font-size: 0.8em;
+  display: block;
+  max-width: 100%;
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  font-size: 1em;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.reveal pre.numberSource code>span,
+.reveal pre>code.sourceCode>span {
+  display: block;
+  padding-left: 0 !important;
+  text-indent: 0 !important;
+}
+
+.reveal pre.numberSource code>span>a:first-child {
+  display: none;
+}
+
+.reveal pre.numberSource code>span>a:first-child::before {
+  content: none !important;
+  display: none !important;
 }
 
 .reveal .visual-slide {
@@ -158,43 +220,4 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-}
-
-.reveal .explain-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.7rem;
-  min-height: 100%;
-  padding: 1.1rem 1.25rem;
-  background: rgba(255, 252, 247, 0.94);
-  border: 1px solid rgba(143, 45, 20, 0.12);
-  border-left: 6px solid var(--slide-accent);
-  border-radius: 24px;
-  box-shadow: var(--slide-card-shadow);
-}
-
-.reveal .explain-card>*:first-child {
-  margin-top: 0;
-}
-
-.reveal .explain-card>*:last-child {
-  margin-bottom: 0;
-}
-
-.reveal .explain-card p,
-.reveal .explain-card ul,
-.reveal .explain-card ol {
-  font-size: 0.9em;
-}
-
-.reveal .explain-card pre {
-  width: 100%;
-  margin: 0;
-  box-shadow: none;
-}
-
-.reveal .explain-card pre code {
-  max-height: 420px;
-  border-radius: 16px;
 }
