@@ -1,11 +1,18 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
-flowchart LR
-  A["Before open<br/>decision time"]
-  B["During day<br/>path unfolds"]
-  C["After close<br/>high/low known"]
-  D["Unsafe signal<br/>uses high_t"]
-  E["Safe signal<br/>uses information already known"]
-  F["Shift position<br/>trade after signal is known"]
+flowchart TB
+  subgraph timeline["Market day"]
+    direction LR
+    A["Before open: decision time"]
+    B["During day: path unfolds"]
+    C["After close: high/low known"]
+  end
+
+  subgraph decision["Signal timing"]
+    direction TB
+    D["Unsafe signal uses high_t"]
+    E["Safe signal uses information already known"]
+    F["Shift position after signal is known"]
+  end
 
   A --> B --> C
   C -. "leaks backward" .-> D

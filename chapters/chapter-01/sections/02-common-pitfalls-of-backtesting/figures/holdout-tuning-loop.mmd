@@ -1,24 +1,17 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
-flowchart TD
-  A["Train on in-sample data"]
-  B["Test on holdout"]
-  C{"Result disappoints?"}
-  D["Tweak parameters"]
-  E["Retest same holdout"]
-  F["Holdout becomes training data"]
-  G["Clean exit<br/>freeze rule"]
-  H["Final walk-forward test"]
+flowchart TB
+  A["Validation checkpoint<br/>train in-sample, test holdout, choose response"]
+  D["Keep tuning<br/>tweak, retest same holdout<br/>holdout becomes training data"]
+  G["Stop tuning<br/>freeze rule, final walk-forward test"]
 
-  A --> B --> C
-  C -- "yes" --> D --> E --> F
-  F -. "data-snooping loop" .-> D
-  C -- "no" --> G --> H
+  A -- "weak result" --> D
+  A -- "usable result" --> G
+  D -. "data-snooping loop" .-> A
 
   classDef train fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
   classDef decision fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
   classDef trap fill:#fef2f2,stroke:#b91c1c,stroke-width:3px,color:#7f1d1d;
   classDef clean fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
-  class A,B train;
-  class C decision;
-  class D,E,F trap;
-  class G,H clean;
+  class A train;
+  class D trap;
+  class G clean;

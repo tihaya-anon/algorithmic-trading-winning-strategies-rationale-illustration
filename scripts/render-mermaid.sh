@@ -3,6 +3,7 @@ set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 theme_config="$script_dir/mermaid-theme.json"
+puppeteer_config="$script_dir/puppeteer-config.json"
 
 runner=()
 if command -v mmdc >/dev/null 2>&1; then
@@ -25,6 +26,7 @@ render_one() {
     -b transparent \
     -t default \
     -c "$theme_config" \
+    --puppeteerConfigFile "$puppeteer_config" \
     -w 1600 \
     -s 2
 }

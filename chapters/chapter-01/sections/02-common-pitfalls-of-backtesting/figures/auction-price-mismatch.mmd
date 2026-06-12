@@ -1,20 +1,21 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
-flowchart LR
+flowchart TB
   subgraph tape["Consolidated tape"]
-    A["Secondary venue<br/>odd print"]
-    B["Small size<br/>outlier price"]
+    direction LR
+    A["Secondary venue: odd print"]
+    B["Small size: outlier price"]
+    E["Mean-reversion backtest profits from unfillable price"]
+    A --> B --> E
   end
 
   subgraph auction["Primary exchange auction"]
+    direction LR
     C["MOO or MOC order"]
     D["Primary auction fill"]
+    F["Use primary-exchange open or close data"]
+    C --> D --> F
   end
 
-  E["Mean-reversion backtest<br/>profits from unfillable price"]
-  F["Use primary-exchange<br/>open or close data"]
-
-  A --> B --> E
-  C --> D --> F
   A -. "not equal to" .- D
   E -. "inflated result" .-> F
 

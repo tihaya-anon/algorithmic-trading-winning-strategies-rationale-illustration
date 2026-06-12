@@ -1,19 +1,26 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
-flowchart TD
+flowchart TB
   subgraph feeds["Only the data feed changes"]
-    H["Historical feed<br/>backtest mode"]
-    L["Live market feed<br/>production mode"]
+    direction LR
+    H["Historical feed: backtest mode"]
+    L["Live market feed: production mode"]
   end
 
   S["Same strategy logic"]
-  T["Same decision clock<br/>what is known now?"]
-  O["Same execution assumptions<br/>venue + order type + price field"]
+  subgraph discipline["Rehearsal discipline"]
+    direction LR
+    T["Same decision clock: what is known now?"]
+    O["Same execution assumptions: venue + order type + price field"]
+  end
   R["Comparable performance evidence"]
-  X["Hidden assumption<br/>breaks the rehearsal"]
+  X["Hidden assumption breaks the rehearsal"]
 
   H --> S
   L --> S
-  S --> T --> O --> R
+  S --> T
+  S --> O
+  T --> R
+  O --> R
   X -. "audit before trusting" .-> O
 
   classDef feed fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;

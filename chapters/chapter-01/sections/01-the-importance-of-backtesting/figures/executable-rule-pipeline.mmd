@@ -1,8 +1,9 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
-flowchart LR
+flowchart TB
   A["Published strategy idea"]
 
   subgraph spec["Make the rule executable"]
+    direction LR
     B1["Instrument"]
     B2["Venue"]
     B3["Timestamp"]
@@ -10,9 +11,12 @@ flowchart LR
     B5["Price field"]
   end
 
-  C["Backtest code<br/>explicit assumptions"]
-  D["Automated execution code<br/>same assumptions"]
-  E["Pitfall audit<br/>borrow, clocks, data, venues"]
+  subgraph implementation["Carry assumptions into execution"]
+    direction LR
+    C["Backtest code: explicit assumptions"]
+    E["Pitfall audit<br/>borrow, clocks, data, venues"]
+    D["Automated execution code: same assumptions"]
+  end
 
   A --> B1
   A --> B2

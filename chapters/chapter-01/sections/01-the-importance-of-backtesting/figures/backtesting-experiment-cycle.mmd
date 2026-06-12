@@ -1,31 +1,12 @@
 %%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 42, "rankSpacing": 52, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e", "clusterBkg": "#ffffff", "clusterBorder": "#cbd5e1"}}}%%
-flowchart LR
-  subgraph R["Research loop"]
-    direction TB
-    A["1<br/>Hypothesis<br/>economic story"]
-    B["2<br/>Build rules<br/>data - signal - order"]
-    C["3<br/>Backtest<br/>returns + diagnostics"]
-    D{"4<br/>Usable<br/>evidence?"}
-    E["Revise<br/>idea or code"]
+flowchart TB
+  A["Research&nbsp;loop:&nbsp;hypothesis,&nbsp;rules,&nbsp;diagnostics,&nbsp;revise&nbsp;if&nbsp;weak"]
+  F["Validation&nbsp;boundary:&nbsp;freeze&nbsp;rule,&nbsp;walk-forward&nbsp;test,&nbsp;live&nbsp;evidence"]
+  H["Research&nbsp;log:&nbsp;dates&nbsp;+&nbsp;choices"]
 
-    A --> B --> C --> D
-    D -- "no" --> E --> A
-  end
+  A --> F
 
-  subgraph V["Validation boundary"]
-    direction TB
-    F["Freeze<br/>rule"]
-    G["Walk-forward<br/>test"]
-    I["Live<br/>evidence"]
-
-    F --> G --> I
-  end
-
-  D -- "yes" --> F
-
-  H["Research log<br/>dates + choices"]
-  H -. "record" .-> B
-  H -. "audit" .-> D
+  H -. "record and audit" .-> A
   H -. "protect" .-> F
 
   classDef idea fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
@@ -33,10 +14,6 @@ flowchart LR
   classDef decision fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
   classDef validation fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
   classDef log fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#334155,stroke-dasharray: 5 4;
-  class A,E idea;
-  class B,C build;
-  class D,F decision;
-  class G,I validation;
+  class A idea;
+  class F validation;
   class H log;
-  style R fill:#f8fafc,stroke:#94a3b8,stroke-width:2px,color:#334155;
-  style V fill:#f0fdf4,stroke:#86efac,stroke-width:2px,color:#14532d;

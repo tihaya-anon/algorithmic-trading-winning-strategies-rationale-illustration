@@ -3,11 +3,13 @@ flowchart LR
   A["All stocks visible<br/>at decision time"]
 
   subgraph current["Survivor-only database"]
+    direction TB
     B["Survived to today"]
     C["Included"]
   end
 
   subgraph missing["Missing history"]
+    direction TB
     D["Delisted"]
     E["Bankrupt"]
     F["Acquired"]

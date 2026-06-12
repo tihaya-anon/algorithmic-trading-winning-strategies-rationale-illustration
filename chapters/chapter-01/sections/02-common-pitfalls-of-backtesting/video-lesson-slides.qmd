@@ -44,15 +44,22 @@ than the strategy could have achieved.
 
 ## Look-ahead bias enters when today's signal uses tomorrow's information.
 
-::: {.split-visual-slide}
-::: columns
-::: {.column width="50%"}
+::: {.visual-slide}
 ::: {.visual-frame}
 ![](figures/look-ahead-timing.svg){fig-alt="Flow showing that same-day high and low are unknown at the morning decision, so the entry signal cannot use them"}
 :::
 :::
 
-::: {.column width="50%"}
+::: {.notes}
+Look-ahead bias means the backtest uses future information to make a current
+decision. A daily high or low is the cleanest example. Before the trading day is
+complete, the high and low are not known. If today's signal uses today's high,
+the backtest is making a decision with information the live program could not
+have.
+:::
+
+## A one-period shift keeps the signal available before the trade.
+
 ::: {.explain-card}
 ```python
 # unsafe in a same-day signal
@@ -62,17 +69,12 @@ signal_t = high_t > threshold
 signal_t = raw_signal.shift(1)
 ```
 :::
-:::
-:::
-:::
 
 ::: {.notes}
-Look-ahead bias means the backtest uses future information to make a current
-decision. A daily high or low is the cleanest example. Before the trading day is
-complete, the high and low are not known. If today's signal uses today's high,
-the backtest is making a decision with information the live program could not
-have. A safer implementation delays the raw signal so the position only uses
-information available before the return is earned.
+A safer implementation delays the raw signal so the position only uses
+information available before the return is earned. The code shape is simple:
+compute the raw condition, then shift it before it becomes a tradable position
+or same-day order decision.
 :::
 
 ## Shared backtest and live logic blocks one major source of look-ahead bias.
@@ -83,17 +85,26 @@ information available before the return is earned.
 :::
 :::
 
-| If the code path differs | If only the data feed differs |
-|---|---|
-| future columns can enter backtest logic | live constraints discipline the rule |
-| simulated rule may not be tradable | backtest rule is closer to execution |
-
 ::: {.notes}
 Chan's practical defense is to keep the backtest and live program as close as
 possible. If the strategy function is the same and only the data feed changes,
 future information has fewer places to enter. This design does not prove the
 strategy will make money, but it removes one major class of programming error:
 a backtest-only rule that could never run in the live market.
+:::
+
+## Different code paths create a backtest-only failure mode.
+
+| If the code path differs | If only the data feed differs |
+|---|---|
+| future columns can enter backtest logic | live constraints discipline the rule |
+| simulated rule may not be tradable | backtest rule is closer to execution |
+
+::: {.notes}
+The comparison makes the implementation risk explicit. If the backtest has a
+separate code path, it can accidentally use columns, timestamps, or order
+assumptions that production code never sees. If only the data feed changes,
+the live constraints discipline the backtest rule.
 :::
 
 ## Validation stops being validation after the model is tuned to pass it.
@@ -155,27 +166,42 @@ before the signal uses it.
 :::
 :::
 
+::: {.notes}
+Survivorship bias appears when the database contains only securities that still
+exist today. For a long-only mean-reversion rule, this is especially dangerous.
+The strategy may buy stocks that fell sharply, but the database keeps the names
+that later recovered and removes many names that failed.
+:::
+
+## Mean-reversion backtests are most exposed to survivor-only universes.
+
 | Mean-reversion trade | Bias direction |
 |---|---|
 | Long the biggest losers | performance inflated |
 | Short failed firms | profits omitted |
 
 ::: {.notes}
-Survivorship bias appears when the database contains only securities that still
-exist today. For a long-only mean-reversion rule, this is especially dangerous.
-The strategy may buy stocks that fell sharply, but the database keeps the names
-that later recovered and removes many names that failed. The backtest then
-acts as if the trader knew which beaten-down stocks would survive, which is
-exactly the information the live trader did not have.
+The backtest then acts as if the trader knew which beaten-down stocks would
+survive, which is exactly the information the live trader did not have. The
+table highlights why long loser portfolios can look too strong and why short
+failed firms can disappear from the reported opportunity set.
 :::
 
-## Auction strategies need primary-exchange prices, not consolidated outliers.
+## Live auction orders require primary-exchange auction prices.
 
 | Order in live trading | Price needed in the backtest |
 |---|---|
 | Market-on-open | primary opening auction |
 | Market-on-close | primary closing auction |
 | Signal from high/low | representative executable range |
+
+::: {.notes}
+U.S. stocks trade across many venues, but market-on-open and market-on-close
+orders route to the primary exchange auction. The table separates the live
+order from the historical price field the backtest must use.
+:::
+
+## Auction strategies fail when consolidated outliers stand in for fills.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -184,12 +210,11 @@ exactly the information the live trader did not have.
 :::
 
 ::: {.notes}
-U.S. stocks trade across many venues, but market-on-open and market-on-close
-orders route to the primary exchange auction. A consolidated open or close may
-come from a different venue, and a small secondary-market print can be far from
-the auction price. A mean-reversion backtest can then profit from a price the
-strategy could not actually fill. Auction strategies need primary-exchange
-auction prices, or the result should be treated with skepticism.
+A consolidated open or close may come from a different venue, and a small
+secondary-market print can be far from the auction price. A mean-reversion
+backtest can then profit from a price the strategy could not actually fill.
+Auction strategies need primary-exchange auction prices, or the result should
+be treated with skepticism.
 :::
 
 ## Forex backtests are venue-specific because quotes and spreads are venue-specific.

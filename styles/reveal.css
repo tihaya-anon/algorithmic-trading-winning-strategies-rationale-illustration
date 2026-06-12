@@ -102,14 +102,21 @@ body {
 .reveal .visual-slide {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 0.35em;
 }
 
 .reveal .visual-frame {
   width: 100%;
+  height: min(62vh, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.reveal .visual-frame img {
+.reveal .visual-frame img,
+.reveal .visual-frame svg {
   display: block;
   width: 100%;
   height: 100%;
