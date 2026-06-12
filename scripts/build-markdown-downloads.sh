@@ -10,7 +10,8 @@ Generate downloadable Markdown artifacts for each web-notes section:
   downloads/section.json
   downloads/section-bundle.zip
 
-The Markdown export strips QMD front matter and local web-only link blocks.
+The Markdown export writes title/subtitle as visible Markdown heading text and
+strips local web-only link blocks.
 The bundle zip contains the generated Markdown plus any locally referenced image
 assets used by that section.
 
@@ -61,9 +62,10 @@ for_each_web_notes() {
 
 split_qmd() {
   local file="$1"
-  local body="$2"
+  local metadata="$2"
+  local body="$3"
 
-  awk -v body="$body" '
+  awk -v metadata="$metadata" -v body="$body" '
     NR == 1 {
       if ($0 != "---") {
         exit 10
@@ -74,6 +76,10 @@ split_qmd() {
     in_yaml && $0 == "---" {
       in_yaml = 0
       found_end = 1
+      next
+    }
+    in_yaml {
+      print > metadata
       next
     }
     !in_yaml && found_end {
@@ -90,16 +96,44 @@ split_qmd() {
 render_markdown_body() {
   local source="$1"
   local output="$2"
+  local metadata="$tmp_dir/metadata.yml"
   local body="$tmp_dir/body.qmd"
+  local title subtitle
 
+  : > "$metadata"
   : > "$body"
-  split_qmd "$source" "$body"
+  split_qmd "$source" "$metadata" "$body"
+  title="$(
+    awk '/^title:[[:space:]]*/ {
+      sub(/^title:[[:space:]]*/, "", $0)
+      gsub(/^"|"$/, "", $0)
+      print
+      exit
+    }' "$metadata"
+  )"
+  subtitle="$(
+    awk '/^subtitle:[[:space:]]*/ {
+      sub(/^subtitle:[[:space:]]*/, "", $0)
+      gsub(/^"|"$/, "", $0)
+      print
+      exit
+    }' "$metadata"
+  )"
 
-  awk '
-    /^:::[[:space:]]+\{\.section-output-links\}[[:space:]]*$/ { skip = 1; next }
-    skip && /^:::[[:space:]]*$/ { skip = 0; next }
-    !skip { print }
-  ' "$body" > "$output"
+  {
+    [[ -n "$title" ]] && printf '# %s\n\n' "$title"
+    [[ -n "$subtitle" ]] && printf '_%s_\n\n' "$subtitle"
+    awk '
+      /^:::[[:space:]]+\{\.section-output-links\}[[:space:]]*$/ { skip = 1; next }
+      skip && /^:::[[:space:]]*$/ { skip = 0; next }
+      !skip { print }
+    ' "$body" | awk '
+      !seen && /^[[:space:]]*$/ { next }
+      { seen = 1 }
+      /^#{1,5}[[:space:]]/ { print "#" $0; next }
+      { print }
+    '
+  } > "$output"
 
   perl -0pi -e 's/\n# Reading Path\n.*\z/\n/s' "$output"
   perl -0pi -e 's/([[(][^)\n]*)video-lesson-slides\.qmd([)\]])/${1}video-lesson-slides.html$2/g; s/([[(][^)\n]*)pdf-notes\.qmd([)\]])/${1}pdf-notes.pdf$2/g; s/([[(][^)\n]*)web-notes\.qmd([)\]])/${1}web-notes.md$2/g' "$output"
