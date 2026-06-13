@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/shell/sync-section-structure.sh [--check|--verify-rendered]
@@ -42,8 +44,8 @@ case "${1:-}" in
     ;;
 esac
 
-repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
-tmp_dir="$(mktemp -d)"
+repo_root="$(repo_root_from_script "${BASH_SOURCE[0]}")"
+tmp_dir="$(make_temp_dir)"
 check_failed=0
 
 cleanup() {
@@ -51,14 +53,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-die() {
-  printf 'sync-section-structure: %s\n' "$*" >&2
-  exit 1
-}
-
 relpath() {
-  local path="$1"
-  printf '%s\n' "${path#"$repo_root"/}"
+  relpath_from_root "$repo_root" "$1"
 }
 
 yaml_quote() {
@@ -110,21 +106,21 @@ validate_tree() {
   for chapter_dir in "$repo_root"/chapters/chapter-*; do
     [[ -d "$chapter_dir" ]] || continue
     chapter_count=$((chapter_count + 1))
-    [[ -f "$chapter_dir/index.qmd" ]] || die "missing chapter index: $(relpath "$chapter_dir")/index.qmd"
-    [[ -d "$chapter_dir/sections" ]] || die "missing sections directory: $(relpath "$chapter_dir")/sections"
+    [[ -f "$chapter_dir/index.qmd" ]] || die "sync-section-structure" "missing chapter index: $(relpath "$chapter_dir")/index.qmd"
+    [[ -d "$chapter_dir/sections" ]] || die "sync-section-structure" "missing sections directory: $(relpath "$chapter_dir")/sections"
 
     for section_dir in "$chapter_dir"/sections/[0-9][0-9]-*; do
       [[ -d "$section_dir" ]] || continue
       section_count=$((section_count + 1))
       for required in video-lesson-slides.qmd web-notes.qmd pdf-notes.qmd; do
-        [[ -f "$section_dir/$required" ]] || die "missing $required in $(relpath "$section_dir")"
+        [[ -f "$section_dir/$required" ]] || die "sync-section-structure" "missing $required in $(relpath "$section_dir")"
       done
     done
   done
   shopt -u nullglob
 
-  [[ "$chapter_count" -gt 0 ]] || die "no chapters found under chapters/chapter-*"
-  [[ "$section_count" -gt 0 ]] || die "no sections found under chapters/chapter-*/sections/"
+  [[ "$chapter_count" -gt 0 ]] || die "sync-section-structure" "no chapters found under chapters/chapter-*"
+  [[ "$section_count" -gt 0 ]] || die "sync-section-structure" "no sections found under chapters/chapter-*/sections/"
 }
 
 for_each_chapter() {

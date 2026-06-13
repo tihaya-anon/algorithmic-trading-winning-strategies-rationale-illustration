@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/shell/build-markdown-downloads.sh [--check]
@@ -37,8 +39,8 @@ case "${1:-}" in
     ;;
 esac
 
-repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
-tmp_dir="$(mktemp -d)"
+repo_root="$(repo_root_from_script "${BASH_SOURCE[0]}")"
+tmp_dir="$(make_temp_dir)"
 check_failed=0
 
 cleanup() {
@@ -46,14 +48,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-die() {
-  printf 'build-markdown-downloads: %s\n' "$*" >&2
-  exit 1
-}
-
 relpath() {
-  local path="$1"
-  printf '%s\n' "${path#"$repo_root"/}"
+  relpath_from_root "$repo_root" "$1"
 }
 
 for_each_web_notes() {
@@ -90,7 +86,7 @@ split_qmd() {
         exit 11
       }
     }
-  ' "$file" || die "missing YAML front matter delimiters in $(relpath "$file")"
+  ' "$file" || die "build-markdown-downloads" "missing YAML front matter delimiters in $(relpath "$file")"
 }
 
 render_markdown_body() {

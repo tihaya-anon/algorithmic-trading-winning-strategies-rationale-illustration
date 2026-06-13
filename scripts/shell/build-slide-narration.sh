@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/shell/build-slide-narration.sh [options]
@@ -26,7 +28,7 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   exit 0
 fi
 
-repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+repo_root="$(repo_root_from_script "${BASH_SOURCE[0]}")"
 cd "$repo_root"
 
 export UV_CACHE_DIR="${UV_CACHE_DIR:-/tmp/uv-cache}"

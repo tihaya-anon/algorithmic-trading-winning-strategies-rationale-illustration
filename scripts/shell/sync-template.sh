@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/shell/sync-template.sh <target-dir> [infra|full] [--dry-run] [--overwrite-quarto-config]
@@ -18,12 +20,7 @@ Examples:
 USAGE
 }
 
-die() {
-  printf 'sync-template: %s\n' "$*" >&2
-  exit 1
-}
-
-command -v rsync >/dev/null 2>&1 || die "rsync is required"
+command -v rsync >/dev/null 2>&1 || die "sync-template" "rsync is required"
 
 mode="infra"
 target_input=""
@@ -62,15 +59,15 @@ done
   exit 64
 }
 
-source_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+source_root="$(repo_root_from_script "${BASH_SOURCE[0]}")"
 mkdir -p -- "$target_input"
 target_root="$(cd -- "$target_input" && pwd -P)"
 
-[[ "$source_root" != "$target_root" ]] || die "target must be different from the template repo"
+[[ "$source_root" != "$target_root" ]] || die "sync-template" "target must be different from the template repo"
 
 case "$target_root/" in
   "$source_root"/*)
-    die "target must not be inside the template repo"
+    die "sync-template" "target must not be inside the template repo"
     ;;
 esac
 
@@ -112,7 +109,7 @@ case "$mode" in
       "$source_root/" "$target_root/"
     ;;
   *)
-    die "unknown mode: $mode"
+    die "sync-template" "unknown mode: $mode"
     ;;
 esac
 

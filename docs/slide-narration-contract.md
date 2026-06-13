@@ -215,7 +215,8 @@ Preferred approach:
 - Add a Quarto/Pandoc filter or pre-render script that reads
   `narration/manifest.json`.
 - It injects `{data-autoslide="12640"}` into each slide heading in the generated
-  AST or a temporary render source.
+  AST or a temporary render source such as
+  `narration/video-lesson-slides.auto.qmd`.
 - Source `.qmd` files remain clean and author-owned.
 
 Fallback approach:
@@ -239,6 +240,7 @@ The check should fail when:
 
 - a slide has notes but no manifest entry;
 - a manifest entry points to a missing audio file;
+- the generated render-ready slide source is missing or stale;
 - `notes_hash` does not match the current notes;
 - `autoslide_ms` is not equal to `duration_ms + padding_ms`;
 - slide ids in the manifest no longer match current slide headings.

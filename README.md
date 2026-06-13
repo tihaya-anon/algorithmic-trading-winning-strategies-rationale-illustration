@@ -219,8 +219,10 @@ In practice you will likely want to set `auto-slide` per slide once your narrati
 
 The repository now includes a local narration pipeline that reads each section's
 `video-lesson-slides.qmd`, extracts `::: {.notes}` blocks, calls the adjacent
-`../tts` project, writes section-local audio files under `narration/`, and
-records `duration_ms` plus `autoslide_ms` in `narration/manifest.json`.
+`../tts` project, writes section-local audio files under `narration/`, records
+`duration_ms` plus `autoslide_ms` in `narration/manifest.json`, and generates a
+render-ready `narration/video-lesson-slides.auto.qmd` with per-slide
+`data-autoslide` attributes injected.
 
 ## Narration Pipeline
 
@@ -267,5 +269,11 @@ Default narration settings:
 - `format`: `mp3`
 - `padding_ms`: `800`
 
-Each manifest follows `docs/slide-narration-contract.md`. Authors should edit
-slide notes only; do not hand-edit `narration/manifest.json`.
+Each section now gets these generated narration artifacts:
+
+- `narration/manifest.json`
+- `narration/slide-NNN.mp3` or `.wav`
+- `narration/video-lesson-slides.auto.qmd`
+
+Authors should edit slide notes only; do not hand-edit generated narration
+artifacts.
