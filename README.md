@@ -3,6 +3,10 @@
 This directory contains a Quarto stack for course material based on Ernest P.
 Chan's algorithmic trading text.
 
+Repository scope note:
+see [docs/repository-boundary.md](docs/repository-boundary.md) for the intended
+split between this content repository and an external narration/video pipeline.
+
 ## Outputs
 
 - `video-lesson-slides.qmd`: reveal.js slides with narration notes
@@ -202,83 +206,17 @@ quarto render
 
 1. Put the core story into each section's `video-lesson-slides.qmd`.
 2. Keep narration in `::: {.notes}` blocks.
-3. Generate TTS from notes and align it with slide timing.
+3. Generate TTS from notes and align it with slide timing in `../course-video`.
 4. Put extra derivations, assumptions, and figures into `web-notes.qmd` and
    `pdf-notes.qmd`.
 5. Publish `_site/` to GitHub Pages and export PDF when needed.
 
 ## TTS / Video Notes
 
-Section slide decks demonstrate the key pieces:
+This repository keeps only the source `video-lesson-slides.qmd` files and their
+speaker notes. Narration audio, manifest files, render-ready autoplay slide
+sources, and video composition should live in `../course-video`.
 
-- reveal.js `auto-slide` for automatic pacing
-- speaker notes as a clean source for narration text
-- formula, code, and figure layout for quant topics
-
-In practice you will likely want to set `auto-slide` per slide once your narration timings are stable.
-
-The repository now includes a local narration pipeline that reads each section's
-`video-lesson-slides.qmd`, extracts `::: {.notes}` blocks, calls the adjacent
-`../tts` project, writes section-local audio files under `narration/`, records
-`duration_ms` plus `autoslide_ms` in `narration/manifest.json`, and generates a
-render-ready `narration/video-lesson-slides.auto.qmd` with per-slide
-`data-autoslide` attributes injected.
-
-The source `video-lesson-slides.qmd` is the web-reading version: manual paging,
-no default autoplay. The generated `video-lesson-slides.auto.qmd` is the video
-version: it turns autoplay back on and uses narration timings from the
-manifest.
-
-## Narration Pipeline
-
-Repository script layout:
-
-- `scripts/shell/`: user-facing shell entry points and sync scripts
-- `scripts/python/`: Python helpers run with `uv`
-
-Prerequisites:
-
-- `uv`
-- adjacent `../tts` repository with `uv sync` completed
-- `ffmpeg` and `ffprobe` when generating `.mp3`
-
-Generate narration for all sections:
-
-```bash
-scripts/shell/build-slide-narration.sh
-```
-
-Generate narration for one section:
-
-```bash
-scripts/shell/build-slide-narration.sh \
-  --section chapters/chapter-01/sections/01-the-importance-of-backtesting
-```
-
-Validate existing manifests and audio without calling TTS:
-
-```bash
-scripts/shell/build-slide-narration.sh --check
-```
-
-Generate WAV instead of MP3:
-
-```bash
-scripts/shell/build-slide-narration.sh --format wav
-```
-
-Default narration settings:
-
-- `voice`: `course-narrator-v1`
-- `model`: `hexgrad/Kokoro-82M`
-- `format`: `mp3`
-- `padding_ms`: `800`
-
-Each section now gets these generated narration artifacts:
-
-- `narration/manifest.json`
-- `narration/slide-NNN.mp3` or `.wav`
-- `narration/video-lesson-slides.auto.qmd`
-
-Authors should edit slide notes only; do not hand-edit generated narration
-artifacts.
+In practice you will likely want to set `auto-slide` per slide once your
+narration timings are stable, but the generated autoplay slide sources and
+their timing manifests belong in `../course-video`, not here.
