@@ -28,9 +28,9 @@ the provider can change without rewriting the manifest logic.
 
 Recommended first implementation:
 
-- `illustration/scripts/build-slide-narration.sh`: repository-facing command
+- `illustration/scripts/shell/build-slide-narration.sh`: repository-facing command
   that authors and checks call.
-- `illustration/scripts/build-slide-narration.py`: deterministic extraction,
+- `illustration/scripts/python/build_slide_narration.py`: deterministic extraction,
   hashing, manifest comparison, audio duration probing, and manifest writing.
 - `../tts`: adjacent Python project for local TTS models, dependencies, caches,
   and optional service code.
@@ -43,7 +43,7 @@ of this Quarto repository:
 ```text
 algorithmic-trading-winning-strategies-rationale/
   illustration/
-    scripts/build-slide-narration.sh
+    scripts/shell/build-slide-narration.sh
     chapters/.../narration/manifest.json
     chapters/.../narration/slide-001.mp3
   tts/
@@ -232,7 +232,7 @@ intrusive but depends on browser-time loading and path resolution.
 Add a non-render check command:
 
 ```text
-bash scripts/build-slide-narration.sh --check
+bash scripts/shell/build-slide-narration.sh --check
 ```
 
 The check should fail when:

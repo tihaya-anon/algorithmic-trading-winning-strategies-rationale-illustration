@@ -162,14 +162,14 @@ that transaction costs and apparent opportunities are venue-specific.
 
 # Pitfall Map
 
-| Pitfall | Backtest mistake | Practical defense |
-|---|---|---|
-| Look-ahead bias | Use information unavailable at the decision time | Share strategy logic between backtest and live trading |
-| Data-snooping bias | Tune rules until validation data look good | Use simple models, cross-validation, and walk-forward tests |
-| Corporate actions | Treat splits or dividends as economic price moves | Adjust historical prices before the signal uses them |
-| Survivorship bias | Exclude delisted securities | Use survivorship-bias-free data |
-| Consolidated prices | Test auction orders on non-auction prints | Use primary-exchange prices for MOO/MOC strategies |
-| FX venue mismatch | Test with quotes from venues you cannot trade | Match historical data to executable venues |
+| Pitfall             | Backtest mistake                                  | Practical defense                                           |
+| ------------------- | ------------------------------------------------- | ----------------------------------------------------------- |
+| Look-ahead bias     | Use information unavailable at the decision time  | Share strategy logic between backtest and live trading      |
+| Data-snooping bias  | Tune rules until validation data look good        | Use simple models, cross-validation, and walk-forward tests |
+| Corporate actions   | Treat splits or dividends as economic price moves | Adjust historical prices before the signal uses them        |
+| Survivorship bias   | Exclude delisted securities                       | Use survivorship-bias-free data                             |
+| Consolidated prices | Test auction orders on non-auction prints         | Use primary-exchange prices for MOO/MOC strategies          |
+| FX venue mismatch   | Test with quotes from venues you cannot trade     | Match historical data to executable venues                  |
 
 # Review Checklist
 

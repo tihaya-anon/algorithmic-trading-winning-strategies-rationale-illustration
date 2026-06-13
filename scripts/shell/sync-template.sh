@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: scripts/sync-template.sh <target-dir> [infra|full] [--dry-run] [--overwrite-quarto-config]
+Usage: scripts/shell/sync-template.sh <target-dir> [infra|full] [--dry-run] [--overwrite-quarto-config]
 
 Modes:
   infra  Sync reusable Quarto infrastructure only:
@@ -11,10 +11,10 @@ Modes:
   full   Sync this whole template, excluding .git, render caches, and outputs.
 
 Examples:
-  scripts/sync-template.sh ../my-course --dry-run
-  scripts/sync-template.sh ../my-course
-  scripts/sync-template.sh ../my-course --overwrite-quarto-config
-  scripts/sync-template.sh ../new-course full
+  scripts/shell/sync-template.sh ../my-course --dry-run
+  scripts/shell/sync-template.sh ../my-course
+  scripts/shell/sync-template.sh ../my-course --overwrite-quarto-config
+  scripts/shell/sync-template.sh ../new-course full
 USAGE
 }
 
@@ -62,7 +62,7 @@ done
   exit 64
 }
 
-source_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+source_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 mkdir -p -- "$target_input"
 target_root="$(cd -- "$target_input" && pwd -P)"
 

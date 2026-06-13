@@ -19,9 +19,9 @@ chapters/
         pdf-notes.qmd
 ```
 
-The directory tree is the router. Run `scripts/sync-section-structure.sh` after
+The directory tree is the router. Run `scripts/shell/sync-section-structure.sh` after
 adding, renaming, or removing section folders.
-Run `scripts/sync-output-formats.sh` after editing section front matter so
+Run `scripts/shell/sync-output-formats.sh` after editing section front matter so
 generated output settings stay aligned with each file type.
 
 # Chapters
@@ -41,5 +41,5 @@ generated output settings stay aligned with each file type.
 - Include `video-lesson-slides.qmd`, `web-notes.qmd`, and `pdf-notes.qmd` in
   every section folder.
 - Keep section front matter focused on descriptive metadata such as `title` and
-  `subtitle`; run `scripts/sync-output-formats.sh` to add generated formats.
-- Run `scripts/sync-section-structure.sh`; do not hand-edit generated routing.
+  `subtitle`; run `scripts/shell/sync-output-formats.sh` to add generated formats.
+- Run `scripts/shell/sync-section-structure.sh`; do not hand-edit generated routing.

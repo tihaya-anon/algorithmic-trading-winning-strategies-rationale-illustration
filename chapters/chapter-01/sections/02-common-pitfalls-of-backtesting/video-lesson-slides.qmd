@@ -26,12 +26,12 @@ execute:
 
 ## Most pitfalls make the simulated market easier than the live market.
 
-| Backtest shortcut | Live-trading reality | Main risk |
-|---|---|---|
-| Future information | Only current information | look-ahead |
-| Surviving stocks | Delistings and failures | survivorship |
-| Convenient prices | Executable prices | price mismatch |
-| Generic quotes | Venue-specific quotes | venue mismatch |
+| Backtest shortcut  | Live-trading reality     | Main risk      |
+| ------------------ | ------------------------ | -------------- |
+| Future information | Only current information | look-ahead     |
+| Surviving stocks   | Delistings and failures  | survivorship   |
+| Convenient prices  | Executable prices        | price mismatch |
+| Generic quotes     | Venue-specific quotes    | venue mismatch |
 
 ::: {.notes}
 Most backtesting pitfalls have the same direction of error: they make the
@@ -93,10 +93,10 @@ a backtest-only rule that could never run in the live market.
 
 ## Different code paths create a backtest-only failure mode.
 
-| If the code path differs | If only the data feed differs |
-|---|---|
+| If the code path differs                | If only the data feed differs        |
+| --------------------------------------- | ------------------------------------ |
 | future columns can enter backtest logic | live constraints discipline the rule |
-| simulated rule may not be tradable | backtest rule is closer to execution |
+| simulated rule may not be tradable      | backtest rule is closer to execution |
 
 ::: {.notes}
 The comparison makes the implementation risk explicit. If the backtest has a
@@ -124,11 +124,11 @@ still needed after the rule is fixed.
 
 ## Simpler linear rules leave fewer places to memorize noise.
 
-| Design choice | Fitting freedom | Backtest risk |
-|---|---|---|
-| Many nonlinear rules | many thresholds and exceptions | high |
-| Few linear terms | fewer knobs to tune | lower |
-| Equal-weight ranks | sampling accidents matter less | lower |
+| Design choice        | Fitting freedom                | Backtest risk |
+| -------------------- | ------------------------------ | ------------- |
+| Many nonlinear rules | many thresholds and exceptions | high          |
+| Few linear terms     | fewer knobs to tune            | lower         |
+| Equal-weight ranks   | sampling accidents matter less | lower         |
 
 ::: {.notes}
 The beauty of linearity is not that linear models are always true. The point is
@@ -141,11 +141,11 @@ extra data-snooping risk.
 
 ## Splits and dividends are accounting events, not trading signals.
 
-| Event | Price | Shares | Market value |
-|---|---:|---:|---:|
-| Before 2-for-1 split | 100 | 1 | 100 |
-| After 2-for-1 split | 50 | 2 | 100 |
-| Unadjusted price series | -50% |  | false signal |
+| Event                   | Price | Shares | Market value |
+| ----------------------- | ----: | -----: | -----------: |
+| Before 2-for-1 split    |   100 |      1 |          100 |
+| After 2-for-1 split     |    50 |      2 |          100 |
+| Unadjusted price series |  -50% |        | false signal |
 
 ::: {.notes}
 A stock split changes the share count and the quoted price, but it does not
@@ -173,10 +173,10 @@ that later recovered and removes many names that failed.
 
 ## Mean-reversion backtests are most exposed to survivor-only universes.
 
-| Mean-reversion trade | Bias direction |
-|---|---|
+| Mean-reversion trade    | Bias direction       |
+| ----------------------- | -------------------- |
 | Long the biggest losers | performance inflated |
-| Short failed firms | profits omitted |
+| Short failed firms      | profits omitted      |
 
 ::: {.notes}
 The backtest then acts as if the trader knew which beaten-down stocks would
@@ -187,11 +187,11 @@ failed firms can disappear from the reported opportunity set.
 
 ## Live auction orders require primary-exchange auction prices.
 
-| Order in live trading | Price needed in the backtest |
-|---|---|
-| Market-on-open | primary opening auction |
-| Market-on-close | primary closing auction |
-| Signal from high/low | representative executable range |
+| Order in live trading | Price needed in the backtest    |
+| --------------------- | ------------------------------- |
+| Market-on-open        | primary opening auction         |
+| Market-on-close       | primary closing auction         |
+| Signal from high/low  | representative executable range |
 
 ::: {.notes}
 U.S. stocks trade across many venues, but market-on-open and market-on-close
@@ -217,11 +217,11 @@ be treated with skepticism.
 
 ## Forex backtests are venue-specific because quotes and spreads are venue-specific.
 
-| Venue | Bid-ask quote | Tradable by our strategy? |
-|---|---|---|
-| Bank or ECN A | one spread | maybe |
-| Bank or ECN B | another spread | maybe |
-| Aggregated book | combined quotes | only if executable |
+| Venue           | Bid-ask quote   | Tradable by our strategy? |
+| --------------- | --------------- | ------------------------- |
+| Bank or ECN A   | one spread      | maybe                     |
+| Bank or ECN B   | another spread  | maybe                     |
+| Aggregated book | combined quotes | only if executable        |
 
 ::: {.notes}
 Currency markets are more fragmented than stock markets, and there is no rule
@@ -234,12 +234,12 @@ apparent opportunities are venue-specific too.
 
 ## A clean backtest matches live trading on information, universe, price, and venue.
 
-| Gate | Passing evidence |
-|---|---|
-| Information | no future fields in current signals |
-| Universe | delisted securities are represented |
-| Price | corporate actions and auction prices are handled |
-| Venue | historical quotes match executable venues |
+| Gate        | Passing evidence                                 |
+| ----------- | ------------------------------------------------ |
+| Information | no future fields in current signals              |
+| Universe    | delisted securities are represented              |
+| Price       | corporate actions and auction prices are handled |
+| Venue       | historical quotes match executable venues        |
 
 ::: {.notes}
 The review checklist for this section has four gates. First, the information

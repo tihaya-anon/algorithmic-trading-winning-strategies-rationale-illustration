@@ -1,6 +1,7 @@
 .quarto/
 _site/
 site_libs/
+.venv/
 
 *.html
 *.pdf
@@ -14,6 +15,7 @@ site_libs/
 !styles/web-note-modal.html
 
 chapters/**/downloads/
+chapters/**/narration/
 
 /.DS_Store
 Thumbs.db

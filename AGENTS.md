@@ -6,17 +6,17 @@ This is a Quarto course-material repository for `algorithmic-trading-winning-str
 
 Content is organized by section. Each section has three deliverables: narration-backed `video-lesson-slides.qmd`, browser `web-notes.qmd`, and printable `pdf-notes.qmd`. Slides should be engaging, visually strong, and may simplify details. `web-notes` and `pdf-notes` should be nearly identical; prefer SVG for web images and TIFF or PNG for PDF images.
 
-Shared CSS is in `styles/`, figures and fonts are in `assets/`, routing sync logic is in `scripts/sync-section-structure.sh`, and output-format sync logic is in `scripts/sync-output-formats.sh`. Treat `_site/`, `.quarto/`, rendered HTML, PDF, TeX, and logs as generated output.
+Shared CSS is in `styles/`, figures and fonts are in `assets/`, routing sync logic is in `scripts/shell/sync-section-structure.sh`, output-format sync logic is in `scripts/shell/sync-output-formats.sh`, and Python helpers are in `scripts/python/`. Treat `_site/`, `.quarto/`, rendered HTML, PDF, TeX, logs, and generated narration assets as output.
 
 ## Build, Test, and Development Commands
 
 - Agents must not run `quarto render` or `quarto preview`; ask a human to execute render/preview commands.
-- `scripts/sync-output-formats.sh` regenerates per-file Quarto `format`, `execute`, and PDF header settings for section outputs.
-- `scripts/sync-output-formats.sh --check` verifies section output settings are current without rendering.
-- `scripts/sync-section-structure.sh` regenerates `_quarto.yml`, `chapters/index.qmd`, and CI routing from section folders.
-- `scripts/sync-section-structure.sh --check` verifies generated routing is current without rendering.
-- `scripts/sync-section-structure.sh --verify-rendered` checks `_site` artifacts after a human has rendered.
-- `scripts/sync-template.sh ../my-course --dry-run` previews template sync changes.
+- `scripts/shell/sync-output-formats.sh` regenerates per-file Quarto `format`, `execute`, and PDF header settings for section outputs.
+- `scripts/shell/sync-output-formats.sh --check` verifies section output settings are current without rendering.
+- `scripts/shell/sync-section-structure.sh` regenerates `_quarto.yml`, `chapters/index.qmd`, and CI routing from section folders.
+- `scripts/shell/sync-section-structure.sh --check` verifies generated routing is current without rendering.
+- `scripts/shell/sync-section-structure.sh --verify-rendered` checks `_site` artifacts after a human has rendered.
+- `scripts/shell/sync-template.sh ../my-course --dry-run` previews template sync changes.
 
 ## Coding Style & Naming Conventions
 
@@ -24,7 +24,7 @@ Use Quarto Markdown with YAML front matter at the top of each `.qmd` file. For s
 
 ## Testing Guidelines
 
-There is no separate automated test suite. Agents should run non-render checks only: `bash -n scripts/sync-output-formats.sh`, `scripts/sync-output-formats.sh --check`, `bash -n scripts/sync-section-structure.sh`, and `scripts/sync-section-structure.sh --check`. When adding chapters or sections, run the sync scripts instead of editing formats, `_quarto.yml`, or CI by hand. Ask a human to render the smallest affected `.qmd` file and then `quarto render`.
+There is no separate automated test suite. Agents should run non-render checks only: `bash -n scripts/shell/sync-output-formats.sh`, `scripts/shell/sync-output-formats.sh --check`, `bash -n scripts/shell/sync-section-structure.sh`, `scripts/shell/sync-section-structure.sh --check`, and `scripts/shell/build-slide-narration.sh --check` when narration assets are in scope. When adding chapters or sections, run the sync scripts instead of editing formats, `_quarto.yml`, or CI by hand. Ask a human to render the smallest affected `.qmd` file and then `quarto render`.
 
 ## Agent-Specific Instructions
 

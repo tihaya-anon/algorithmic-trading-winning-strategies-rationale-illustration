@@ -58,7 +58,7 @@ chapters/
 ```
 
 Add new chapters by copying that pattern, then add the pages to the website
-sidebar via `scripts/sync-section-structure.sh`.
+sidebar via `scripts/shell/sync-section-structure.sh`.
 
 # Suggested Workflow
 

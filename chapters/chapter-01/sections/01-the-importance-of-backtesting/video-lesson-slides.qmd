@@ -26,10 +26,10 @@ execute:
 
 ## A backtest is useful only when it rehearses the live strategy.
 
-| Mode | Input | Output |
-|---|---|---|
-| Backtest | historical feed | simulated orders |
-| Live | market feed | executable orders |
+| Mode     | Input           | Output            |
+| -------- | --------------- | ----------------- |
+| Backtest | historical feed | simulated orders  |
+| Live     | market feed     | executable orders |
 
 The feed changes. The strategy rule should not.
 

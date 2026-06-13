@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: scripts/build-markdown-downloads.sh [--check]
+Usage: scripts/shell/build-markdown-downloads.sh [--check]
 
 Generate downloadable Markdown artifacts for each web-notes section:
   downloads/section.md
@@ -37,7 +37,7 @@ case "${1:-}" in
     ;;
 esac
 
-repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 tmp_dir="$(mktemp -d)"
 check_failed=0
 

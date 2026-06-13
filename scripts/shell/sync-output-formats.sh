@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: scripts/sync-output-formats.sh [--check]
+Usage: scripts/shell/sync-output-formats.sh [--check]
 
 Maintains generated Quarto output settings for section files:
   video-lesson-slides.qmd
@@ -35,7 +35,7 @@ case "${1:-}" in
     ;;
 esac
 
-repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 tmp_dir="$(mktemp -d)"
 check_failed=0
 

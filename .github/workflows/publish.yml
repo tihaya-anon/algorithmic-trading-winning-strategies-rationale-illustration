@@ -30,13 +30,13 @@ jobs:
           sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-mono
 
       - name: Check generated output settings
-        run: scripts/sync-output-formats.sh --check
+        run: scripts/shell/sync-output-formats.sh --check
 
       - name: Check generated section routing
-        run: scripts/sync-section-structure.sh --check
+        run: scripts/shell/sync-section-structure.sh --check
 
       - name: Build generated Markdown downloads
-        run: bash scripts/build-markdown-downloads.sh
+        run: bash scripts/shell/build-markdown-downloads.sh
 
       - name: Set up Quarto and TinyTeX
         uses: quarto-dev/quarto-actions/setup@v2
@@ -49,7 +49,7 @@ jobs:
         run: quarto render
 
       - name: Verify rendered section artifacts
-        run: scripts/sync-section-structure.sh --verify-rendered
+        run: scripts/shell/sync-section-structure.sh --verify-rendered
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

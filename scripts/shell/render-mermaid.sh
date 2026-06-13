@@ -2,8 +2,9 @@
 set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-theme_config="$script_dir/mermaid-theme.json"
-puppeteer_config="$script_dir/puppeteer-config.json"
+repo_root="$(cd -- "$script_dir/../.." && pwd -P)"
+theme_config="$repo_root/scripts/mermaid-theme.json"
+puppeteer_config="$repo_root/scripts/puppeteer-config.json"
 
 runner=()
 if command -v mmdc >/dev/null 2>&1; then

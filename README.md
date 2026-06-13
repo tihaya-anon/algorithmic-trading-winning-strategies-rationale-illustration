@@ -16,7 +16,7 @@ notes when final figures are available.
 
 Section authors should maintain only descriptive front matter such as `title`,
 `subtitle`, `author`, and `date`. Do not hand-write output `format` blocks in
-section files; generate them with `scripts/sync-output-formats.sh`.
+section files; generate them with `scripts/shell/sync-output-formats.sh`.
 
 ## Chapter-Section Structure
 
@@ -46,8 +46,8 @@ matches reading order.
 After adding, renaming, or removing a chapter or section folder, run:
 
 ```bash
-scripts/sync-output-formats.sh
-scripts/sync-section-structure.sh
+scripts/shell/sync-output-formats.sh
+scripts/shell/sync-section-structure.sh
 ```
 
 The first command regenerates per-file Quarto output settings for slides, web
@@ -131,9 +131,9 @@ The workflow in `.github/workflows/publish.yml` renders the entire Quarto
 project in CI, including section-level PDF notes, then deploys the generated
 `_site/` directory as a static GitHub Pages artifact.
 
-CI runs `scripts/sync-output-formats.sh --check` and
-`scripts/sync-section-structure.sh --check` before rendering, then
-`scripts/sync-section-structure.sh --verify-rendered` after rendering, so the
+CI runs `scripts/shell/sync-output-formats.sh --check` and
+`scripts/shell/sync-section-structure.sh --check` before rendering, then
+`scripts/shell/sync-section-structure.sh --verify-rendered` after rendering, so the
 artifact checks stay aligned with section folders automatically.
 
 Configure the repository under Settings -> Pages to use GitHub Actions as the
@@ -146,8 +146,8 @@ Use this repository as the Quarto infrastructure template, then sync it into a
 real course repository when the Actions, fonts, or styles change:
 
 ```bash
-scripts/sync-template.sh ../my-course --dry-run
-scripts/sync-template.sh ../my-course
+scripts/shell/sync-template.sh ../my-course --dry-run
+scripts/shell/sync-template.sh ../my-course
 ```
 
 The default `infra` mode copies `.github/`, `.vscode/`, `styles/`, and
@@ -156,7 +156,7 @@ have one, so course-specific titles and navigation are preserved. To replace the
 target Quarto config too, run:
 
 ```bash
-scripts/sync-template.sh ../my-course --overwrite-quarto-config
+scripts/shell/sync-template.sh ../my-course --overwrite-quarto-config
 ```
 
 It overwrites synced files with the same names but does not delete unrelated
@@ -165,7 +165,7 @@ course material.
 For a brand-new repository, copy the whole template:
 
 ```bash
-scripts/sync-template.sh ../new-course full
+scripts/shell/sync-template.sh ../new-course full
 ```
 
 Use `full` mode only when the target is empty or disposable; it deletes files in
@@ -216,3 +216,56 @@ Section slide decks demonstrate the key pieces:
 - formula, code, and figure layout for quant topics
 
 In practice you will likely want to set `auto-slide` per slide once your narration timings are stable.
+
+The repository now includes a local narration pipeline that reads each section's
+`video-lesson-slides.qmd`, extracts `::: {.notes}` blocks, calls the adjacent
+`../tts` project, writes section-local audio files under `narration/`, and
+records `duration_ms` plus `autoslide_ms` in `narration/manifest.json`.
+
+## Narration Pipeline
+
+Repository script layout:
+
+- `scripts/shell/`: user-facing shell entry points and sync scripts
+- `scripts/python/`: Python helpers run with `uv`
+
+Prerequisites:
+
+- `uv`
+- adjacent `../tts` repository with `uv sync` completed
+- `ffmpeg` and `ffprobe` when generating `.mp3`
+
+Generate narration for all sections:
+
+```bash
+scripts/shell/build-slide-narration.sh
+```
+
+Generate narration for one section:
+
+```bash
+scripts/shell/build-slide-narration.sh \
+  --section chapters/chapter-01/sections/01-the-importance-of-backtesting
+```
+
+Validate existing manifests and audio without calling TTS:
+
+```bash
+scripts/shell/build-slide-narration.sh --check
+```
+
+Generate WAV instead of MP3:
+
+```bash
+scripts/shell/build-slide-narration.sh --format wav
+```
+
+Default narration settings:
+
+- `voice`: `course-narrator-v1`
+- `model`: `hexgrad/Kokoro-82M`
+- `format`: `mp3`
+- `padding_ms`: `800`
+
+Each manifest follows `docs/slide-narration-contract.md`. Authors should edit
+slide notes only; do not hand-edit `narration/manifest.json`.
