@@ -217,6 +217,8 @@ Preferred approach:
 - It injects `{data-autoslide="12640"}` into each slide heading in the generated
   AST or a temporary render source such as
   `narration/video-lesson-slides.auto.qmd`.
+- The author-owned `video-lesson-slides.qmd` can stay in manual web-reading
+  mode while the generated render source enables video autoplay settings.
 - Source `.qmd` files remain clean and author-owned.
 
 Fallback approach:

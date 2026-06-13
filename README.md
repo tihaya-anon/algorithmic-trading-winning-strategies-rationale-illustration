@@ -224,6 +224,11 @@ The repository now includes a local narration pipeline that reads each section's
 render-ready `narration/video-lesson-slides.auto.qmd` with per-slide
 `data-autoslide` attributes injected.
 
+The source `video-lesson-slides.qmd` is the web-reading version: manual paging,
+no default autoplay. The generated `video-lesson-slides.auto.qmd` is the video
+version: it turns autoplay back on and uses narration timings from the
+manifest.
+
 ## Narration Pipeline
 
 Repository script layout:

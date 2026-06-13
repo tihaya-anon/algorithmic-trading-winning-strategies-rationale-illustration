@@ -154,8 +154,6 @@ format:
     center: false
     auto-stretch: true
     auto-animate: true
-    auto-slide: 9000
-    auto-slide-stoppable: true
     show-notes: false
     scrollable: true
     embed-resources: false
