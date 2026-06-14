@@ -23,6 +23,9 @@ format:
     toc: true
     number-sections: true
     colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
 include-in-header:
   text: |
     \addtokomafont{disposition}{\rmfamily\bfseries}
@@ -128,5 +131,5 @@ however, the final validation period should not be used for further tuning.
 
 # Reading Path
 
-- Previous: [Chapter overview](../../index.qmd)
-- Next: [1.2 Common Pitfalls of Backtesting](../02-common-pitfalls-of-backtesting/web-notes.qmd)
+- Previous: [Chapter overview](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/index.html)
+- Next: [1.2 Common Pitfalls of Backtesting](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.html)

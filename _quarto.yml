@@ -6,6 +6,7 @@ project:
 
 website:
   title: "Algorithmic Trading: Winning Strategies and Their Rationale"
+  site-url: "https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration"
   navbar:
     left:
       - href: index.qmd

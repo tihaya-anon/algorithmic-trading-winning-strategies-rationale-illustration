@@ -132,6 +132,7 @@ render_markdown_body() {
   } > "$output"
 
   perl -0pi -e 's/\n# Reading Path\n.*\z/\n/s' "$output"
+  perl -0pi -e 's/\n+(?:- (?:Previous|Next): .+\n?)+\z/\n/s' "$output"
   perl -0pi -e 's/([[(][^)\n]*)video-lesson-slides\.qmd([)\]])/${1}video-lesson-slides.html$2/g; s/([[(][^)\n]*)pdf-notes\.qmd([)\]])/${1}pdf-notes.pdf$2/g; s/([[(][^)\n]*)web-notes\.qmd([)\]])/${1}web-notes.md$2/g' "$output"
 }
 

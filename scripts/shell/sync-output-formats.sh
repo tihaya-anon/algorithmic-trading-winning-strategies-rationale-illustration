@@ -197,6 +197,9 @@ format:
     toc: true
     number-sections: true
     colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
 include-in-header:
   text: |
     \addtokomafont{disposition}{\rmfamily\bfseries}

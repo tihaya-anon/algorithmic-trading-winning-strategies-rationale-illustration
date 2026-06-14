@@ -23,6 +23,9 @@ format:
     toc: true
     number-sections: true
     colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
 include-in-header:
   text: |
     \addtokomafont{disposition}{\rmfamily\bfseries}
@@ -192,5 +195,5 @@ that transaction costs and apparent opportunities are venue-specific.
 
 # Reading Path
 
-- Previous: [1.1 The Importance of Backtesting](../01-the-importance-of-backtesting/web-notes.qmd)
-- Next: [Chapter overview](../../index.qmd)
+- Previous: [1.1 The Importance of Backtesting](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.html)
+- Next: [Chapter overview](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/index.html)
