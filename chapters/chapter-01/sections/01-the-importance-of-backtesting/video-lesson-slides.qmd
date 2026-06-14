@@ -2,6 +2,14 @@
 title: "1.1 The Importance of Backtesting"
 subtitle: "Video lesson slides"
 author: "Algorithmic Trading"
+notes: |
+  Imagine seeing a strategy with an impressive equity curve and deciding to
+  trade it, only to learn later that the result depended on a price, timestamp,
+  or order assumption you could never reproduce live. That is why backtesting
+  comes first. In this lesson, we will treat a backtest not as a marketing
+  chart, but as a rehearsal for real trading, and we will see why the details
+  of implementation determine whether a historical result is useful or
+  misleading.
 
 format:
   revealjs:
@@ -32,12 +40,11 @@ execute:
 The feed changes. The strategy rule should not.
 
 ::: {.notes}
-A backtest is useful only when it rehearses the live strategy. Historical data
-and live data are different feeds, but the trading rule should be the same rule.
-That means the timing rule, the order type, the venue, and the price field have
-to be explicit. If the backtest uses assumptions that the live system cannot
-use, the performance estimate belongs to a strategy we are not actually going
-to trade.
+Start with the core idea of the chapter: a backtest matters only if it
+rehearses the strategy we plan to trade. Historical data and live data are two
+different feeds, but the trading rule should remain the same. So timing, order
+type, venue, and price field all have to be explicit. Otherwise, the backtest
+is measuring a strategy that disappears the moment we go live.
 :::
 
 ## Rehearsal means one strategy rule under two data feeds.
@@ -49,11 +56,10 @@ to trade.
 :::
 
 ::: {.notes}
-The picture makes the same point in system form. A backtest is a rehearsal only
-when the same strategy rule survives the transition from historical data to a
-live feed. If timing, price field, order type, or venue assumptions change
-between the two modes, we are no longer validating the strategy we intend to
-trade.
+Now express that same idea as a system diagram. The key question is whether the
+same strategy rule survives the move from historical data to live data. If the
+logic changes when the feed changes, then the backtest is not validation. It is
+just a separate simulation with different assumptions.
 :::
 
 ## Published performance still hides implementation choices.
@@ -66,12 +72,11 @@ trade.
 | "trade S&P futures" | stock close at 4:00 or futures close at 4:15      |
 
 ::: {.notes}
-Published strategies often report the idea and the historical result, but they
-cannot describe every execution choice without distracting from the main point.
-Those omitted choices matter. Buying at the open can mean an auction order or a
-market order after the open. Using the close can mean a primary exchange auction
-price, a consolidated last trade, or a futures settlement. Independent
-backtesting forces these choices into the strategy definition.
+That is why we should not accept published performance at face value. A paper
+or article usually highlights the idea, not every execution choice behind it.
+But those missing choices can change returns materially. "Buy at the open" or
+"use the close" sounds precise until we ask which auction, which print, and
+which clock. Independent backtesting forces those hidden decisions into the open.
 :::
 
 ## Independent backtesting turns an idea into an executable rule.
@@ -83,12 +88,11 @@ backtesting forces these choices into the strategy definition.
 :::
 
 ::: {.notes}
-Independent backtesting is not only a check on someone else's return number. It
-is the process that turns an informal strategy idea into an executable rule. We
-start with the published idea, then specify the instrument, venue, timestamp,
-and order type. Once those decisions are encoded in the backtest, the same
-logic can be carried toward automated execution. That continuity is what makes
-the backtest operational rather than decorative.
+So independent backtesting does more than verify someone else's number. It
+translates an informal trading idea into an executable rule. We move from the
+headline concept to concrete choices about instrument, venue, timestamp, and
+order type. Once those choices are encoded, the backtest becomes the first
+version of an automated trading system rather than a decorative chart.
 :::
 
 ## Pitfall checks must happen before the equity curve earns trust.
@@ -100,12 +104,11 @@ the backtest operational rather than decorative.
 | Published rule after release | Did post-publication data still work?  |
 
 ::: {.notes}
-After a strategy is implemented, the first question is not whether the equity
-curve looks smooth. The first question is whether the test describes feasible
-trades. For a long-short stock book, the short side may depend on borrow
-availability. For an intermarket futures pair, two closing prices may not be
-observed at the same time. These checks belong before interpretation because
-most pitfalls make backtested performance look too good.
+Once the rule is explicit, the next step is not admiring the equity curve. The
+next step is checking whether the trades were feasible. Could we actually borrow
+the short names? Did the two futures markets close at the same time? These
+questions come first because most backtesting mistakes make performance look
+better, not worse.
 :::
 
 ## True out-of-sample testing begins after the rule is frozen.
@@ -117,12 +120,11 @@ most pitfalls make backtested performance look too good.
 :::
 
 ::: {.notes}
-The phrase out-of-sample can be misleading before the rule is frozen. If a
-researcher sees weak validation results and then changes the parameters, that
-validation period has become part of the research process. Publication creates
-a cleaner boundary because the rule is now cast in stone. Data arriving after
-that boundary can test the published rule without the same hidden opportunity
-for revision.
+This leads directly to the meaning of true out-of-sample testing. A validation
+period is not really out of sample if we keep changing the rule after seeing the
+result. Once we revise the parameters, that data has become part of research.
+Publication creates a cleaner boundary because the rule is effectively frozen,
+and later data can test it without the same opportunity for quiet revision.
 :::
 
 ## Backtesting is an experiment cycle with a hard validation boundary.
@@ -134,12 +136,10 @@ for revision.
 :::
 
 ::: {.notes}
-Backtesting follows the scientific method. We start with a hypothesis about an
-arbitrage opportunity or market inefficiency. We implement that hypothesis,
-test it, and revise it when the evidence is not good enough. That loop is
-valuable, but it is not unlimited. Once the rule is frozen, the next test is a
-walk-forward or post-publication test, not another chance to keep tuning the
-same validation data.
+Seen this way, backtesting is an experiment cycle. We form a hypothesis, code
+it, test it, and revise it when the evidence is weak. That iteration is normal
+and useful. But it needs a hard stopping point. After the rule is frozen, the
+next data should evaluate the strategy, not give us one more chance to tune it.
 :::
 
 ## A credible backtest can answer three live-trading questions.
@@ -151,10 +151,9 @@ same validation data.
 | Was the market access realistic? | venue, order, borrow, and clock checks |
 
 ::: {.notes}
-Before trusting a backtest, reduce the review to three live-trading questions.
-First, can the same strategy rule run live if we replace historical data with a
-live feed? Second, was every signal based on information available at the
-decision time? Third, did the backtest use market access that the live trader
-could actually obtain? If the answer to any of these questions is no, the result
-is still research, not execution evidence.
+Close with three review questions that connect everything in the lesson. Can
+the same rule run live if we swap in a live feed? Was every signal built from
+information available at the decision time? And did the test assume market
+access we could actually obtain? If any answer is no, the backtest may still be
+interesting research, but it is not yet evidence we can trade.
 :::
