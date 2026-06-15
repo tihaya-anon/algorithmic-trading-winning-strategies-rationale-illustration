@@ -132,6 +132,12 @@ strategy uses historical lookbacks, the historical prices must be adjusted
 before the market opens on the relevant ex-date. Otherwise, the live signal can
 inherit the same false jump that would have distorted the historical test.
 
+Chan also makes the implementation timing explicit. The adjustment is not a
+cleanup step that can wait until later in the day. It has to be applied before
+the market opens on the ex-date so that a live model sees a continuous
+historical series when it computes its morning signal. The same logic applies
+to reverse splits, ETFs, and, with more complicated handling, options.
+
 # Use a Universe That Includes Failures
 
 Survivorship bias occurs when the historical database includes only securities
@@ -149,6 +155,13 @@ trades, are missing. Long-short mean-reversion may experience both effects, but
 the bias is not eliminated. The preferred solution is a survivorship-bias-free
 database. If that is unavailable, limiting the test to more recent history can
 reduce the damage, but it does not solve the problem.
+
+Momentum strategies are affected differently. When failed stocks disappear from
+the database, some profitable short momentum trades disappear with them, so the
+measured return can be biased downward instead of upward. That difference does
+not make survivorship bias harmless. It means the sign and magnitude of the
+distortion depend on the trading logic, so the researcher cannot assume the
+bias is conservative.
 
 # Model Short-Sale Constraints When the Strategy Shorts
 
@@ -169,6 +182,14 @@ list depends on the broker and time period. The practical response is to treat
 small-cap short results with extra skepticism, include borrow costs and locate
 availability when data are available, and remember that ETFs can also become
 hard to borrow.
+
+Chan highlights the uptick rules as another source of execution mismatch. Under
+the original uptick rule, and later under the alternative uptick rule after a
+circuit breaker is triggered, a short sale may have to occur above the last
+trade or national best bid. That can make a short market order unexecutable at
+the moment the backtest assumes the fill. A historically careful short backtest
+therefore needs to model not only direction and borrow, but also the short-sale
+rules that were in effect at the time.
 
 # Match Historical Prices to the Order You Would Send
 

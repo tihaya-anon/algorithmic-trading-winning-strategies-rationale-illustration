@@ -32,6 +32,8 @@ generated output settings stay aligned with each file type.
   Alternate formats: [video](chapter-01/sections/01-the-importance-of-backtesting/video-lesson-slides.qmd), [PDF](chapter-01/sections/01-the-importance-of-backtesting/pdf-notes.qmd)
 - [1.2 Common Pitfalls of Backtesting](chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.qmd)  
   Alternate formats: [video](chapter-01/sections/02-common-pitfalls-of-backtesting/video-lesson-slides.qmd), [PDF](chapter-01/sections/02-common-pitfalls-of-backtesting/pdf-notes.qmd)
+- [1.3 Statistical Significance of Backtesting](chapter-01/sections/03-statistical-significance-of-backtesting/web-notes.qmd)  
+  Alternate formats: [video](chapter-01/sections/03-statistical-significance-of-backtesting/video-lesson-slides.qmd), [PDF](chapter-01/sections/03-statistical-significance-of-backtesting/pdf-notes.qmd)
 
 # Authoring Convention
 

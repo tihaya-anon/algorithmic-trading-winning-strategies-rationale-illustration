@@ -173,6 +173,23 @@ companies would survive. That is especially dangerous for long-only
 mean-reversion rules that buy the biggest recent losers.
 :::
 
+## The bias is strongest for long-only mean reversion and weaker for momentum.
+
+| Strategy type             | Missing delisted names usually do what? |
+| ------------------------- | --------------------------------------- |
+| long-only mean reversion  | inflate returns                         |
+| short-only mean reversion | deflate returns                         |
+| long-short mean reversion | still biased, often net inflated        |
+| momentum                  | often deflate returns                   |
+
+::: {.notes}
+Chan is careful here about direction. If bankrupt stocks disappear from the
+ database, long-only mean reversion looks too good because the worst losers that
+ should have gone to zero are silently removed. Short-only mean reversion can
+ look worse for the opposite reason, and momentum often loses some profitable
+ short trades when failed stocks are missing.
+:::
+
 ## Short-sale constraints can erase trades that look easy in a database.
 
 | Backtest assumption       | Live-market question                     |
@@ -187,6 +204,22 @@ access rather than membership. A backtest may assume every short trade can be
 placed. Live trading depends on locate availability, borrow cost, share float,
 short interest, and occasionally rule-based restrictions. Ignoring these
 constraints can create profits that no trader could have captured.
+:::
+
+## Uptick rules can block the fill even when the signal is correct.
+
+| Constraint source         | What it changes in practice                |
+| ------------------------- | ------------------------------------------ |
+| hard-to-borrow status     | borrow may be expensive or unavailable     |
+| low float / high short interest | desired size may not be borrowable   |
+| SEC short-sale restrictions | short market order may not fill         |
+
+::: {.notes}
+The book gives a concrete warning: regulation can change whether a short order
+ is executable at all. Under the original uptick rule, and later under the
+ alternative uptick rule after a circuit breaker is triggered, a short market
+ order may be prevented from filling. A realistic short backtest has to model
+ these constraints, not just direction.
 :::
 
 ## Auction orders need primary-exchange auction prices.

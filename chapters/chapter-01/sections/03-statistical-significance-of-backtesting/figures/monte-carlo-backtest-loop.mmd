@@ -1,0 +1,6 @@
+flowchart LR
+    A[Null market model] --> B[Simulate many price paths]
+    B --> C[Run strategy on each path]
+    C --> D[Collect simulated returns]
+    D --> E[Compare with observed backtest]
+    E --> F[p-value = fraction as good or better]

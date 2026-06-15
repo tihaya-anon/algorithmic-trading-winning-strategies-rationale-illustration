@@ -1,0 +1,8 @@
+flowchart LR
+    A[Observed backtest result] --> B[Test statistic]
+    B --> C[Null hypothesis:<br/>true mean return = 0]
+    C --> D[Null distribution]
+    D --> E[p-value]
+    E --> F{Small enough?}
+    F -->|Yes| G[Reject null]
+    F -->|No| H[Do not reject null]

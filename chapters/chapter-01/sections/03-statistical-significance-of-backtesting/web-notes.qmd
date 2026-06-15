@@ -1,0 +1,139 @@
+---
+title: "1.3 Statistical Significance of Backtesting"
+subtitle: "Chapter 01. Backtesting and Automated Execution"
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+    code-tools: false
+include-after-body:
+  - ../../../../styles/web-note-modal.html
+---
+
+::: {.section-output-links}
+[Slides](video-lesson-slides.qmd){.action-video aria-label="Open video lesson slides" data-modal="video" data-label="Video lesson slides" data-tooltip="Slides"}
+<span aria-hidden="true">/</span>
+[PDF](pdf-notes.qmd){.action-pdf aria-label="Open PDF notes" data-tooltip="PDF"}
+<span aria-hidden="true">/</span>
+[Markdown](downloads/section.json){.action-markdown aria-label="Open raw markdown viewer" data-modal="markdown" data-label="Markdown" data-tooltip="Markdown" data-markdown-src="downloads/section.json"}
+<span aria-hidden="true">/</span>
+[Bundle](downloads/section-bundle.zip){.action-bundle aria-label="Download markdown bundle" data-tooltip="Bundle"}
+:::
+
+# A Good Backtest Still Has a Finite-Sample Problem
+
+Even when a backtest is carefully implemented, its summary statistics are based
+on a limited historical sample. Average return, Sharpe ratio, and drawdown are
+all random variables in that sense. A profitable backtest may indicate a real
+edge, but it may also reflect a favorable historical sample that happened to
+reward the strategy.
+
+Chan frames this as a statistical-significance problem. The practical question
+is not only whether the backtest made money, but whether the observed result is
+surprising enough that pure luck becomes an implausible explanation.
+
+# Hypothesis Testing Starts from a Skeptical Null
+
+The standard framework begins with a null hypothesis. In this context, the null
+hypothesis says that the strategy's true average daily return, over an
+effectively infinite sample, is zero. The backtest then produces a test
+statistic from the observed sample. For a simple example, that statistic could
+be the average daily return itself.
+
+The next step is to specify the probability distribution implied by the null
+hypothesis. Once that distribution is fixed, we ask how likely it would be to
+see a test statistic at least as extreme as the one observed in the backtest.
+That probability is the p-value.
+
+If the p-value is very small, the null hypothesis becomes difficult to keep. A
+common threshold is 0.01. Reaching such a threshold does not prove that the
+strategy will keep working, but it does support the claim that the historical
+result is not easily explained as chance under the chosen null model.
+
+# Sharpe Ratio Connects Naturally to Significance
+
+Under a Gaussian assumption, the test becomes especially intuitive. The
+relevant statistic is proportional to the daily Sharpe ratio multiplied by the
+square root of the number of observations:
+
+$$
+t \approx \text{Sharpe}_{\text{daily}} \sqrt{n}
+$$
+
+This matches trading intuition. A strategy looks more statistically persuasive
+when it has either a stronger signal per unit of risk or a longer history over
+which that signal has repeated. One spectacular short sample is usually less
+convincing than many observations of a moderate but persistent edge.
+
+Chan reproduces critical values that convert this statistic into p-value
+thresholds:
+
+| p-value threshold | Critical value for daily Sharpe × \(\sqrt{n}\) |
+| ----------------: | ---------------------------------------------: |
+| 0.10              | 1.282                                          |
+| 0.05              | 1.645                                          |
+| 0.01              | 2.326                                          |
+| 0.001             | 3.091                                          |
+
+These cutoffs give a simple reading rule. For example, if the daily Sharpe
+ratio times \(\sqrt{n}\) is at least 2.326, then the p-value is at most 0.01
+under the Gaussian null.
+
+# Choosing the Null Distribution Is the Real Modeling Decision
+
+Chan emphasizes that the most delicate step is not calculating the p-value once
+a null distribution is known. The difficult part is deciding what that null
+distribution should be.
+
+One option is parametric. We assume daily returns follow a Gaussian
+distribution with mean zero under the null and with standard deviation
+estimated from the sample. This choice is simple and produces an immediate link
+to the Sharpe ratio.
+
+Another option is simulation-based. The researcher can generate many synthetic
+historical price series under a null market model and rerun the trading
+strategy on each of them. The p-value is then estimated empirically as the
+fraction of simulated histories that produce an average return at least as
+large as the observed backtest return.
+
+The appeal of Monte Carlo testing is conceptual. A trading strategy may depend
+on subtle path structure, timing, or correlation patterns that are not captured
+well by only the first few moments of returns. Running the actual strategy over
+many simulated histories can be a more direct way to ask whether the observed
+profit is unusual.
+
+# Statistical Significance Does Not Replace Market Realism
+
+A statistically significant backtest is stronger than an impressive but
+unexamined equity curve. It shows that, under the chosen null model, the
+observed result is hard to dismiss as random luck. But it still does not answer
+every practical question.
+
+Significance does not fix look-ahead bias, survivorship bias, incorrect auction
+prices, missing borrow constraints, or unrealistic venue assumptions. It does
+not guarantee that transaction costs are modeled correctly. It does not prove
+that market structure will remain stable in the future.
+
+The correct interpretation is narrower and more useful. Statistical
+significance is one gate in the evaluation process. After a backtest passes the
+market-reality checks from the previous section, hypothesis testing helps judge
+whether the remaining performance evidence is strong enough to take seriously.
+
+# Review Checklist
+
+- What is the test statistic in this backtest: average return, Sharpe ratio, or
+  something else?
+- What null hypothesis is being tested?
+- Which null distribution is assumed: a parametric model or a simulation-based
+  model?
+- Is the sample large enough for the claimed significance to be persuasive?
+- Does the strategy remain realistic after costs, timing, venue, and execution
+  constraints are considered?
+
+# Reading Path
+
+- Previous: [1.2 Common Pitfalls of Backtesting](../02-common-pitfalls-of-backtesting/web-notes.qmd)
+- Next: [Chapter overview](../../index.qmd)
