@@ -34,102 +34,108 @@ include-in-header:
     \addtokomafont{date}{\rmfamily}
 ---
 
-# Why Backtesting Comes First
+# Backtesting Is a Rehearsal, Not a Scoreboard
 
-Backtesting is the process of feeding historical data into a trading strategy to
-see how the strategy would have performed. That historical performance is useful
-only when the backtest reproduces the decisions, prices, and constraints that a
-live trading program would face.
+Backtesting feeds historical data into a trading strategy to ask how the
+strategy would have performed. That definition sounds simple, but the useful
+part is conditional: the historical test matters only if it rehearses the rule
+that could later run live.
 
-This qualification is the main reason Chapter 1 begins with backtesting rather
-than with strategy examples. A careless backtest can be worse than no backtest:
-it can make a fragile strategy look profitable and push the trader toward real
-losses. A useful backtest therefore has two jobs at once. It estimates
-performance, and it exposes the implementation assumptions behind that estimate.
+This is why a backtest is more than an equity curve. The equity curve shows the
+result of a simulated trading process. The backtest itself has to define the
+process: what data were known, which price field was used, which order would
+have been sent, where it would have been routed, and whether the trade could
+have existed at the intended size. If those details are missing, the chart may
+describe a strategy that cannot be executed.
 
-# Backtest Published Strategies Yourself
+# Published Results Still Need Independent Backtesting
 
-Independent backtesting matters even when a strategy comes from a trusted
-publication. Published articles often simplify implementation details so that
-the main idea remains readable. Those details may look minor on paper, but they
-can decide whether the live strategy is profitable.
+Independent backtesting matters even when the original strategy comes from a
+trusted publication. A published article usually has to protect the main idea
+from too much operational detail. That is reasonable for communication, but it
+is dangerous for implementation.
 
-Order timing is one example of this sensitivity. A market-on-open order is not
-the same as a market order sent shortly after the open. A futures strategy that
-uses the S&P 500 may behave differently depending on whether the order is sent
-near the 4:00 p.m. stock-market close or near the 4:15 p.m. futures close.
-Price choice creates another implementation decision: a signal based on the bid,
-the ask, or the last traded price can trigger at different times and costs.
+For example, "buy at the open" could mean a market-on-open auction order, or it
+could mean a market order sent shortly after the open. A strategy involving the
+E-mini S&P 500 future may depend on whether the order is timed around the 4:00
+p.m. stock-market close or the 4:15 p.m. futures close. A rule that "triggers
+on price" still has to specify whether that price is the bid, the ask, the last
+trade, the high, or the low.
 
-Because these details are part of the strategy, the backtest must make them
-explicit. The backtest is not merely a verification exercise; it is the place
-where an informal trading idea becomes a fully specified trading rule.
+These choices are not cosmetic. They can change both the backtest and the live
+profitability of the strategy. Rebuilding the strategy ourselves forces those
+choices into the open and turns an informal rule into an executable
+specification.
 
-# Connect Backtesting to Automated Execution
+# The Backtest Should Stay Close to the Execution System
 
-The same implementation discipline links backtesting to automated execution.
-Ideally, the backtesting program should be close enough to the live execution
-program that the same strategy logic can be reused with different data feeds:
-historical data in the backtest and live market data in production.
+Backtesting and automated execution are linked because both need the same
+implementation assumptions. Ideally, the backtesting program can be transformed
+into a live execution program with the same strategy logic. In that design, the
+historical feed is swapped for a live market feed, but the decision rule stays
+fixed.
 
-This design goal reduces the gap between simulated performance and live
-behavior. If the backtest uses one set of assumptions and the execution system
-uses another, the reported performance belongs to a strategy that may never be
-traded. When the two systems share the same logic, implementation details such
-as order type, timestamp, venue, and signal timing become easier to inspect and
-harder to forget.
+This discipline reduces a common failure mode: the research code tests one
+strategy while the production code trades another. Shared logic does not remove
+every source of error, but it makes timing, order type, venue, and price-field
+assumptions easier to inspect. It also makes accidental look-ahead logic harder
+to hide because the live system cannot request tomorrow's data.
 
-# Use Backtesting to Find Pitfalls
+# Use the Backtest to Search for Impossible Trades
 
-Once the implementation details are explicit, the backtest can be examined for
-strategy-specific pitfalls. A long-short equity strategy, for example, must ask
-whether the short positions were actually borrowable at a reasonable size. An
-intermarket futures pair must ask whether the two closing prices occur at the
-same time. If these constraints are ignored, the historical result may describe
-an impossible trade.
+Once the implementation details are explicit, the next job is to look for
+pitfalls. A long-short stock strategy has to ask whether the short positions
+were borrowable at a reasonable size. An intermarket futures pair has to ask
+whether the two market closes occurred at the same time. A strategy that uses
+open or close prices has to ask whether those prices match the order type it
+would actually send.
 
-Most backtesting pitfalls have the same direction of error: they inflate the
-reported performance relative to what could have been achieved. This tendency is
-what makes pitfall analysis part of the core research process, not a cosmetic
-review after the Sharpe ratio looks attractive.
+Most backtesting pitfalls are dangerous because they bias the result upward.
+They make the strategy look more profitable than it could have been, not merely
+noisier. Pitfall analysis therefore belongs before we trust the performance
+statistics, not after we are already impressed by them.
 
-# Treat Publication as the Start of True Out-of-Sample Testing
+# True Out-of-Sample Testing Begins After the Rule Freezes
 
-Backtesting a published strategy also creates a more honest out-of-sample test.
-Before publication, an author may have adjusted parameters after seeing weak
-validation results. That adjustment can quietly turn the claimed
-out-of-sample period into another in-sample period.
+Backtesting a published strategy can create a cleaner out-of-sample test than
+the one claimed inside the original article. Before publication, the author may
+have tested a validation period, disliked the result, changed a parameter, and
+tested again. After enough revisions, the validation data have effectively
+become part of the research process.
 
-After publication, the strategy is effectively cast in stone. New data that
-arrive after that point can test the published rule without the same hidden
-opportunity for revision. Poor post-publication performance does not prove that
-the author was careless, but it does raise the possibility that the published
-result depended on a limited historical sample.
+After publication, the rule is much harder to revise quietly. New data that
+arrive after that point can test the published rule as it stands. Weak
+post-publication performance does not prove misconduct or carelessness, but it
+does raise an important possibility: the original result may have depended on a
+limited historical sample.
 
-# Follow the Scientific Method, But Keep the Boundary Clear
+# Experiment Freely, Then Validate Strictly
 
-Backtesting is also a way to improve a strategy. The research process begins
-with a hypothesis about an arbitrage opportunity or market inefficiency. The
-backtest then confirms, weakens, or refutes that hypothesis. If the result is
-not good enough, the researcher can revise the hypothesis and test again.
+Backtesting is also a way to improve a strategy. The research cycle begins with
+a hypothesis about a market inefficiency, converts that hypothesis into code,
+tests it on historical data, and revises it when the evidence is not good
+enough. Small changes can matter: a different lookback window, an entry at the
+open instead of the close, or a different price field can materially change the
+result.
 
-This iterative process is useful only when exploration is separated from final
-validation. Small implementation changes, such as altering a lookback window or
-entering at the open rather than the close, may materially change performance.
-Those changes are legitimate during exploration. Once the rule is frozen,
-however, the final validation period should not be used for further tuning.
+That experimentation is legitimate during research. The boundary matters. Once
+the rule is frozen, the next test should evaluate the strategy rather than give
+the researcher another chance to tune it. A credible research process therefore
+allows iteration before the validation boundary and protects the validation
+period after the boundary.
 
 # Review Checklist
 
-- What trading hypothesis is the backtest testing?
-- Which order type, timestamp, venue, and price field does the strategy use?
+- What hypothesis about market behavior is the backtest testing?
+- Which instrument, venue, timestamp, order type, and price field does the rule
+  use?
 - Could the same strategy logic run on live market data?
-- Are short-borrow limits, closing-time mismatches, and other strategy-specific
-  constraints represented?
-- Is the post-publication or walk-forward period kept separate from model
-  revision?
+- Are borrow limits, closing-time mismatches, venue constraints, and other
+  strategy-specific feasibility checks represented?
+- Is the post-publication, walk-forward, or final validation period protected
+  from further tuning?
 
 # Reading Path
 
-- Previous: [Chapter overview](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/index.html)
-- Next: [1.2 Common Pitfalls of Backtesting](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/web-notes.html)
+- Previous: [Chapter overview](../../index.qmd)
+- Next: [1.2 Common Pitfalls of Backtesting](../02-common-pitfalls-of-backtesting/web-notes.qmd)

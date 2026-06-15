@@ -34,166 +34,202 @@ include-in-header:
     \addtokomafont{date}{\rmfamily}
 ---
 
-# Why Pitfalls Matter
+# Backtesting Pitfalls Make History Too Easy
 
-Backtesting errors are not evenly balanced. In Chapter 1, Chan emphasizes that
-most pitfalls make a strategy look better than it could have been in actual
-trading. That direction of error is dangerous because it converts an
-implementation weakness into apparent alpha.
+Most backtesting pitfalls point in the same direction: they make historical
+performance look better than the strategy could have achieved in live trading.
+That is why they are dangerous. They do not merely add random measurement
+error; they can convert a market-access problem, data problem, or modeling
+problem into apparent alpha.
 
-The pitfalls in this section share a common pattern. Each one lets the backtest
-use information, securities, prices, or venues that the live strategy could not
-have used in the same way. A credible backtest therefore has to ask not only
-whether the trading rule is profitable, but also whether the historical test
-used the same information set and market access that the trader would have had.
+The pitfalls in this section share one diagnostic question. Did the backtest
+give the strategy information, securities, prices, or venues that the live
+strategy would not have had at the same decision time? If yes, the backtest is
+describing a friendlier market than the one the trader would actually face.
 
-# Look-Ahead Bias
+# Keep Future Information Out of Current Signals
 
-Look-ahead bias occurs when the backtest uses future information to make a
-current decision. A same-day high or low price is a simple example: before the
-trading day ends, that high or low is not yet known. If a strategy uses that
-value to trigger an intraday entry, the backtest is predicting with information
-that a live system could not obtain.
+Look-ahead bias occurs when a current trading signal uses information from the
+future. A same-day high or low is the simplest example. Before the trading day
+ends, the final high and low are not known. If an intraday entry rule uses
+those values during the same day, the backtest is no longer testing a live
+decision rule.
 
-This bias is fundamentally a programming error. It can infect a backtest, but it
-cannot infect a live trading program in the same form because live code cannot
-request tomorrow's prices. For that reason, one strong defense is to make the
-backtest and live system share the same strategy logic. When the only difference
-between the two modes is the data source, future information has fewer places to
-enter accidentally.
+This bias is essentially a programming error. It can infect a backtest because
+historical data are already complete, but it cannot infect a live program in the
+same form because live code cannot request tomorrow's data. A strong defense is
+therefore architectural: make the backtest and live system share the same
+strategy logic, and change only the data feed. The live feed disciplines the
+rule because it exposes only information that exists at the decision time.
 
-# Data-Snooping Bias and the Beauty of Linearity
+# Prevent Validation Data From Becoming Training Data
 
-Data-snooping bias appears when a model has enough free parameters or trading
-rules to fit random historical patterns. A formal out-of-sample test is supposed
-to catch this problem. In practice, the test can lose its meaning when the
-researcher keeps revising the model after seeing disappointing validation
-results. That revision turns the out-of-sample data into another training set.
+Data-snooping bias appears when a model has enough freedom to fit accidental
+historical patterns. A formal out-of-sample test is supposed to protect against
+this. The protection fails when the researcher sees a poor validation result,
+changes parameters or rules, and tests the same validation period again. After
+that loop, the validation data have become part of training.
 
-Cross-validation can reduce this problem when the data set is small or when a
-single fixed validation period would be too arbitrary. The model is trained and
-checked across different subsets, and the researcher asks whether the result is
-stable across those subsets. A strategy with a high Sharpe ratio and short
-drawdown duration is easier to validate because fewer subsamples are dominated
-by long losing periods.
+Cross-validation can help when the data set is small or when one fixed holdout
+period would be arbitrary. The model is trained and checked across multiple
+subsets, and the researcher asks whether performance is stable rather than
+dependent on one favorable slice of history. A high Sharpe ratio and short
+maximum drawdown duration make this stability easier to observe because fewer
+subsamples are dominated by long losing periods.
 
-Model simplicity is the deeper defense. A model with few parameters but many
-hand-built trading rules can still overfit. Chan's practical preference is
-therefore not only fewer parameters, but fewer opportunities to encode
-historical accidents. Linear models often satisfy this standard better than
-nonlinear models because they are easier to explain, easier to validate, and
-less able to memorize noise.
+The final defense is walk-forward testing. Chan emphasizes that some
+data-snooping can creep in even when the research process is careful. A frozen
+model therefore needs evidence from data that arrive after research stops.
+Paper trading is useful, and a small real-money deployment can reveal execution
+issues that paper trading still misses.
 
-Linearity also applies to capital allocation. In a mean-reverting model, a
-linear allocation scales the position with the deviation from the mean rather
-than waiting for a hard threshold. In a factor model, a simple equal-weighted
-combination of normalized predictors can be more robust than a heavily tuned
-set of coefficients. If factors $f_i$ are normalized to $z_i$, a deliberately
-simple predictor can combine their signs and standardized values rather than
-optimize every weight:
+# Prefer Simplicity Until Complexity Earns Its Keep
+
+Model simplicity is a defense against data-snooping because every additional
+rule, parameter, threshold, or distributional assumption is another way to fit
+historical noise. A model with few numerical parameters can still overfit if it
+contains many hand-built exceptions. The practical standard is therefore not
+just "few parameters," but fewer opportunities to encode accidents in the
+sample.
+
+This is the reason for Chan's preference for linearity. A linear model is not
+automatically true, and financial markets do not have to be linear. The point
+is that a simple linear rule is easier to explain, easier to validate, and less
+able to memorize noise. A nonlinear model should have a strong theoretical and
+empirical reason for existing; otherwise, the simpler approximation deserves to
+be tested first.
+
+Linearity also applies to position sizing and factor combination. In a
+mean-reverting model, a linear allocation scales the position with the deviation
+from the mean instead of waiting for a hard threshold. In a factor model,
+normalized predictors can be combined with deliberately simple weights. For a
+factor $f_i$, the normalized value is:
 
 $$
 z_i = \frac{f_i - \operatorname{mean}(f_i)}
            {\operatorname{std}(f_i)}
 $$
 
-The point of this formula is not that every strategy should use equal weights.
-The point is that every extra modeling choice needs a reason strong enough to
-outweigh the additional data-snooping risk.
+Equal-weight or signed-rank combinations will not always be best. Their value
+is that they force every extra weighting choice to justify the added
+data-snooping risk.
 
-# Stock Splits and Dividend Adjustments
+# Adjust Corporate Actions Before Signals Use Prices
 
-Corporate actions can create false signals if the historical price series is
-not adjusted. In an $N$-for-1 split, the share price falls by a factor of $N$,
-but the shareholder owns $N$ times as many shares. The market value is unchanged,
-so the pre-split historical prices must be adjusted by the same factor. Without
-that adjustment, the backtest may treat an accounting change as a trading
-signal.
+Stock splits and dividends can create false signals when the historical price
+series is not adjusted. In an $N$-for-1 split, the share price falls by a factor
+of $N$, but the shareholder owns $N$ times as many shares. The market value is
+unchanged. If the pre-split prices are not adjusted, the backtest can mistake
+an accounting event for a large economic price move.
 
-Dividends create a similar problem. On the ex-dividend date, the stock price
-typically drops by roughly the dividend amount, while the shareholder receives
-the distribution. A price-only backtest that ignores the dividend adjustment can
-interpret this mechanical price drop as an economic move. The same logic applies
-to ETFs, while options require more specialized treatment.
+Dividends create the same kind of problem. On the ex-dividend date, the stock
+price typically drops by roughly the dividend amount, while the shareholder
+receives the distribution. A price-only signal that ignores the dividend
+adjustment may interpret this mechanical drop as a trading opportunity.
 
-These adjustments are not only historical clean-up. A live system that uses
-historical lookbacks must update those historical prices before the market opens
-on the relevant ex-date; otherwise, the live signal can inherit the same false
-jump that would distort a backtest.
+These adjustments matter in live trading as well as in backtesting. If a live
+strategy uses historical lookbacks, the historical prices must be adjusted
+before the market opens on the relevant ex-date. Otherwise, the live signal can
+inherit the same false jump that would have distorted the historical test.
 
-# Survivorship Bias in Stock Databases
+# Use a Universe That Includes Failures
 
-Survivorship bias occurs when the historical database contains only securities
-that still exist today. A backtest built on that database can accidentally
-assume that the trader knew which firms would survive.
+Survivorship bias occurs when the historical database includes only securities
+that still exist today. A backtest built on that data acts as if the trader
+knew in advance which distressed companies would survive.
 
-This bias is especially damaging for long-only mean-reversion strategies. A
-rule that buys the stock with the largest recent drop can look attractive if
-the database excludes the firms that later failed. The surviving stocks are the
-ones that recovered enough to remain in the data set, so the test overstates
-the long strategy's performance.
+This is especially damaging for long-only mean-reversion strategies. A rule
+that buys the stock with the largest recent drop may look profitable if the
+database excludes companies that later went bankrupt or delisted. The surviving
+stocks are precisely the ones that recovered enough to remain visible.
 
-The direction of the bias depends on the strategy. For a short-only
-mean-reversion strategy, excluding bankrupt or delisted firms can remove some of
-the best short trades and make performance look worse. For long-short
-mean-reversion, the two effects partly offset, but the problem remains. A
-survivorship-bias-free database is therefore the preferred solution; using only
-very recent data can reduce, but not eliminate, the damage when better data are
-unavailable.
+The direction of the bias depends on the strategy. Short-only mean-reversion
+can look worse because bankrupt stocks, which would have been strong short
+trades, are missing. Long-short mean-reversion may experience both effects, but
+the bias is not eliminated. The preferred solution is a survivorship-bias-free
+database. If that is unavailable, limiting the test to more recent history can
+reduce the damage, but it does not solve the problem.
 
-# Primary Versus Consolidated Stock Prices
+# Model Short-Sale Constraints When the Strategy Shorts
 
-U.S. stocks trade across primary exchanges, ECNs, and other venues. Standard
-daily open and close prices often come from consolidated data, which record the
-first or last regular-hours execution across venues. Market-on-open and
-market-on-close orders, however, are routed to the primary exchange auction.
+A stock strategy that shorts securities assumes those securities can be
+borrowed. In live trading, the broker has to locate shares and arrange a stock
+loan. Some stocks are hard to borrow because the float is small, short interest
+is already high, or lenders demand compensation. In extreme cases, the desired
+quantity cannot be borrowed at all.
 
-This distinction matters most when the trading rule depends on the open, close,
-high, or low. A small trade on a secondary venue can print at a price far from
-the primary auction price. A mean-reversion backtest that buys after such an
-outlier may record a profit when the next price reverts, even though the trader
-could not have executed at the outlier price in meaningful size.
+Ignoring this constraint can inflate a backtest. A model may appear to profit
+from shorting names that other traders could not short in size, or could short
+only with a high borrow cost. Rule-based restrictions can also matter. For
+example, short-sale rules may prevent a short market order from being filled
+under certain conditions.
 
-The clean solution is to use primary-exchange historical prices for strategies
-that execute in primary open or close auctions. If that data source is not
-available, the backtest should be treated with skepticism rather than accepted
-as a precise estimate.
+The data problem is difficult because a historically accurate hard-to-borrow
+list depends on the broker and time period. The practical response is to treat
+small-cap short results with extra skepticism, include borrow costs and locate
+availability when data are available, and remember that ETFs can also become
+hard to borrow.
 
-# Venue Dependence of Currency Quotes
+# Match Historical Prices to the Order You Would Send
 
-Currency markets are fragmented, and there is no rule requiring each venue to
-display or execute at the best bid or ask across all venues. A foreign-exchange
-backtest is realistic only when its historical data come from the venue, or the
-same executable venue set, that the live strategy can trade.
+U.S. stocks trade on many venues, including primary exchanges, ECNs, and dark
+pools. Standard daily open and close prices often come from consolidated data,
+which record the first or last regular-hours execution across venues. That is
+not necessarily the same price a market-on-open (MOO) or market-on-close (MOC)
+order would receive.
 
-This venue dependence affects both signals and costs. Trade prices and trade
-sizes are often unavailable or delayed, so bid-ask quotes are usually the safer
-basis for a forex backtest. Those quotes still vary across venues, which means
-that transaction costs and apparent opportunities are venue-specific.
+MOO and MOC orders are routed to the primary exchange auction. If a strategy
+uses those order types, the backtest should use primary-exchange auction prices.
+Using consolidated prices can create unrealistic fills, especially for
+mean-reversion strategies. A small trade on a secondary venue can print far
+from the primary auction price, and the next price may revert from that
+unrepresentative outlier.
+
+The same concern applies to high and low prices. Historical highs and lows are
+usually consolidated values and may be produced by small trades away from the
+primary venue. If the strategy cannot execute at those prices in meaningful
+size, they should not be treated as reliable fills.
+
+# Treat Forex Quotes as Venue-Specific
+
+Currency markets are even more fragmented than equity markets. There is no rule
+requiring a trade on one venue to occur at the best bid or ask available across
+all venues. A foreign-exchange backtest is realistic only when its historical
+quotes come from the same venue, or executable venue set, that the live
+strategy can access.
+
+This matters for both signals and costs. Trade prices and sizes are often
+unavailable or delayed, so bid-ask quotes are usually the safer basis for forex
+backtesting. Those quotes still vary across venues. As a result, spread and
+transaction-cost assumptions are venue-specific, not universal.
 
 # Pitfall Map
 
-| Pitfall             | Backtest mistake                                  | Practical defense                                           |
-| ------------------- | ------------------------------------------------- | ----------------------------------------------------------- |
-| Look-ahead bias     | Use information unavailable at the decision time  | Share strategy logic between backtest and live trading      |
-| Data-snooping bias  | Tune rules until validation data look good        | Use simple models, cross-validation, and walk-forward tests |
-| Corporate actions   | Treat splits or dividends as economic price moves | Adjust historical prices before the signal uses them        |
-| Survivorship bias   | Exclude delisted securities                       | Use survivorship-bias-free data                             |
-| Consolidated prices | Test auction orders on non-auction prints         | Use primary-exchange prices for MOO/MOC strategies          |
-| FX venue mismatch   | Test with quotes from venues you cannot trade     | Match historical data to executable venues                  |
+| Pitfall                 | Backtest mistake                                  | Practical defense                                           |
+| ----------------------- | ------------------------------------------------- | ----------------------------------------------------------- |
+| Look-ahead bias         | Use information unavailable at decision time      | Share strategy logic and delay signals until observable     |
+| Data-snooping bias      | Tune rules until validation data look good        | Use simple models, cross-validation, and walk-forward tests |
+| Corporate actions       | Treat splits or dividends as economic price moves | Adjust historical prices before signals use them            |
+| Survivorship bias       | Exclude delisted securities                       | Use survivorship-bias-free data                             |
+| Short-sale constraints  | Assume every short can be borrowed and filled     | Model locate availability, borrow cost, and short-sale rules |
+| Consolidated prices     | Test auction orders on non-auction prints         | Use primary-exchange prices for MOO and MOC strategies      |
+| Forex venue mismatch    | Test with quotes from venues you cannot trade     | Match quotes and spreads to executable venues               |
 
 # Review Checklist
 
 - Does every signal use only information known at the decision time?
 - Was the model changed after seeing validation results?
+- Is the rule simple enough that each extra modeling choice has a clear reason?
 - Are split and dividend adjustments applied before the strategy uses the
   historical lookback?
 - Does the equity universe include delisted securities where the strategy would
   have traded them?
-- Do open, close, high, and low prices match the execution venue?
+- Are short-sale availability, borrow costs, and relevant short-sale rules
+  represented?
+- Do open, close, high, and low prices match the execution venue and order type?
 - Do currency quotes and spreads come from venues the live strategy can access?
 
 # Reading Path
 
-- Previous: [1.1 The Importance of Backtesting](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/sections/01-the-importance-of-backtesting/web-notes.html)
-- Next: [Chapter overview](https://tihaya-anon.github.io/algorithmic-trading-winning-strategies-rationale-illustration/chapters/chapter-01/index.html)
+- Previous: [1.1 The Importance of Backtesting](../01-the-importance-of-backtesting/web-notes.qmd)
+- Next: [Chapter overview](../../index.qmd)

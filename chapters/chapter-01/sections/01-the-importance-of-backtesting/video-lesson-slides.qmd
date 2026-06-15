@@ -3,13 +3,11 @@ title: "1.1 The Importance of Backtesting"
 subtitle: "Video lesson slides"
 author: "Algorithmic Trading"
 notes: |
-  Imagine seeing a strategy with an impressive equity curve and deciding to
-  trade it, only to learn later that the result depended on a price, timestamp,
-  or order assumption you could never reproduce live. That is why backtesting
-  comes first. In this lesson, we will treat a backtest not as a marketing
-  chart, but as a rehearsal for real trading, and we will see why the details
-  of implementation determine whether a historical result is useful or
-  misleading.
+  A smooth equity curve can look like proof. In algorithmic trading, it is
+  usually only the start of the investigation. This lesson treats a backtest as
+  a rehearsal for live trading: the same rule, the same timing discipline, and
+  the same market access constraints, tested first on historical data before
+  real money is at risk.
 
 format:
   revealjs:
@@ -35,53 +33,54 @@ execute:
   echo: true
 ---
 
-## A backtest is useful only when it rehearses the live strategy.
+## An impressive equity curve can still describe a trade we cannot execute.
 
-| Mode     | Input           | Output            |
-| -------- | --------------- | ----------------- |
-| Backtest | historical feed | simulated orders  |
-| Live     | market feed     | executable orders |
-
-The feed changes. The strategy rule should not.
-
-::: {.notes}
-Start with the core idea of the chapter: a backtest matters only if it
-rehearses the strategy we plan to trade. Historical data and live data are two
-different feeds, but the trading rule should remain the same. So timing, order
-type, venue, and price field all have to be explicit. Otherwise, the backtest
-is measuring a strategy that disappears the moment we go live.
-:::
-
-## Rehearsal means one strategy rule under two data feeds.
-
-::: {.visual-slide}
-::: {.visual-frame}
-![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions"}
-:::
-:::
+| What the chart shows | What the chart can hide              |
+| ------------------- | ------------------------------------ |
+| historical profits  | unavailable prices                   |
+| smooth returns      | missing borrow constraints           |
+| clean entries       | ambiguous clocks, venues, and orders |
 
 ::: {.notes}
-Now express that same idea as a system diagram. The key question is whether the
-same strategy rule survives the move from historical data to live data. If the
-logic changes when the feed changes, then the backtest is not validation. It is
-just a separate simulation with different assumptions.
+Open by separating the chart from the trading system. A backtest may show a
+beautiful equity curve, but that curve is useful only if the simulated trades
+could have been placed. The chapter begins here because the danger is practical:
+an implementation detail that looks small on paper can decide whether the live
+strategy exists at all.
 :::
 
-## Published performance still hides implementation choices.
+## A useful backtest rehearses the live strategy before capital is at risk.
 
-| Published phrase    | Execution decision that changes returns           |
-| ------------------- | ------------------------------------------------- |
-| "buy at the open"   | MOO auction or market order after the open        |
-| "use the close"     | primary auction, consolidated last, or settlement |
-| "trigger on price"  | bid, ask, last trade, high, or low                |
-| "trade S&P futures" | stock close at 4:00 or futures close at 4:15      |
+| Mode     | Data feed       | Strategy rule | Result            |
+| -------- | --------------- | ------------- | ----------------- |
+| Backtest | historical data | same rule     | simulated orders  |
+| Live     | market data     | same rule     | executable orders |
+
+The feed changes. The rule should not.
 
 ::: {.notes}
-That is why we should not accept published performance at face value. A paper
-or article usually highlights the idea, not every execution choice behind it.
-But those missing choices can change returns materially. "Buy at the open" or
-"use the close" sounds precise until we ask which auction, which print, and
-which clock. Independent backtesting forces those hidden decisions into the open.
+Define backtesting in plain terms: we feed historical data to a strategy and
+ask how it would have performed. The key phrase is "would have." To make that
+conditional meaningful, the backtest has to rehearse the rule we could actually
+run live. Historical data and live data are different feeds; the trading logic
+should not quietly become a different strategy.
+:::
+
+## Published strategies hide choices that can change returns.
+
+| Published phrase    | Missing execution decision                      |
+| ------------------- | ----------------------------------------------- |
+| "buy at the open"   | MOO auction or market order after the open      |
+| "use the close"     | primary auction, consolidated last, settlement  |
+| "trigger on price"  | bid, ask, last trade, high, low                 |
+| "trade S&P futures" | stock close at 4:00 p.m. or futures close 4:15 |
+
+::: {.notes}
+This is why Chan says we should independently backtest even a strategy from a
+trusted publication. Published research often has to simplify the operational
+details so the main idea stays readable. But "open," "close," and "price" are
+not single objects in live trading. They are choices about auctions, clocks,
+and price fields, and those choices can materially change profitability.
 :::
 
 ## Independent backtesting turns an idea into an executable rule.
@@ -93,30 +92,46 @@ which clock. Independent backtesting forces those hidden decisions into the open
 :::
 
 ::: {.notes}
-So independent backtesting does more than verify someone else's number. It
-translates an informal trading idea into an executable rule. We move from the
-headline concept to concrete choices about instrument, venue, timestamp, and
-order type. Once those choices are encoded, the backtest becomes the first
-version of an automated trading system rather than a decorative chart.
+Independent backtesting is not just a fact-checking exercise. It is the
+translation layer between an informal idea and a rule that software can execute.
+Instrument, venue, timestamp, order type, and price field all have to be pinned
+down. Once they are encoded, the backtest becomes the first draft of the live
+system rather than a separate spreadsheet story.
 :::
 
-## Pitfall checks must happen before the equity curve earns trust.
+## The best rehearsal keeps one strategy rule under two data feeds.
 
-| Strategy setting             | Hidden feasibility check               |
-| ---------------------------- | -------------------------------------- |
-| Long-short stock book        | Were the short names borrowable?       |
-| Intermarket futures pair     | Did both market closes occur together? |
-| Published rule after release | Did post-publication data still work?  |
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/live-strategy-rehearsal.svg){fig-alt="Flow from same strategy logic to same timing rules to same execution assumptions"}
+:::
+:::
 
 ::: {.notes}
-Once the rule is explicit, the next step is not admiring the equity curve. The
-next step is checking whether the trades were feasible. Could we actually borrow
-the short names? Did the two futures markets close at the same time? These
-questions come first because most backtesting mistakes make performance look
-better, not worse.
+Now connect backtesting to automated execution. In the ideal design, the same
+strategy logic can receive either a historical feed or a live market feed. This
+does not make the strategy profitable by itself, but it reduces the gap between
+the simulated rule and the executable rule. If the code has to be rewritten for
+production, new assumptions can enter at exactly the moment we need discipline.
 :::
 
-## True out-of-sample testing begins after the rule is frozen.
+## Pitfall checks ask whether the simulated trades could have existed.
+
+| Strategy setting         | Feasibility question                    |
+| ------------------------ | --------------------------------------- |
+| Long-short stock book    | Were the short names borrowable?        |
+| Intermarket futures pair | Did the two closing prices align?       |
+| Published rule           | Did later data still support the rule?  |
+
+::: {.notes}
+Once every detail is explicit, the equity curve has to wait. First we ask
+whether the trades were feasible. Could the short positions actually be
+borrowed? Did both markets close at the same time? Did the rule survive data
+that arrived after publication? These checks matter because most backtesting
+pitfalls inflate performance instead of making it look worse.
+:::
+
+## True out-of-sample testing starts only after the rule is frozen.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -125,11 +140,11 @@ better, not worse.
 :::
 
 ::: {.notes}
-This leads directly to the meaning of true out-of-sample testing. A validation
-period is not really out of sample if we keep changing the rule after seeing the
-result. Once we revise the parameters, that data has become part of research.
-Publication creates a cleaner boundary because the rule is effectively frozen,
-and later data can test it without the same opportunity for quiet revision.
+Out-of-sample testing sounds objective, but it can lose that objectivity. If a
+researcher sees weak validation results and then changes parameters until the
+same validation period looks good, that period is no longer a clean test.
+Publication creates a clearer boundary because the rule is cast in stone. Data
+after that point can test the rule with less opportunity for quiet revision.
 :::
 
 ## Backtesting is an experiment cycle with a hard validation boundary.
@@ -141,24 +156,26 @@ and later data can test it without the same opportunity for quiet revision.
 :::
 
 ::: {.notes}
-Seen this way, backtesting is an experiment cycle. We form a hypothesis, code
-it, test it, and revise it when the evidence is weak. That iteration is normal
-and useful. But it needs a hard stopping point. After the rule is frozen, the
-next data should evaluate the strategy, not give us one more chance to tune it.
+The research process still needs iteration. We start with a hypothesis about an
+inefficiency, code the rule, test it, and revise when the evidence is weak.
+That is the scientific method applied to trading. The discipline is knowing
+when exploration stops. After the rule is frozen, the next data should evaluate
+the strategy, not give us another chance to tune it.
 :::
 
-## A credible backtest can answer three live-trading questions.
+## A credible backtest answers one live-trading question: could this run tomorrow?
 
-| Question                         | Evidence in the backtest               |
-| -------------------------------- | -------------------------------------- |
-| Can the same rule run live?      | one strategy function, two data feeds  |
-| Was the information available?   | signals delayed to decision time       |
-| Was the market access realistic? | venue, order, borrow, and clock checks |
+| Required answer | Evidence to look for                         |
+| --------------- | -------------------------------------------- |
+| Same rule       | one strategy logic path across modes         |
+| Same timing     | signals use only information already known   |
+| Same access     | venues, prices, orders, and borrow are real  |
+| Same boundary   | validation data are not used for more tuning |
 
 ::: {.notes}
-Close with three review questions that connect everything in the lesson. Can
-the same rule run live if we swap in a live feed? Was every signal built from
-information available at the decision time? And did the test assume market
-access we could actually obtain? If any answer is no, the backtest may still be
-interesting research, but it is not yet evidence we can trade.
+Close with the practical test. Before trusting the performance number, ask
+whether this exact rule could run tomorrow with live data and real market
+access. If the answer depends on future information, unavailable prices,
+unborrowable stocks, or a validation period that was tuned repeatedly, the
+backtest may be useful research. It is not yet evidence we should trade.
 :::

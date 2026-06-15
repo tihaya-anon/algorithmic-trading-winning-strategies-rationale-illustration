@@ -3,11 +3,12 @@ title: "1.2 Common Pitfalls of Backtesting"
 subtitle: "Video lesson slides"
 author: "Algorithmic Trading"
 notes: |
-  Most backtesting mistakes do not create harmless noise. They create false
-  confidence by making the simulated market easier than the real one. In this
-  lesson, we will map the most common pitfalls and ask a simple question each
-  time: did the backtest use information, securities, prices, or venues that a
-  live strategy would not actually have had?
+  Backtesting errors are not usually neutral. Many of them make the historical
+  market easier than the live market: the signal knows too much, the stock
+  universe is cleaner, the price is more convenient, or the venue is not the
+  one we can trade. This lesson turns the pitfall list into one diagnostic
+  question: did the backtest give the strategy an advantage it would not have
+  had in real time?
 
 format:
   revealjs:
@@ -33,24 +34,23 @@ execute:
   echo: true
 ---
 
-## Most pitfalls make the simulated market easier than the live market.
+## Backtesting pitfalls usually make the past easier to trade than the future.
 
-| Backtest shortcut  | Live-trading reality     | Main risk      |
-| ------------------ | ------------------------ | -------------- |
-| Future information | Only current information | look-ahead     |
-| Surviving stocks   | Delistings and failures  | survivorship   |
-| Convenient prices  | Executable prices        | price mismatch |
-| Generic quotes     | Venue-specific quotes    | venue mismatch |
+| Shortcut in the test | Constraint in live trading      | Pitfall family       |
+| -------------------- | ------------------------------- | -------------------- |
+| future fields        | current information only         | look-ahead           |
+| tuned holdout        | unseen data after rule freeze    | data-snooping        |
+| surviving stocks     | delistings and borrow limits     | universe and access  |
+| convenient prices    | executable auctions and quotes   | price and venue      |
 
 ::: {.notes}
-Open this section with the main warning: most pitfalls bias the result in the
-same direction. They make the simulated market easier than the real market.
-That can happen through early information, survivor-only securities,
-non-executable prices, or the wrong trading venue. So the danger is not random
-error. The danger is inflated performance.
+Frame the section as one repeated pattern. The backtest gives the strategy
+something that live trading would not give it: future information, a cleaned-up
+universe, a price it could not fill, or a venue it could not access. The result
+is usually not harmless noise. It is performance that is too good.
 :::
 
-## Look-ahead bias enters when today's signal uses tomorrow's information.
+## Look-ahead bias lets the signal know the ending before the trade begins.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -59,31 +59,30 @@ error. The danger is inflated performance.
 :::
 
 ::: {.notes}
-Start with the most basic pitfall: look-ahead bias. It occurs when the backtest
-uses future information to make a current decision. A same-day high or low is a
-clean example because that value is unknown until the day is over. If the
-signal uses it earlier, the backtest is predicting with information the live
-system could never have.
+Look-ahead bias is the clearest example. If a morning entry signal uses the
+same day's high or low, the backtest has given the strategy knowledge from the
+end of the day. A live system cannot have that value at the decision time, so
+the backtest is no longer testing a real-time prediction rule.
 :::
 
-## A one-period shift keeps the signal available before the trade.
+## The signal must be observable before the return is credited.
 
 ```python
-# unsafe in a same-day signal
-signal_t = high_t > threshold
+# unsafe when high_t is not known yet
+raw_signal_t = high_t > threshold
 
-# safer shape
+# safer shape: trade one period after the signal is known
 signal_t = raw_signal.shift(1)
 ```
 
 ::: {.notes}
-The practical fix is usually simple: delay the signal so the trade uses only
-information already known. The point of the shift is not cosmetic. It enforces
-the timeline of a real decision, where the signal must exist before the return
-is earned.
+The timeline test is simple: the signal must exist before the trade earns the
+return. Shifting the signal is not a mechanical afterthought. It enforces the
+order of events. First information becomes available, then the strategy decides,
+then the next return belongs to that decision.
 :::
 
-## Shared backtest and live logic blocks one major source of look-ahead bias.
+## Shared strategy logic removes one hiding place for future information.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -92,27 +91,13 @@ is earned.
 :::
 
 ::: {.notes}
-Chan's stronger defense is structural, not just procedural. If the backtest and
-live system share the same strategy function and only the data feed changes,
-future information has fewer places to sneak in. That does not guarantee
-profits, but it does remove one major class of backtest-only programming error.
+Chan's preferred defense is structural. If the backtest and the live system use
+the same strategy function, and only the data feed changes, future information
+has fewer places to sneak in. This does not prove the strategy is good, but it
+helps prevent a backtest-only programming error.
 :::
 
-## Different code paths create a backtest-only failure mode.
-
-| If the code path differs                | If only the data feed differs        |
-| --------------------------------------- | ------------------------------------ |
-| future columns can enter backtest logic | live constraints discipline the rule |
-| simulated rule may not be tradable      | backtest rule is closer to execution |
-
-::: {.notes}
-This comparison shows why architecture matters. Separate code paths invite
-separate assumptions, and separate assumptions invite bias. When only the feed
-changes, live constraints discipline the research code instead of letting the
-backtest drift into a fantasy version of the strategy.
-:::
-
-## Validation stops being validation after the model is tuned to pass it.
+## A holdout set stops being clean after we tune the model to pass it.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -121,45 +106,59 @@ backtest drift into a fantasy version of the strategy.
 :::
 
 ::: {.notes}
-The next pitfall is broader: data-snooping bias. A model with enough freedom
-can fit noise and then look brilliant in hindsight. Even a holdout sample stops
-protecting us if we keep retuning the model until that holdout looks good.
-Once that happens, validation has quietly turned into training.
+Data-snooping bias is more subtle because it can happen during honest research.
+We test a model on a holdout set, dislike the result, tweak the model, and test
+again. After enough loops, the holdout set has become part of training. It is no
+longer a clean estimate of future performance.
 :::
 
-## Simpler linear rules leave fewer places to memorize noise.
+## Simple linear rules reduce the number of ways to fit noise.
 
-| Design choice        | Fitting freedom                | Backtest risk |
-| -------------------- | ------------------------------ | ------------- |
-| Many nonlinear rules | many thresholds and exceptions | high          |
-| Few linear terms     | fewer knobs to tune            | lower         |
-| Equal-weight ranks   | sampling accidents matter less | lower         |
+| Design choice        | Freedom to fit history           | Diagnostic question          |
+| -------------------- | -------------------------------- | ---------------------------- |
+| many nonlinear rules | many thresholds and exceptions   | Did complexity predict?      |
+| few linear terms     | fewer knobs to tune              | Can a simpler rule work?     |
+| equal-weight ranks   | less dependence on sample quirks | Are weights doing real work? |
 
 ::: {.notes}
-This is where Chan's preference for simplicity becomes useful. The value of a
-linear rule is not that markets are always linear. The value is that simple
-rules leave fewer knobs to tune and fewer ways to memorize noise. A more
-complicated model should earn its complexity by improving prediction, not just
-improving the historical fit.
+The defense is not simplicity for its own sake. The defense is that every extra
+rule, threshold, distributional assumption, or parameter is another opportunity
+to fit historical accidents. A more complex model should earn its complexity by
+predicting better, not merely by explaining the past more tightly.
 :::
 
-## Splits and dividends are accounting events, not trading signals.
+## Walk-forward testing is the final defense because every research loop leaks.
 
-| Event                   | Price | Shares | Market value |
-| ----------------------- | ----: | -----: | -----------: |
-| Before 2-for-1 split    |   100 |      1 |          100 |
-| After 2-for-1 split     |    50 |      2 |          100 |
-| Unadjusted price series |  -50% |        | false signal |
+| Test stage      | What it can reveal                         |
+| --------------- | ------------------------------------------ |
+| cross-validation | whether results survive different subsets |
+| paper trading   | whether the frozen rule works after research |
+| small live trade | whether real execution frictions appear   |
 
 ::: {.notes}
-Now move from modeling errors to data preparation errors. Stock splits and
-dividends change the quoted price, but they do not represent the same kind of
-economic move as a genuine selloff. If the price history is not adjusted before
-the signal uses it, the strategy can mistake accounting events for tradable
-information.
+Cross-validation helps when data are scarce, especially if performance is
+stable across subsets. But Chan is blunt about the final defense: because some
+data-snooping almost always creeps in, the frozen model needs walk-forward
+testing. Paper trading helps, and a small real-money deployment can reveal
+execution issues that even paper trading misses.
 :::
 
-## A survivor-only database makes recovery look predictable.
+## Splits and dividends can turn accounting events into false signals.
+
+| Event                | Quoted price | Holdings | Economic value |
+| -------------------- | -----------: | -------: | -------------: |
+| Before 2-for-1 split |          100 |        1 |            100 |
+| After 2-for-1 split  |           50 |        2 |            100 |
+| If unadjusted        |         -50% |          | false signal   |
+
+::: {.notes}
+Now move from model selection to data preparation. A split changes the quoted
+price and the share count, not the economic value of the position. Dividends
+create a similar mechanical price drop. If the historical series is not
+adjusted before the signal sees it, accounting mechanics become fake alpha.
+:::
+
+## Survivor-only data makes recovery look obvious after it has happened.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -168,42 +167,44 @@ information.
 :::
 
 ::: {.notes}
-Another common distortion is survivorship bias. If the database contains only
-stocks that still exist today, the backtest acts as if the trader somehow knew
-which distressed names would survive. That is especially dangerous in
-mean-reversion strategies that deliberately buy recent losers.
+Survivorship bias changes the universe. If the database contains only stocks
+that still exist today, the backtest acts as if the trader knew which distressed
+companies would survive. That is especially dangerous for long-only
+mean-reversion rules that buy the biggest recent losers.
 :::
 
-## Mean-reversion backtests are most exposed to survivor-only universes.
+## Short-sale constraints can erase trades that look easy in a database.
 
-| Mean-reversion trade    | Bias direction       |
-| ----------------------- | -------------------- |
-| Long the biggest losers | performance inflated |
-| Short failed firms      | profits omitted      |
+| Backtest assumption       | Live-market question                     |
+| ------------------------- | ---------------------------------------- |
+| any stock can be shorted  | Could the broker locate shares?          |
+| borrow is always cheap    | Was the name hard to borrow?             |
+| market order can execute  | Did short-sale rules block the fill?     |
 
 ::: {.notes}
-This slide makes the direction of the bias concrete. Long loser portfolios can
-look too strong because failed firms disappear from history, while some of the
-best short opportunities can vanish from the sample entirely. Either way, the
-historical universe is cleaner than the one a live trader actually faced.
+Short-sale constraints are another universe problem, but now the issue is
+access rather than membership. A backtest may assume every short trade can be
+placed. Live trading depends on locate availability, borrow cost, share float,
+short interest, and occasionally rule-based restrictions. Ignoring these
+constraints can create profits that no trader could have captured.
 :::
 
-## Live auction orders require primary-exchange auction prices.
+## Auction orders need primary-exchange auction prices.
 
-| Order in live trading | Price needed in the backtest    |
-| --------------------- | ------------------------------- |
-| Market-on-open        | primary opening auction         |
-| Market-on-close       | primary closing auction         |
-| Signal from high/low  | representative executable range |
+| Live order type      | Historical price needed                  |
+| -------------------- | ---------------------------------------- |
+| Market-on-open       | primary opening auction                  |
+| Market-on-close      | primary closing auction                  |
+| Signal from high/low | representative executable price range    |
 
 ::: {.notes}
-Next, connect prices to execution venue. In U.S. equities, market-on-open and
-market-on-close orders target the primary exchange auction, not just any print
-in the consolidated tape. So the historical price field has to match the order
-the strategy would really send.
+Next, match the price to the order. U.S. stocks trade across many venues, but
+market-on-open and market-on-close orders route to the primary exchange
+auction. Consolidated daily open and close prices may come from another venue,
+so they can be the wrong evidence for the order we are testing.
 :::
 
-## Auction strategies fail when consolidated outliers stand in for fills.
+## Consolidated outliers can create fills the auction never offered.
 
 ::: {.visual-slide}
 ::: {.visual-frame}
@@ -212,39 +213,41 @@ the strategy would really send.
 :::
 
 ::: {.notes}
-If we ignore that distinction, a small and possibly unrepresentative print on a
-secondary venue can become a fake entry or exit in the backtest. The strategy
-then profits from a price it could not realistically fill. That is why auction
-strategies need primary-exchange auction prices, not convenient substitutes.
+The mistake is especially tempting in mean-reversion tests. A small trade on a
+secondary venue can print away from the primary auction price. The next price
+may revert, and the backtest records a profit. But the strategy may never have
+been able to fill at that outlier price in meaningful size.
 :::
 
-## Forex backtests are venue-specific because quotes and spreads are venue-specific.
+## Forex backtests are realistic only on executable venue quotes.
 
-| Venue           | Bid-ask quote   | Tradable by our strategy? |
-| --------------- | --------------- | ------------------------- |
-| Bank or ECN A   | one spread      | maybe                     |
-| Bank or ECN B   | another spread  | maybe                     |
-| Aggregated book | combined quotes | only if executable        |
+| Data source           | Tradable by the strategy? | What must be checked      |
+| --------------------- | ------------------------- | ------------------------- |
+| single bank or ECN    | maybe                     | venue-specific spread     |
+| aggregated order book | only if executable        | depth and access          |
+| delayed trade prints  | usually not enough        | bid-ask quotes preferred  |
 
 ::: {.notes}
-The same principle extends even more strongly to foreign exchange. FX is highly
-fragmented, spreads differ across venues, and there is no universal best bid or
-offer that every trader can access. So a forex backtest is realistic only when
-its quotes come from the same executable venue set as the live strategy.
+Foreign exchange makes the venue problem even sharper. There is no single
+central exchange and no rule that every venue must execute at the best bid or
+ask across the market. A forex backtest is realistic only if its quotes come
+from the venue set the live strategy can actually trade, with that venue set's
+spreads and transaction costs.
 :::
 
-## A clean backtest matches live trading on information, universe, price, and venue.
+## A clean backtest passes five market-reality gates before performance matters.
 
-| Gate        | Passing evidence                                 |
-| ----------- | ------------------------------------------------ |
-| Information | no future fields in current signals              |
-| Universe    | delisted securities are represented              |
-| Price       | corporate actions and auction prices are handled |
-| Venue       | historical quotes match executable venues        |
+| Gate        | Passing evidence                                  |
+| ----------- | ------------------------------------------------- |
+| Information | no future fields in current signals               |
+| Selection   | validation data are not reused for tuning         |
+| Universe    | delisted and hard-to-borrow names are represented |
+| Price       | corporate actions and auction prices are handled  |
+| Venue       | quotes and spreads match executable venues        |
 
 ::: {.notes}
-End the section with four gates that summarize the entire pitfall map. Check
-the information set, the security universe, the price series, and the trading
-venue. If any gate fails, the backtest may still look precise, but it is
-describing a market that the live strategy never had access to.
+End with the diagnostic checklist. Before the Sharpe ratio matters, the
+backtest has to pass five gates: information, selection, universe, price, and
+venue. If one gate fails, the result may still be interesting, but it is
+evidence about a friendlier market than the one the strategy would face live.
 :::
