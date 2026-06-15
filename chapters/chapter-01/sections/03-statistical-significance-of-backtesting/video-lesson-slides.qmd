@@ -81,10 +81,10 @@ $$
 t \approx \text{Sharpe}_{\text{daily}} \sqrt{n}
 $$
 
-| Daily Sharpe × \(\sqrt{n}\) | Interpretation              |
-| ---------------------------: | --------------------------- |
-| small                        | lucky sample still plausible |
-| large                        | zero-edge story strained     |
+| Daily Sharpe x $\sqrt{n}$ | Interpretation               |
+| ------------------------: | ---------------------------- |
+| small                     | lucky sample still plausible |
+| large                     | zero-edge story strained     |
 
 ::: {.notes}
 Under a Gaussian assumption, the familiar signal shows up again. The larger the
@@ -109,12 +109,12 @@ had room to average out.
 
 ## Critical values convert a test statistic into a significance threshold.
 
-| p-value threshold | Critical value for daily Sharpe × \(\sqrt{n}\) |
-| ----------------: | ---------------------------------------------: |
-| 0.10              | 1.282                                          |
-| 0.05              | 1.645                                          |
-| 0.01              | 2.326                                          |
-| 0.001             | 3.091                                          |
+| p-value threshold | Critical value for daily Sharpe x $\sqrt{n}$ |
+| ----------------: | -------------------------------------------: |
+| 0.10              | 1.282                                        |
+| 0.05              | 1.645                                        |
+| 0.01              | 2.326                                        |
+| 0.001             | 3.091                                        |
 
 ::: {.notes}
 This is Chan's compact lookup table. If the test statistic crosses one of these

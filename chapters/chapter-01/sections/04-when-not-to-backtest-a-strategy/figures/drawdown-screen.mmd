@@ -1,0 +1,7 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+    A["Candidate strategy<br/>high annual return"] --> B["Low Sharpe ratio"]
+    B --> C["Long drawdown duration"]
+    C --> D["Reject before deep backtest"]
+    B -. "inconsistent result" .-> D
+    C -. "behaviorally hard to hold" .-> D

@@ -1,0 +1,117 @@
+---
+title: "1.4 When Not to Backtest a Strategy"
+subtitle: "Chapter 01. Backtesting and Automated Execution"
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+    code-tools: false
+include-after-body:
+  - ../../../../styles/web-note-modal.html
+---
+
+::: {.section-output-links}
+[Slides](video-lesson-slides.qmd){.action-video aria-label="Open video lesson slides" data-modal="video" data-label="Video lesson slides" data-tooltip="Slides"}
+<span aria-hidden="true">/</span>
+[PDF](pdf-notes.qmd){.action-pdf aria-label="Open PDF notes" data-tooltip="PDF"}
+<span aria-hidden="true">/</span>
+[Markdown](downloads/section.json){.action-markdown aria-label="Open raw markdown viewer" data-modal="markdown" data-label="Markdown" data-tooltip="Markdown" data-markdown-src="downloads/section.json"}
+<span aria-hidden="true">/</span>
+[Bundle](downloads/section-bundle.zip){.action-bundle aria-label="Download markdown bundle" data-tooltip="Bundle"}
+:::
+
+# Not Every Published Strategy Deserves a Backtest
+
+The earlier sections argued that a strategy should usually be backtested before
+it is traded. Chan's next point is more selective. Some published strategies
+are so weak on first inspection that it is not worth spending time coding them
+in the first place.
+
+This is not a rejection of disciplined research. It is part of disciplined
+research. Backtesting takes time, data, implementation effort, and attention.
+Those resources should be reserved for ideas that survive a basic plausibility
+screen.
+
+# High Return Alone Is Not a Good Invitation
+
+Chan's first example is a strategy with a 30 percent annualized return, a
+Sharpe ratio of only 0.3, and a maximum drawdown duration of two years. On the
+surface, the average return looks attractive. On inspection, the strategy looks
+fragile.
+
+The low Sharpe ratio implies weak consistency. The return may come from a small
+number of favorable episodes rather than from a repeatable edge. The long
+drawdown duration adds two more problems. First, it suggests that the strategy
+may fail a cross-validation test because many subsamples will be dominated by
+extended losing periods. Second, even if the edge were real, many traders or
+investors would not endure two years underwater.
+
+This leads to Chan's practical rule: do not bother to backtest strategies with
+high average return but low Sharpe ratio, and do not bother to backtest
+strategies with maximum drawdown duration longer than the trader or investor
+can realistically tolerate.
+
+# A Trading Rule Must Beat the Obvious Benchmark
+
+Chan's second example is a long-only crude oil futures strategy that returned
+20 percent in 2007 with a Sharpe ratio of 1.5. Those numbers sound respectable
+until they are compared with a trivial benchmark. Simply holding the front-month
+crude oil futures contract returned 47 percent that year with a Sharpe ratio of
+1.7.
+
+That comparison changes the interpretation completely. The trading rule is no
+longer impressive. It is inferior to a simpler alternative that requires less
+design, less turnover, and less explanation. The conclusion is straightforward:
+if a strategy cannot beat an obvious buy-and-hold benchmark on both return and
+risk-adjusted performance, it has not earned the right to be studied further.
+
+This is an important screening principle beyond the crude-oil example. The
+simpler the candidate strategy, the more forcefully it should be compared
+against the simplest credible baseline before additional research begins.
+
+# Some Claims Reveal Likely Data Problems Immediately
+
+Chan's third example is a long-only stock strategy that claims an extremely
+large return. His first reaction is not to ask which parameters generated it.
+His first reaction is to question the database.
+
+The key suspicion is survivorship bias. If the historical stock data include
+only companies that survived until today, then a long-only strategy can look
+far better than it really was. Stocks that collapsed, delisted, or went
+bankrupt disappear from the sample, and the backtest quietly keeps only the
+recoveries.
+
+This means some published claims can be screened before detailed replication.
+If the paper does not clearly establish that the stock database is free of
+survivorship bias, especially for a spectacular long-only result, the strategy
+may not deserve immediate backtesting effort.
+
+# Pitfall Knowledge Makes Early Rejection Possible
+
+This section depends on the earlier ones. We can reject weak candidates early
+because we now know what kinds of flaws to look for: inconsistent returns,
+intolerable drawdowns, obvious benchmark underperformance, and data structures
+that almost certainly inflate the result.
+
+The goal is not to become cynical about every strategy. The goal is to avoid
+wasting time on ideas that fail basic tests before implementation details even
+matter. Good research is selective. It screens quickly, then backtests deeply
+only when the candidate idea survives that first screen.
+
+# Review Checklist
+
+- Is the strategy's return supported by a reasonable Sharpe ratio?
+- Is the maximum drawdown duration shorter than what the trader or investor can
+  realistically endure?
+- Does the strategy beat a simple benchmark such as buy-and-hold when that
+  benchmark is the natural alternative?
+- Is the data source credible enough that survivorship bias or another obvious
+  pitfall is not the first explanation for the result?
+
+# Reading Path
+
+- Previous: [1.3 Statistical Significance of Backtesting]({{< meta site-url >}}/chapters/chapter-01/sections/03-statistical-significance-of-backtesting/)
+- Next: [Chapter overview]({{< meta site-url >}}/chapters/)

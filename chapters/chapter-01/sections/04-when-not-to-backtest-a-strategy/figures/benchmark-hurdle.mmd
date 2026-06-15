@@ -1,0 +1,12 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart TB
+    A["Candidate rule<br/>20% return<br/>Sharpe 1.5"]
+    B["Simple benchmark<br/>47% return<br/>Sharpe 1.7"]
+    C["Does the strategy beat the obvious baseline?"]
+    D["No: reject the idea"]
+    E["Yes: maybe worth detailed backtest"]
+
+    A --> C
+    B --> C
+    C -->|No| D
+    C -->|Yes| E

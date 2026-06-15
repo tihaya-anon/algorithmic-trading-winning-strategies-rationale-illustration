@@ -29,6 +29,8 @@ website:
             text: "1.2 Common Pitfalls of Backtesting"
           - href: chapters/chapter-01/sections/03-statistical-significance-of-backtesting/web-notes.qmd
             text: "1.3 Statistical Significance of Backtesting"
+          - href: chapters/chapter-01/sections/04-when-not-to-backtest-a-strategy/web-notes.qmd
+            text: "1.4 When Not to Backtest a Strategy"
 
 format:
   html:

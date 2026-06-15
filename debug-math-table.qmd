@@ -1,0 +1,66 @@
+---
+title: "Debug Math Table"
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: false
+    number-sections: false
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+---
+
+# Inline Math in Paragraph
+
+This variant is expected to fail in this repository toolchain:
+`\(\sqrt{n}\)`.
+
+This variant is the safe form to use:
+$\sqrt{n}$.
+
+# Display Math
+
+$$
+t \approx \text{Sharpe}_{\text{daily}} \sqrt{n}
+$$
+
+# Markdown Table with Plain Text Header
+
+| label | value |
+| ----- | ----- |
+| dollar math in cell | $\sqrt{n}$ |
+
+# Markdown Table with Plain-Text Header for PDF Safety
+
+| Critical value for sqrt(n) | value |
+| -------------------------- | ----- |
+| test                       | 2.326 |
+
+# Markdown Table with Plain-Text Header but Math in Sentence Below
+
+| label | value |
+| ----- | ----- |
+| threshold | 2.326 |
+
+If daily Sharpe times $\sqrt{n}$ exceeds 2.326, this sentence should compile.
+
+# Conclusion
+
+In this repository, Quarto to XeLaTeX currently handles `$...$` reliably for
+inline math, but `\(...\)` is not being converted safely and should be avoided
+in `.qmd` source intended for PDF output.
