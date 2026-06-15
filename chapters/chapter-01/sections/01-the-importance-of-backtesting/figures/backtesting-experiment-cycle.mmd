@@ -1,19 +1,28 @@
 %%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 42, "rankSpacing": 52, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e", "clusterBkg": "#ffffff", "clusterBorder": "#cbd5e1"}}}%%
-flowchart TB
-  A["Research&nbsp;loop:&nbsp;hypothesis,&nbsp;rules,&nbsp;diagnostics,&nbsp;revise&nbsp;if&nbsp;weak"]
-  F["Validation&nbsp;boundary:&nbsp;freeze&nbsp;rule,&nbsp;walk-forward&nbsp;test,&nbsp;live&nbsp;evidence"]
-  H["Research&nbsp;log:&nbsp;dates&nbsp;+&nbsp;choices"]
+flowchart LR
+  H["Research log<br/>dates and choices"]
 
-  A --> F
+  subgraph left["Experiment cycle"]
+    direction TB
+    A["Research loop<br/>hypothesis<br/>rules<br/>diagnostics"]
+    M["Revise weak result<br/>and rerun"]
+    A --> M
+  end
 
+  subgraph right["Validation side"]
+    direction TB
+    F["Validation boundary<br/>freeze rule<br/>walk-forward test"]
+  end
+
+  M --> F
   H -. "record and audit" .-> A
-  H -. "protect" .-> F
+  H -. "protect final test" .-> F
 
   classDef idea fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
   classDef build fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;
   classDef decision fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
   classDef validation fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
   classDef log fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#334155,stroke-dasharray: 5 4;
-  class A idea;
+  class A,M idea;
   class F validation;
   class H log;

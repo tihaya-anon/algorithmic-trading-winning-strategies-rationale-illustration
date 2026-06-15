@@ -1,19 +1,19 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
 flowchart TB
   subgraph feeds["Only the data feed changes"]
-    direction LR
-    H["Historical feed: backtest mode"]
-    L["Live market feed: production mode"]
+    direction TB
+    H["Historical feed<br/>backtest mode"]
+    L["Live market feed<br/>production mode"]
   end
 
   S["Same strategy logic"]
   subgraph discipline["Rehearsal discipline"]
-    direction LR
-    T["Same decision clock: what is known now?"]
-    O["Same execution assumptions: venue + order type + price field"]
+    direction TB
+    T["Same decision clock<br/>what is known now?"]
+    O["Same execution assumptions<br/>venue<br/>order type<br/>price field"]
   end
-  R["Comparable performance evidence"]
-  X["Hidden assumption breaks the rehearsal"]
+  R["Comparable<br/>performance evidence"]
+  X["Hidden assumption<br/>breaks the rehearsal"]
 
   H --> S
   L --> S

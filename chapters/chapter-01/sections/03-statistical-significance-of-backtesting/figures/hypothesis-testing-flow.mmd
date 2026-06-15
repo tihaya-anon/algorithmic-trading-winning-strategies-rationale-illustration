@@ -1,8 +1,22 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
 flowchart LR
-    A[Observed backtest result] --> B[Test statistic]
-    B --> C[Null hypothesis:<br/>true mean return = 0]
-    C --> D[Null distribution]
-    D --> E[p-value]
-    E --> F{Small enough?}
-    F -->|Yes| G[Reject null]
-    F -->|No| H[Do not reject null]
+    subgraph left["Observed result"]
+      direction TB
+      A["Observed<br/>backtest result"]
+      B["Test statistic"]
+      C["Null hypothesis<br/>true mean return = 0"]
+      A --> B --> C
+    end
+
+    subgraph right["Decision under the null"]
+      direction TB
+      D["Null distribution"]
+      E{"p-value<br/>small enough?"}
+      G["Reject null"]
+      H["Do not reject null"]
+      D --> E
+      E -->|Yes| G
+      E -->|No| H
+    end
+
+    C --> D

@@ -1,8 +1,8 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
 flowchart TB
-  A["Research&nbsp;period:&nbsp;try&nbsp;hypothesis,&nbsp;tune&nbsp;details,&nbsp;repair&nbsp;weak&nbsp;tests"]
-  F["Publication&nbsp;boundary:&nbsp;rule&nbsp;is&nbsp;frozen"]
-  G["True&nbsp;out-of-sample&nbsp;period:&nbsp;new&nbsp;data,&nbsp;fixed-rule&nbsp;test,&nbsp;accept&nbsp;or&nbsp;reject"]
+  A["Research period<br/>try hypothesis<br/>tune details<br/>repair weak tests"]
+  F["Publication boundary<br/>rule is frozen"]
+  G["True out-of-sample period<br/>new data<br/>fixed-rule test<br/>accept or reject"]
 
   A --> F --> G
   G -. "do not tune backward" .-> A

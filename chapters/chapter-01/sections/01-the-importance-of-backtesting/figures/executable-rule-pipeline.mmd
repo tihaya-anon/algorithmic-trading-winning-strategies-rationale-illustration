@@ -3,7 +3,7 @@ flowchart TB
   A["Published strategy idea"]
 
   subgraph spec["Make the rule executable"]
-    direction LR
+    direction TB
     B1["Instrument"]
     B2["Venue"]
     B3["Timestamp"]
@@ -12,10 +12,10 @@ flowchart TB
   end
 
   subgraph implementation["Carry assumptions into execution"]
-    direction LR
-    C["Backtest code: explicit assumptions"]
-    E["Pitfall audit<br/>borrow, clocks, data, venues"]
-    D["Automated execution code: same assumptions"]
+    direction TB
+    C["Backtest code<br/>explicit assumptions"]
+    E["Pitfall audit<br/>borrow<br/>clocks<br/>data<br/>venues"]
+    D["Automated execution code<br/>same assumptions"]
   end
 
   A --> B1
@@ -29,7 +29,7 @@ flowchart TB
   B4 --> C
   B5 --> C
   C --> E --> D
-  D -. "implementation details stay pinned down" .-> C
+  D -. "details stay pinned down" .-> C
 
   classDef idea fill:#f8fafc,stroke:#475569,stroke-width:2px,color:#0f172a;
   classDef spec fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;

@@ -1,5 +1,5 @@
 %%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
-flowchart LR
+flowchart TB
   A["All stocks visible<br/>at decision time"]
 
   subgraph current["Survivor-only database"]
@@ -9,7 +9,7 @@ flowchart LR
   end
 
   subgraph missing["Missing history"]
-    direction TB
+    direction LR
     D["Delisted"]
     E["Bankrupt"]
     F["Acquired"]

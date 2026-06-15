@@ -1,6 +1,19 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
 flowchart LR
-    A[Null market model] --> B[Simulate many price paths]
-    B --> C[Run strategy on each path]
-    C --> D[Collect simulated returns]
-    D --> E[Compare with observed backtest]
-    E --> F[p-value = fraction as good or better]
+    subgraph left["Build and replay"]
+      direction TB
+      A["Null market model"]
+      B["Simulate many<br/>price paths"]
+      C["Run strategy<br/>on each path"]
+      D["Collect simulated<br/>returns"]
+      A --> B --> C --> D
+    end
+
+    subgraph right["Compare with history"]
+      direction TB
+      E["Compare with<br/>observed backtest"]
+      F["p-value = fraction<br/>as good or better"]
+      E --> F
+    end
+
+    D --> E
