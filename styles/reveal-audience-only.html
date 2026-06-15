@@ -31,11 +31,57 @@
 
   protectGlobalPlugin("RevealMenu", disabledPlugin("menu"));
   protectGlobalPlugin("RevealNotes", disabledPlugin("notes"));
+
+  const removeAudienceOnlyUi = () => {
+    document
+      .querySelectorAll(".slide-menu-wrapper, .slide-menu-button")
+      .forEach((element) => element.remove());
+
+    document.body?.classList.remove("slide-menu-active");
+    document
+      .querySelector(".reveal")
+      ?.classList.forEach((className) => {
+        if (className.startsWith("has-") && className.includes("-left")) {
+          document.querySelector(".reveal")?.classList.remove(className);
+        }
+      });
+  };
+
+  const installAudienceOnlyUiGuard = () => {
+    removeAudienceOnlyUi();
+
+    new MutationObserver(removeAudienceOnlyUi).observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key?.toLowerCase() === "m") {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      },
+      true
+    );
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", installAudienceOnlyUiGuard, {
+      once: true
+    });
+  } else {
+    installAudienceOnlyUiGuard();
+  }
 })();
 </script>
 <style>
   .slide-menu-wrapper,
+  .slide-menu-button,
   .reveal .slide-menu-button {
     display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 </style>

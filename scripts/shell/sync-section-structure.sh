@@ -333,7 +333,7 @@ jobs:
     steps:
       - name: Deploy static site
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 YAML
 }
 
