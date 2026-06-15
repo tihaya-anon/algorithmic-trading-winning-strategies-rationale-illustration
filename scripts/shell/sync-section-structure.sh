@@ -47,6 +47,7 @@ esac
 repo_root="$(repo_root_from_script "${BASH_SOURCE[0]}")"
 tmp_dir="$(make_temp_dir)"
 check_failed=0
+site_url_placeholder='{{< meta site-url >}}'
 
 cleanup() {
   rm -rf -- "$tmp_dir"
@@ -130,6 +131,76 @@ for_each_chapter() {
 for_each_section() {
   local chapter_dir="$1"
   find "$chapter_dir/sections" -mindepth 1 -maxdepth 1 -type d -name '[0-9][0-9]-*' | sort
+}
+
+for_each_section_file() {
+  find "$repo_root/chapters" -type f \
+    \( -path '*/sections/[0-9][0-9]-*/web-notes.qmd' -o -path '*/sections/[0-9][0-9]-*/pdf-notes.qmd' \) \
+    | sort
+}
+
+strip_reading_path_block() {
+  local input="$1"
+  local output="$2"
+  perl -0pe 's/\n*# Reading Path\n(?:.*\n?)*\z/\n/s' "$input" > "$output"
+}
+
+render_reading_path_block() {
+  local prev_label="$1"
+  local prev_url="$2"
+  local next_label="$3"
+  local next_url="$4"
+
+  {
+    printf '\n# Reading Path\n\n'
+    printf -- '- Previous: [%s](%s)\n' "$prev_label" "$prev_url"
+    printf -- '- Next: [%s](%s)\n' "$next_label" "$next_url"
+  }
+}
+
+sync_reading_paths() {
+  local -a sections=()
+  local -a section_titles=()
+  local chapter_dir section_dir section_rel section_title
+  local i prev_label prev_url next_label next_url base_output generated_file target_file tmp_body
+
+  while IFS= read -r chapter_dir; do
+    while IFS= read -r section_dir; do
+      sections+=("$section_dir")
+      section_titles+=("$(front_matter_title "$section_dir/web-notes.qmd" "$(basename -- "$section_dir")")")
+    done < <(for_each_section "$chapter_dir")
+  done < <(for_each_chapter)
+
+  for i in "${!sections[@]}"; do
+    section_dir="${sections[$i]}"
+    section_rel="$(relpath "$section_dir")"
+    base_output="$tmp_dir/reading-path-$i"
+
+    if (( i == 0 )); then
+      prev_label="Chapter overview"
+      prev_url="$site_url_placeholder/chapters/"
+    else
+      prev_label="${section_titles[$((i - 1))]}"
+      prev_url="$site_url_placeholder/${sections[$((i - 1))]#"$repo_root"/}/"
+    fi
+
+    if (( i == ${#sections[@]} - 1 )); then
+      next_label="Chapter overview"
+      next_url="$site_url_placeholder/chapters/"
+    else
+      next_label="${section_titles[$((i + 1))]}"
+      next_url="$site_url_placeholder/${sections[$((i + 1))]#"$repo_root"/}/"
+    fi
+
+    for target_file in "$section_dir/web-notes.qmd" "$section_dir/pdf-notes.qmd"; do
+      generated_file="$base_output-$(basename "$target_file")"
+      tmp_body="$generated_file.tmp"
+      strip_reading_path_block "$target_file" "$tmp_body"
+      cat "$tmp_body" > "$generated_file"
+      render_reading_path_block "$prev_label" "$prev_url" "$next_label" "$next_url" >> "$generated_file"
+      sync_generated_file "$generated_file" "$target_file"
+    done
+  done
 }
 
 generate_quarto_yml() {
@@ -387,6 +458,7 @@ generate_workflow "$tmp_dir/publish.yml"
 sync_generated_file "$tmp_dir/_quarto.yml" "$repo_root/_quarto.yml"
 sync_generated_file "$tmp_dir/chapters-index.qmd" "$repo_root/chapters/index.qmd"
 sync_generated_file "$tmp_dir/publish.yml" "$repo_root/.github/workflows/publish.yml"
+sync_reading_paths
 
 if [[ "$mode" == "check" ]]; then
   exit "$check_failed"
