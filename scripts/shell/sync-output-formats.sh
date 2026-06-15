@@ -100,7 +100,7 @@ strip_generated_metadata() {
       return line ~ /^[^[:space:]#][^:]*:[[:space:]]*/
     }
     function is_generated_key(line) {
-      return line ~ /^(format|execute|include-in-header|include-after-body):[[:space:]]*/
+      return line ~ /^(format|execute|filters|include-in-header|include-before-body|include-after-body):[[:space:]]*/
     }
     {
       if (skipping && is_top_level_key($0)) {
@@ -149,6 +149,7 @@ format:
     slide-number: true
     controls: true
     progress: true
+    menu: false
     transition: slide
     transition-speed: fast
     center: false
@@ -157,6 +158,10 @@ format:
     show-notes: false
     scrollable: true
     embed-resources: false
+filters:
+  - ../../../../scripts/lua/remove-reveal-notes.lua
+include-before-body:
+  - ../../../../styles/reveal-audience-only.html
 execute:
   echo: true
 YAML

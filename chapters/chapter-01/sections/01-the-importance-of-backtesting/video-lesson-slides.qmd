@@ -18,6 +18,7 @@ format:
     slide-number: true
     controls: true
     progress: true
+    menu: false
     transition: slide
     transition-speed: fast
     center: false
@@ -26,6 +27,10 @@ format:
     show-notes: false
     scrollable: true
     embed-resources: false
+filters:
+  - ../../../../scripts/lua/remove-reveal-notes.lua
+include-before-body:
+  - ../../../../styles/reveal-audience-only.html
 execute:
   echo: true
 ---

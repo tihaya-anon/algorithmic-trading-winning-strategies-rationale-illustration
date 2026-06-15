@@ -1,0 +1,41 @@
+<script>
+(() => {
+  const disabledPlugin = (id) => () => ({
+    id,
+    init: () => {},
+    open: () => {},
+    toggle: () => {},
+    openMenu: () => {},
+    closeMenu: () => {}
+  });
+
+  const protectGlobalPlugin = (name, pluginFactory) => {
+    try {
+      Object.defineProperty(window, name, {
+        configurable: true,
+        get() {
+          return pluginFactory;
+        },
+        set() {
+          Object.defineProperty(window, name, {
+            configurable: true,
+            writable: true,
+            value: pluginFactory
+          });
+        }
+      });
+    } catch (_) {
+      window[name] = pluginFactory;
+    }
+  };
+
+  protectGlobalPlugin("RevealMenu", disabledPlugin("menu"));
+  protectGlobalPlugin("RevealNotes", disabledPlugin("notes"));
+})();
+</script>
+<style>
+  .slide-menu-wrapper,
+  .reveal .slide-menu-button {
+    display: none !important;
+  }
+</style>
