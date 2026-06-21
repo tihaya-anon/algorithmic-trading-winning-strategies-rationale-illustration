@@ -33,7 +33,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Backtesting pitfalls usually make the past easier to trade than the future.
 
 | Shortcut in the test | Constraint in live trading      | Pitfall family       |

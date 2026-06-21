@@ -31,7 +31,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Bollinger bands make linear mean reversion tradable by capping exposure at one unit.
 
 | Linear strategy        | Bollinger strategy                   |

@@ -32,7 +32,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## The signal choice decides what portfolio we are actually trading.
 
 | Signal form       | Hidden implementation claim          |

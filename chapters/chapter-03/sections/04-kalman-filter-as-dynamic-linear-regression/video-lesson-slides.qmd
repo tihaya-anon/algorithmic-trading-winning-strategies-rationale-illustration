@@ -30,7 +30,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## The Kalman filter updates hedge ratio and mean without an arbitrary rolling cutoff.
 
 | Rolling window problem     | Kalman filter response                 |

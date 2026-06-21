@@ -31,7 +31,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Averaging-in feels right because bigger deviations promise bigger reversals.
 
 | Intuition              | Hidden assumption                     |

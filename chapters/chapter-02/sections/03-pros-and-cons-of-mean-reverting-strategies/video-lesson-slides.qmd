@@ -32,7 +32,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Mean-reverting strategies often look unusually consistent in normal markets.
 
 ::: {.visual-slide}

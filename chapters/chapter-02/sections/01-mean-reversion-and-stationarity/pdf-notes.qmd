@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Mean Reversion Here Means Time-Series Mean Reversion
 
 This chapter is about time-series mean reversion: the price of one asset, or of

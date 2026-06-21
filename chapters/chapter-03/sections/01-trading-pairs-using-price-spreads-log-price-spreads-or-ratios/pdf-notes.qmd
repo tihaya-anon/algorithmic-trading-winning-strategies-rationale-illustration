@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Signal Choice Is Portfolio Choice
 
 Chapter 2 ended with stationary portfolios and linear mean-reversion rules. The

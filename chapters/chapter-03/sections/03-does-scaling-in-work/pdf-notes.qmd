@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Scaling-in Is Intuitive but Not Automatically Optimal
 
 Scaling-in, or averaging-in, is one of the most natural ideas in mean-reversion

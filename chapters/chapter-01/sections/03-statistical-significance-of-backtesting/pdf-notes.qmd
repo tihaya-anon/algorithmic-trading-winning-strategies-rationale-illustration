@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # A Good Backtest Still Has a Finite-Sample Problem
 
 Even when a backtest is carefully implemented, its summary statistics are based

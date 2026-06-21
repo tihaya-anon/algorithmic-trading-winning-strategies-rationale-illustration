@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Backtesting Pitfalls Make History Too Easy
 
 Most backtesting pitfalls point in the same direction: they make historical

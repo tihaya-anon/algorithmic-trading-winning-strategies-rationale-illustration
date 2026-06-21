@@ -31,7 +31,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Some strategies should fail the smell test before they reach the backtester.
 
 | Candidate claim            | Early screening question            |

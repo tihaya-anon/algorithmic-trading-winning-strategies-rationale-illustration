@@ -31,7 +31,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Cointegration lets traders manufacture stationarity from nonstationary assets.
 
 ::: {.visual-slide}

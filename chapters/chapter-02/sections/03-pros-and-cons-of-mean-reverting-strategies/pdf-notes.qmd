@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Mean Reversion Often Looks Better Than It Feels in a Crisis
 
 Chan ends the chapter by explaining why mean-reversion strategies are so

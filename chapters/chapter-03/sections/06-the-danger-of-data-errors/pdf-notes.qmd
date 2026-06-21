@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Data Errors Systematically Favor Mean-Reversion Backtests
 
 Chan treats data quality as a special danger for mean-reversion strategies

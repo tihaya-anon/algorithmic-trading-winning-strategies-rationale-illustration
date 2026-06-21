@@ -31,7 +31,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## The same Kalman logic can estimate one asset's fair value, not just a pair hedge ratio.
 
 | Pair version            | Market-making version               |

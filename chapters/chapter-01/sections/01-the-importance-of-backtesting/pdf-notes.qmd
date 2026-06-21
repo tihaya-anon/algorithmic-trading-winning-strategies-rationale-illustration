@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Backtesting Is a Rehearsal, Not a Scoreboard
 
 Backtesting feeds historical data into a trading strategy to ask how the

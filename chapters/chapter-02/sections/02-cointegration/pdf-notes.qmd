@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Cointegration Solves the Scarcity Problem of Stationary Assets
 
 By the end of Section 2.1, one difficulty is obvious: truly stationary traded

@@ -30,7 +30,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## One bad tick can create a fake mean-reversion profit that never existed.
 
 | True path              | Corrupted path                        |

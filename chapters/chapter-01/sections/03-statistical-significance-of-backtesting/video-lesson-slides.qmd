@@ -31,7 +31,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## A profitable sample can still be a lucky sample.
 
 | What we observe        | What may still be true      |

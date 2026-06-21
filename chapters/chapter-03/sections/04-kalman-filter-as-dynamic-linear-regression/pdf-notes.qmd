@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Rolling Regression Has Two Opposite Failure Modes
 
 Chan introduces the Kalman filter as a response to a basic implementation

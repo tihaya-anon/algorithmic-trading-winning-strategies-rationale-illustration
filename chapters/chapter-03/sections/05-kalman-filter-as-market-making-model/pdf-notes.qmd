@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # The Kalman Filter Can Estimate Fair Value for One Asset
 
 In Section 3.4, the hidden state contained the slope and intercept linking two

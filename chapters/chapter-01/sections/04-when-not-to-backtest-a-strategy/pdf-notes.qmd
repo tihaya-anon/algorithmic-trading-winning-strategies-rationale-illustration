@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Not Every Published Strategy Deserves a Backtest
 
 The earlier sections argued that a strategy should usually be backtested before

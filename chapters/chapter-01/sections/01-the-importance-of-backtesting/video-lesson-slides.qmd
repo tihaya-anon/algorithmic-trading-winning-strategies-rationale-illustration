@@ -32,7 +32,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## An impressive equity curve can still describe a trade we cannot execute.
 
 | What the chart shows | What the chart can hide              |

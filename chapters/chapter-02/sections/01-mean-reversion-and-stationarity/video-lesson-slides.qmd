@@ -32,7 +32,6 @@ include-before-body:
 execute:
   echo: true
 ---
-
 ## Mean reversion is tradable only when price departures tend to pull back.
 
 ::: {.visual-slide}

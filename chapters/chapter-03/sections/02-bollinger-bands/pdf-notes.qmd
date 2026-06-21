@@ -33,7 +33,6 @@ include-in-header:
     \addtokomafont{author}{\rmfamily}
     \addtokomafont{date}{\rmfamily}
 ---
-
 # Bollinger Bands Turn a Demonstration Strategy into a Tradable Rule
 
 The linear strategy from Chapter 2 is intentionally simple: position size is
