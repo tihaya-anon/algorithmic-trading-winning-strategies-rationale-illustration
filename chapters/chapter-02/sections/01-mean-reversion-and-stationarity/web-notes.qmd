@@ -309,5 +309,5 @@ worth pursuing before the researcher starts tuning a trading rule.
 
 # Reading Path
 
-- Previous: [1.4 When Not to Backtest a Strategy]({{< meta site-url >}}/chapters/chapter-01/sections/04-when-not-to-backtest-a-strategy/)
-- Next: [2.2 Cointegration]({{< meta site-url >}}/chapters/chapter-02/sections/02-cointegration/)
+- Previous: [1.4 When Not to Backtest a Strategy](../../../chapter-01/sections/04-when-not-to-backtest-a-strategy/web-notes.qmd)
+- Next: [2.2 Cointegration](../02-cointegration/web-notes.qmd)

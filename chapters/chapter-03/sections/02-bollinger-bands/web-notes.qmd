@@ -111,5 +111,5 @@ implementation afterthought.
 
 # Reading Path
 
-- Previous: [3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios]({{< meta site-url >}}/chapters/chapter-03/sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/)
-- Next: [3.3 Does Scaling-in Work?]({{< meta site-url >}}/chapters/chapter-03/sections/03-does-scaling-in-work/)
+- Previous: [3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios](../01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/web-notes.qmd)
+- Next: [3.3 Does Scaling-in Work?](../03-does-scaling-in-work/web-notes.qmd)

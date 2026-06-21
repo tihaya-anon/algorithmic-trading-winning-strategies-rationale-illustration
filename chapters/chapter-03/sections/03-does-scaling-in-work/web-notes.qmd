@@ -94,5 +94,5 @@ environment changes.
 
 # Reading Path
 
-- Previous: [3.2 Bollinger Bands]({{< meta site-url >}}/chapters/chapter-03/sections/02-bollinger-bands/)
-- Next: [3.4 Kalman Filter as Dynamic Linear Regression]({{< meta site-url >}}/chapters/chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/)
+- Previous: [3.2 Bollinger Bands](../02-bollinger-bands/web-notes.qmd)
+- Next: [3.4 Kalman Filter as Dynamic Linear Regression](../04-kalman-filter-as-dynamic-linear-regression/web-notes.qmd)

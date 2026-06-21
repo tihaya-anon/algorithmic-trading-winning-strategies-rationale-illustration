@@ -126,5 +126,5 @@ period after the boundary.
 
 # Reading Path
 
-- Previous: [Chapter overview]({{< meta site-url >}}/chapters/)
-- Next: [1.2 Common Pitfalls of Backtesting]({{< meta site-url >}}/chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/)
+- Previous: [Chapter overview](../../../index.qmd)
+- Next: [1.2 Common Pitfalls of Backtesting](../02-common-pitfalls-of-backtesting/web-notes.qmd)

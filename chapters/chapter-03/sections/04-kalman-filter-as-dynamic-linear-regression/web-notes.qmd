@@ -281,5 +281,5 @@ implementation.
 
 # Reading Path
 
-- Previous: [3.3 Does Scaling-in Work?]({{< meta site-url >}}/chapters/chapter-03/sections/03-does-scaling-in-work/)
-- Next: [3.5 Kalman Filter as Market-Making Model]({{< meta site-url >}}/chapters/chapter-03/sections/05-kalman-filter-as-market-making-model/)
+- Previous: [3.3 Does Scaling-in Work?](../03-does-scaling-in-work/web-notes.qmd)
+- Next: [3.5 Kalman Filter as Market-Making Model](../05-kalman-filter-as-market-making-model/web-notes.qmd)

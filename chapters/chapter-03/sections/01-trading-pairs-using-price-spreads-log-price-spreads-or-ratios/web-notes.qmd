@@ -180,5 +180,5 @@ aligned with how the live portfolio is actually being held.
 
 # Reading Path
 
-- Previous: [2.3 Pros and Cons of Mean-Reverting Strategies]({{< meta site-url >}}/chapters/chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/)
-- Next: [3.2 Bollinger Bands]({{< meta site-url >}}/chapters/chapter-03/sections/02-bollinger-bands/)
+- Previous: [2.3 Pros and Cons of Mean-Reverting Strategies](../../../chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/web-notes.qmd)
+- Next: [3.2 Bollinger Bands](../02-bollinger-bands/web-notes.qmd)

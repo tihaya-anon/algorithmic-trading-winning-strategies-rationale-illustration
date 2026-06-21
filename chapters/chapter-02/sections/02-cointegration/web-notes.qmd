@@ -255,5 +255,5 @@ construction principle and a filtering device, not as a guarantee of profits.
 
 # Reading Path
 
-- Previous: [2.1 Mean Reversion and Stationarity]({{< meta site-url >}}/chapters/chapter-02/sections/01-mean-reversion-and-stationarity/)
-- Next: [2.3 Pros and Cons of Mean-Reverting Strategies]({{< meta site-url >}}/chapters/chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/)
+- Previous: [2.1 Mean Reversion and Stationarity](../01-mean-reversion-and-stationarity/web-notes.qmd)
+- Next: [2.3 Pros and Cons of Mean-Reverting Strategies](../03-pros-and-cons-of-mean-reverting-strategies/web-notes.qmd)

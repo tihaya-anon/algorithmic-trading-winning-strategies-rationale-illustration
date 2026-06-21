@@ -146,5 +146,5 @@ whether the remaining performance evidence is strong enough to take seriously.
 
 # Reading Path
 
-- Previous: [1.2 Common Pitfalls of Backtesting]({{< meta site-url >}}/chapters/chapter-01/sections/02-common-pitfalls-of-backtesting/)
-- Next: [1.4 When Not to Backtest a Strategy]({{< meta site-url >}}/chapters/chapter-01/sections/04-when-not-to-backtest-a-strategy/)
+- Previous: [1.2 Common Pitfalls of Backtesting](../02-common-pitfalls-of-backtesting/pdf-notes.qmd)
+- Next: [1.4 When Not to Backtest a Strategy](../04-when-not-to-backtest-a-strategy/pdf-notes.qmd)

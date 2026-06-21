@@ -113,5 +113,5 @@ only when the candidate idea survives that first screen.
 
 # Reading Path
 
-- Previous: [1.3 Statistical Significance of Backtesting]({{< meta site-url >}}/chapters/chapter-01/sections/03-statistical-significance-of-backtesting/)
-- Next: [2.1 Mean Reversion and Stationarity]({{< meta site-url >}}/chapters/chapter-02/sections/01-mean-reversion-and-stationarity/)
+- Previous: [1.3 Statistical Significance of Backtesting](../03-statistical-significance-of-backtesting/web-notes.qmd)
+- Next: [2.1 Mean Reversion and Stationarity](../../../chapter-02/sections/01-mean-reversion-and-stationarity/web-notes.qmd)

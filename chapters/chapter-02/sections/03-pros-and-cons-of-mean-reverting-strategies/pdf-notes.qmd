@@ -125,5 +125,5 @@ once thought stable may no longer hold.
 
 # Reading Path
 
-- Previous: [2.2 Cointegration]({{< meta site-url >}}/chapters/chapter-02/sections/02-cointegration/)
-- Next: [Chapter overview]({{< meta site-url >}}/chapters/)
+- Previous: [2.2 Cointegration](../02-cointegration/pdf-notes.qmd)
+- Next: [3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios](../../../chapter-03/sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/pdf-notes.qmd)

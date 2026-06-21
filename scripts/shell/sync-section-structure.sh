@@ -47,7 +47,6 @@ esac
 repo_root="$(repo_root_from_script "${BASH_SOURCE[0]}")"
 tmp_dir="$(make_temp_dir)"
 check_failed=0
-site_url_placeholder='{{< meta site-url >}}'
 
 cleanup() {
   rm -rf -- "$tmp_dir"
@@ -158,11 +157,33 @@ render_reading_path_block() {
   }
 }
 
+reading_path_url() {
+  local current_section_dir="$1"
+  local target="$2"
+  local target_file="$3"
+  local current_chapter target_chapter target_section
+
+  if [[ "$target" == "chapters-index" ]]; then
+    printf '../../../index.qmd\n'
+    return 0
+  fi
+
+  current_chapter="$(basename -- "$(dirname -- "$(dirname -- "$current_section_dir")")")"
+  target_chapter="$(basename -- "$(dirname -- "$(dirname -- "$target")")")"
+  target_section="$(basename -- "$target")"
+
+  if [[ "$current_chapter" == "$target_chapter" ]]; then
+    printf '../%s/%s\n' "$target_section" "$target_file"
+  else
+    printf '../../../%s/sections/%s/%s\n' "$target_chapter" "$target_section" "$target_file"
+  fi
+}
+
 sync_reading_paths() {
   local -a sections=()
   local -a section_titles=()
   local chapter_dir section_dir section_rel section_title
-  local i prev_label prev_url next_label next_url base_output generated_file target_file tmp_body
+  local i prev_label prev_url next_label next_url base_output generated_file target_file tmp_body target_name
 
   while IFS= read -r chapter_dir; do
     while IFS= read -r section_dir; do
@@ -178,25 +199,38 @@ sync_reading_paths() {
 
     if (( i == 0 )); then
       prev_label="Chapter overview"
-      prev_url="$site_url_placeholder/chapters/"
+      prev_url="$(reading_path_url "$section_dir" "chapters-index" "index.qmd")"
     else
       prev_label="${section_titles[$((i - 1))]}"
-      prev_url="$site_url_placeholder/${sections[$((i - 1))]#"$repo_root"/}/"
+      prev_url="$(reading_path_url "$section_dir" "${sections[$((i - 1))]}" "web-notes.qmd")"
     fi
 
     if (( i == ${#sections[@]} - 1 )); then
       next_label="Chapter overview"
-      next_url="$site_url_placeholder/chapters/"
+      next_url="$(reading_path_url "$section_dir" "chapters-index" "index.qmd")"
     else
       next_label="${section_titles[$((i + 1))]}"
-      next_url="$site_url_placeholder/${sections[$((i + 1))]#"$repo_root"/}/"
+      next_url="$(reading_path_url "$section_dir" "${sections[$((i + 1))]}" "web-notes.qmd")"
     fi
 
     for target_file in "$section_dir/web-notes.qmd" "$section_dir/pdf-notes.qmd"; do
+      target_name="$(basename -- "$target_file")"
       generated_file="$base_output-$(basename "$target_file")"
       tmp_body="$generated_file.tmp"
       strip_reading_path_block "$target_file" "$tmp_body"
       cat "$tmp_body" > "$generated_file"
+      if (( i == 0 )); then
+        prev_url="$(reading_path_url "$section_dir" "chapters-index" "$target_name")"
+      else
+        prev_url="$(reading_path_url "$section_dir" "${sections[$((i - 1))]}" "$target_name")"
+      fi
+
+      if (( i == ${#sections[@]} - 1 )); then
+        next_url="$(reading_path_url "$section_dir" "chapters-index" "$target_name")"
+      else
+        next_url="$(reading_path_url "$section_dir" "${sections[$((i + 1))]}" "$target_name")"
+      fi
+
       render_reading_path_block "$prev_label" "$prev_url" "$next_label" "$next_url" >> "$generated_file"
       sync_generated_file "$generated_file" "$target_file"
     done

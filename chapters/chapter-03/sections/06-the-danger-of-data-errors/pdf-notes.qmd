@@ -93,5 +93,5 @@ confuse bad ticks with opportunities.
 
 # Reading Path
 
-- Previous: [3.5 Kalman Filter as Market-Making Model]({{< meta site-url >}}/chapters/chapter-03/sections/05-kalman-filter-as-market-making-model/)
-- Next: [Chapter overview]({{< meta site-url >}}/chapters/)
+- Previous: [3.5 Kalman Filter as Market-Making Model](../05-kalman-filter-as-market-making-model/pdf-notes.qmd)
+- Next: [Chapter overview](../../../index.qmd)

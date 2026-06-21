@@ -170,5 +170,5 @@ Kalman recursion provides a principled way to combine them.
 
 # Reading Path
 
-- Previous: [3.4 Kalman Filter as Dynamic Linear Regression]({{< meta site-url >}}/chapters/chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/)
-- Next: [3.6 The Danger of Data Errors]({{< meta site-url >}}/chapters/chapter-03/sections/06-the-danger-of-data-errors/)
+- Previous: [3.4 Kalman Filter as Dynamic Linear Regression](../04-kalman-filter-as-dynamic-linear-regression/pdf-notes.qmd)
+- Next: [3.6 The Danger of Data Errors](../06-the-danger-of-data-errors/pdf-notes.qmd)
