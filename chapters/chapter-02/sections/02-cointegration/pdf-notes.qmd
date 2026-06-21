@@ -1,0 +1,270 @@
+---
+title: "2.2 Cointegration"
+subtitle: "PDF notes | Chapter 02. The Basics of Mean Reversion"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Cointegration Solves the Scarcity Problem of Stationary Assets
+
+By the end of Section 2.1, one difficulty is obvious: truly stationary traded
+price series are rare. Chan's answer is that traders are not limited to
+prefabricated price series. They can create a new series by taking a linear
+combination of several nonstationary assets. If that combination is stationary,
+the input assets are called cointegrated.
+
+For two assets, the most familiar case is a pair trade. For a larger set of
+assets, the same idea generalizes to a basket. The core mathematical object is
+always the same: a weighted portfolio whose net market value behaves like a
+mean-reverting series even though each component price does not.
+
+# Hedge Ratios Define the Portfolio Being Tested
+
+Suppose we have price series $y_1, y_2, \ldots, y_n$. A candidate portfolio
+price is a weighted sum
+
+$$
+y_{\text{port}} = h_1 y_1 + h_2 y_2 + \cdots + h_n y_n.
+$$
+
+The coefficients $h_i$ are the hedge ratios. In equity language they are share
+counts; in futures or ETF language they are contract or unit weights. A negative
+weight means a short position.
+
+The central difficulty is that stationarity is a property of the weighted
+combination, not of the raw assets individually. Most weight choices will not
+produce a stationary portfolio. Cointegration testing is therefore partly a
+search for the right hedge ratios.
+
+# CADF Uses an Estimated Hedge Ratio and Then Tests the Residual
+
+The Engle-Granger logic, which Chan implements through the Cointegrated ADF
+(CADF) test, works in two steps for a pair:
+
+1. estimate the hedge ratio by regressing one series on the other
+2. test whether the residual spread is stationary
+
+For a pair $(x_t, y_t)$, a regression of $y_t$ on $x_t$ gives
+
+$$
+y_t = h x_t + c + u_t,
+$$
+
+where the residual
+
+$$
+u_t = y_t - h x_t - c
+$$
+
+is the candidate stationary portfolio up to the constant offset. The CADF test
+then applies the ADF logic to $u_t$ rather than to one raw price series.
+
+This solves the main problem left open by ordinary ADF testing. We do not know
+the correct hedge ratio in advance, so we cannot test the pair portfolio until
+we estimate the combination first.
+
+# Why CADF Is Different from Testing a Naive Spread
+
+Without the regression step, a trader might test an arbitrary spread such as
+$y_t - x_t$ or a dollar-neutral construction chosen for convenience. Chan's
+point is that cointegration does not guarantee that every linear combination is
+stationary. Only specific combinations work.
+
+The regression estimate is therefore not cosmetic. It is the mechanism that
+turns two drifting assets into a candidate stationary series. Once that series
+is built, the ADF logic from the previous section applies again.
+
+# The EWA-EWC Example Shows the Full CADF Workflow
+
+Chan uses EWA and EWC, ETFs tied to Australian and Canadian equities, as a
+practical illustration. Because both economies are strongly commodity-linked,
+the pair is a plausible cointegration candidate.
+
+The workflow is:
+
+1. regress EWC on EWA to estimate a hedge ratio
+2. form the residual series $y_t - h x_t$
+3. run CADF on that residual series
+
+The reported CADF statistic is about $-3.64$, while the 5 percent critical
+value is about $-3.359$. Because $-3.64$ is more negative, the null that the
+residual has a unit root is rejected at the 95 percent level. In Chan's
+language, EWA and EWC are cointegrating with 95 percent certainty.
+
+# CADF Is Order Dependent
+
+This is one of the most important caveats in the section. If we regress EWC on
+EWA, we get one hedge ratio. If we regress EWA on EWC, we get another. Those
+two estimates are generally not exact reciprocals, and only one direction may
+produce the more stationary residual.
+
+That means CADF is order dependent. The test is not asking only whether the two
+assets move together. It is also inheriting the asymmetry of the regression used
+to estimate the portfolio weights.
+
+Chan's practical recommendation is blunt: if CADF is the tool being used, try
+each variable as the independent one and keep the ordering that yields the most
+negative test statistic.
+
+# Johansen Generalizes the Framework to a Multivariate System
+
+CADF works naturally for a pair, but traders often want to test a basket of
+three or more assets. Chan then introduces the Johansen test by lifting the
+univariate ADF-style dynamics into vector form:
+
+$$
+\Delta Y(t) = \Lambda Y(t-1) + M
+  + A_1 \Delta Y(t-1) + \cdots + A_k \Delta Y(t-k) + \varepsilon_t.
+\tag{2.7}
+$$
+
+Here:
+
+- $Y(t)$ is now a vector of price series
+- $\Lambda$ and $A_i$ are coefficient matrices
+- $M$ is a constant offset vector
+
+The same intuition remains in force. If the next move of the vector does not
+depend on the current level, then there is no mean-reverting long-run relation.
+In the Johansen framework, that dependence is summarized by the rank of
+$\Lambda$.
+
+# The Rank of the Long-Run Matrix Counts Cointegrating Relations
+
+Let $n$ be the number of price series and let $r = \operatorname{rank}(\Lambda)$.
+Then $r$ is the number of independent cointegrating relations in the system.
+
+This interpretation is the key reason Johansen is so useful:
+
+- $r = 0$: no cointegration
+- $r = 1$: one independent stationary portfolio
+- $r > 1$: several distinct stationary portfolios exist
+
+The test provides trace and eigen statistics, each evaluated against critical
+values for null hypotheses such as $r = 0$, $r \le 1$, and so on. A trader does
+not need to derive these statistics by hand; the important output is how many
+cointegrating relations survive the critical-value comparisons.
+
+# Johansen Also Produces the Hedge Ratios
+
+The by-product that matters most in implementation is the eigenvector output.
+Johansen returns eigenvectors associated with the cointegrating relations, and
+those eigenvectors can be used directly as hedge ratios.
+
+This is more powerful than CADF in two ways:
+
+- it is not tied to one arbitrary regression ordering
+- it can return multiple stationary portfolios from one basket
+
+In practice, Chan treats the eigenvector associated with the largest eigenvalue
+as the strongest relation, in the sense that it often corresponds to the
+shortest half-life.
+
+# The EWA-EWC Pair Under Johansen
+
+Applying Johansen to the EWA-EWC pair confirms the CADF conclusion that the
+pair is cointegrating. But Chan emphasizes a subtler point: with two series,
+Johansen can recover two independent relations, which aligns with the idea that
+reversing the dependent and independent roles in a CADF-style regression can
+lead to different stationary constructions.
+
+This is the mathematical reason Johansen is cleaner. Instead of re-running the
+regression manually under different orderings, the system test extracts the full
+set of relations in one step.
+
+# The Three-Asset Example Shows Why Johansen Matters
+
+Chan then adds IGE, an ETF of natural-resource stocks, to create a three-series
+system $(\text{EWA}, \text{EWC}, \text{IGE})$. The Johansen test reports
+eigenvalues and eigenvectors for the system, and Chan chooses the first
+eigenvector because it corresponds to the largest eigenvalue and therefore the
+strongest relation.
+
+The stationary portfolio price is then formed as
+
+$$
+y_{\text{port}}(t) = h_1 y_1(t) + h_2 y_2(t) + h_3 y_3(t),
+$$
+
+where $(h_1,h_2,h_3)$ is the selected eigenvector.
+
+Once this portfolio price is constructed, the analysis returns to familiar
+ground. The trader can estimate $\lambda$ by regressing $\Delta y_{\text{port}}$
+on $y_{\text{port}}(t-1)$ and compute the half-life exactly as in Section 2.1.
+
+Chan reports a half-life of roughly 23 days for the selected triplet relation,
+which is much shorter than the 115-day estimate for USD.CAD. That comparison is
+precisely the payoff of cointegration: a basket may create a much more tradable
+mean-reverting process than any one raw component.
+
+# A Linear Mean-Reversion Strategy Can Then Be Applied to the Portfolio
+
+Once the unit portfolio is defined by the Johansen eigenvector, Chan reuses the
+same linear trading rule as before. Let $y_{\text{port}}$ be the unit-portfolio
+price and let the lookback be chosen near the estimated half-life. Then
+
+$$
+\text{numUnits}_t
+= -\frac{y_{\text{port},t} - \operatorname{movingAvg}(y_{\text{port},t})}
+         {\operatorname{movingStd}(y_{\text{port},t})}.
+$$
+
+The actual positions in the underlying assets are those unit-portfolio weights
+scaled by $\text{numUnits}_t$. In other words, the strategy does not trade the
+raw ETFs one by one based on separate signals. It trades multiples of one
+constructed stationary portfolio.
+
+# Cointegration Widens the Search Space Without Eliminating Risk
+
+Cointegration is powerful because it transforms a scarce search problem into a
+richer one. The trader no longer asks only, "Which single assets are
+stationary?" The trader asks, "Which combinations of related assets generate a
+stationary price process?"
+
+But the method does not make every pair or basket safe. Hedge ratios may drift,
+transaction costs may matter, and a statistically cointegrated relation can
+still become economically unstable. Cointegration is therefore best read as a
+construction principle and a filtering device, not as a guarantee of profits.
+
+# Review Checklist
+
+- What exact linear combination is being tested?
+- Is the hedge ratio estimated, or was it chosen by convenience?
+- If CADF is used, was order dependence checked explicitly?
+- If Johansen is used, what rank does the test imply?
+- Which eigenvector is being traded, and what half-life does its portfolio price
+  imply?
+
+# Reading Path
+
+- Previous: [2.1 Mean Reversion and Stationarity]({{< meta site-url >}}/chapters/chapter-02/sections/01-mean-reversion-and-stationarity/)
+- Next: [2.3 Pros and Cons of Mean-Reverting Strategies]({{< meta site-url >}}/chapters/chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/)

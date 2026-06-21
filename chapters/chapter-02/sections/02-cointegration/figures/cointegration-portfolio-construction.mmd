@@ -1,0 +1,23 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 42, "rankSpacing": 52, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  A["Asset A<br/>nonstationary"]
+  B["Asset B<br/>nonstationary"]
+  C["Choose hedge ratio h"]
+  D["Portfolio price<br/>A - h x B"]
+  E["If stationary:<br/>trade deviation from mean"]
+
+  A --> C
+  B --> C
+  C --> D --> E
+
+  F["Wrong h<br/>spread still drifts"]
+  C -. "random weighting" .-> F
+
+  classDef asset fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef build fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;
+  classDef trade fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef bad fill:#fef2f2,stroke:#b91c1c,stroke-width:2px,color:#7f1d1d;
+  class A,B asset;
+  class C,D build;
+  class E trade;
+  class F bad;

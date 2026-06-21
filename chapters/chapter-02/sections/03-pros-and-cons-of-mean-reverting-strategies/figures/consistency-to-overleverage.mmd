@@ -1,0 +1,18 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 40, "rankSpacing": 52, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  A["Frequent small wins"]
+  B["Short drawdowns"]
+  C["High confidence in model"]
+  D["Leverage creeps upward"]
+  E["Strategy feels safest<br/>just before rare break"]
+
+  A --> C
+  B --> C
+  C --> D --> E
+
+  classDef good fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef warn fill:#fff7ed,stroke:#c2410c,stroke-width:2px,color:#7c2d12;
+  classDef risk fill:#fef2f2,stroke:#b91c1c,stroke-width:3px,color:#7f1d1d;
+  class A,B good;
+  class C,D warn;
+  class E risk;

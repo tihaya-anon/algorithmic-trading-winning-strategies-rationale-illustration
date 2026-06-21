@@ -37,6 +37,15 @@ generated output settings stay aligned with each file type.
 - [1.4 When Not to Backtest a Strategy](chapter-01/sections/04-when-not-to-backtest-a-strategy/web-notes.qmd)  
   Alternate formats: [video](chapter-01/sections/04-when-not-to-backtest-a-strategy/video-lesson-slides.qmd), [PDF](chapter-01/sections/04-when-not-to-backtest-a-strategy/pdf-notes.qmd)
 
+## Chapter 02. The Basics of Mean Reversion
+
+- [2.1 Mean Reversion and Stationarity](chapter-02/sections/01-mean-reversion-and-stationarity/web-notes.qmd)  
+  Alternate formats: [video](chapter-02/sections/01-mean-reversion-and-stationarity/video-lesson-slides.qmd), [PDF](chapter-02/sections/01-mean-reversion-and-stationarity/pdf-notes.qmd)
+- [2.2 Cointegration](chapter-02/sections/02-cointegration/web-notes.qmd)  
+  Alternate formats: [video](chapter-02/sections/02-cointegration/video-lesson-slides.qmd), [PDF](chapter-02/sections/02-cointegration/pdf-notes.qmd)
+- [2.3 Pros and Cons of Mean-Reverting Strategies](chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/web-notes.qmd)  
+  Alternate formats: [video](chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/video-lesson-slides.qmd), [PDF](chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/pdf-notes.qmd)
+
 # Authoring Convention
 
 - Create one folder per chapter: `chapters/chapter-02/`.

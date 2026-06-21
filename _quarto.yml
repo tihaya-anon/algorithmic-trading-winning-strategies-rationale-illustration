@@ -31,6 +31,14 @@ website:
             text: "1.3 Statistical Significance of Backtesting"
           - href: chapters/chapter-01/sections/04-when-not-to-backtest-a-strategy/web-notes.qmd
             text: "1.4 When Not to Backtest a Strategy"
+      - section: "Chapter 02. The Basics of Mean Reversion"
+        contents:
+          - href: chapters/chapter-02/sections/01-mean-reversion-and-stationarity/web-notes.qmd
+            text: "2.1 Mean Reversion and Stationarity"
+          - href: chapters/chapter-02/sections/02-cointegration/web-notes.qmd
+            text: "2.2 Cointegration"
+          - href: chapters/chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/web-notes.qmd
+            text: "2.3 Pros and Cons of Mean-Reverting Strategies"
 
 format:
   html:

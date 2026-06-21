@@ -1,0 +1,324 @@
+---
+title: "2.1 Mean Reversion and Stationarity"
+subtitle: "PDF notes | Chapter 02. The Basics of Mean Reversion"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Mean Reversion Here Means Time-Series Mean Reversion
+
+This chapter is about time-series mean reversion: the price of one asset, or of
+one constructed portfolio, tends to move back toward a mean determined by its
+own history. That is different from cross-sectional mean reversion, where the
+relative returns of assets inside a basket revert toward the basket return. Chan
+defers that stock-basket setting to Chapter 4.
+
+The practical question in this section is narrower and more technical. Given a
+price series $y(t)$, can we show that its current level contains information
+about the next move, and can we show that the pullback happens fast enough to
+support a trading strategy?
+
+# Mean Reversion and Stationarity Are Equivalent Views of One Property
+
+Chan presents two mathematical descriptions of the same phenomenon.
+
+The mean-reversion description says that the next price change is related to the
+gap between current price and mean price. If current price is above the mean,
+the next move should tend to be downward. If current price is below the mean,
+the next move should tend to be upward.
+
+The stationarity description says that the variance of the log price grows more
+slowly than it would for a geometric random walk. A random walk diffuses
+normally: uncertainty grows linearly with elapsed time. A stationary series can
+still wander, but its uncertainty grows sublinearly.
+
+These views lead to different tests:
+
+- the ADF framework tests the first description directly
+- the Hurst exponent and Variance Ratio framework test the second description
+
+# The ADF Regression Encodes Pullback Explicitly
+
+Chan writes the discrete-time model as:
+
+$$
+\Delta y(t) = \lambda y(t-1) + \mu + \beta t
+  + \alpha_1 \Delta y(t-1) + \cdots + \alpha_k \Delta y(t-k) + \varepsilon_t
+\tag{2.1}
+$$
+
+where
+
+$$
+\Delta y(t) \equiv y(t) - y(t-1).
+$$
+
+This equation is easy to interpret term by term:
+
+- $\lambda y(t-1)$ is the key mean-reversion term
+- $\mu$ allows a nonzero long-run mean
+- $\beta t$ allows deterministic drift
+- lagged differences $\alpha_i \Delta y(t-i)$ absorb short-run serial
+  correlation in changes
+
+The null hypothesis in the ADF test is $\lambda = 0$. Under that null, the next
+change does not depend on current level, so the series behaves like a unit-root
+process rather than a mean-reverting one.
+
+For a trader, the sign of $\lambda$ matters immediately:
+
+- $\lambda < 0$: high levels tend to be followed by downward moves, and low
+  levels by upward moves
+- $\lambda = 0$: no pullback force is detected
+- $\lambda > 0$: the series is not mean reverting at all
+
+The ADF test statistic is the estimated coefficient divided by its standard
+error:
+
+$$
+\frac{\hat{\lambda}}{\operatorname{SE}(\hat{\lambda})}.
+$$
+
+To reject the null in favor of mean reversion, this statistic must be negative
+enough relative to Dickey-Fuller critical values. Chan also follows the
+practical simplification $\beta = 0$: any deterministic drift is usually much
+smaller than day-to-day fluctuations, so the drift term is typically not the
+economically important piece.
+
+# The USD.CAD Example Shows the Difference Between Sign and Significance
+
+Chan applies the ADF test to the daily USD.CAD exchange rate sampled at
+17:00 ET. The example is useful because it shows that "negative" and
+"statistically convincing" are not the same thing.
+
+The reported result is approximately:
+
+- ADF statistic: $-1.84$
+- 10 percent critical value: $-2.594$
+
+Because $-1.84$ is not more negative than $-2.594$, the test does not reject
+the null that $\lambda = 0$ even at the 90 percent level. The series therefore
+does not qualify as stationary by this strict test.
+
+But the sign is still informative. The estimate is negative, which suggests the
+series is at least not obviously trending. This distinction becomes important
+later when Chan shifts from pure hypothesis testing to half-life.
+
+# Stationarity Can Also Be Described Through Diffusion Speed
+
+The Hurst-exponent route starts from log prices:
+
+$$
+z(t) = \log y(t).
+$$
+
+Define the variance of the increment over lag $\tau$ as
+
+$$
+\operatorname{Var}(\tau)
+= \left\langle |z(t+\tau)-z(t)|^2 \right\rangle.
+\tag{2.2}
+$$
+
+For a geometric random walk, this variance grows linearly:
+
+$$
+\left\langle |z(t+\tau)-z(t)|^2 \right\rangle \sim \tau.
+\tag{2.3}
+$$
+
+For a more general process, Chan writes
+
+$$
+\left\langle |z(t+\tau)-z(t)|^2 \right\rangle \sim \tau^{2H},
+\tag{2.4}
+$$
+
+where $H$ is the Hurst exponent.
+
+This gives a compact classification rule:
+
+- $H = 0.5$: geometric random walk
+- $H < 0.5$: mean reverting
+- $H > 0.5$: trending
+
+The smaller $H$ is, the stronger the pullback tendency. But Chan is careful
+about interpretation: stationarity here does not mean prices are perfectly range
+bound with time-independent variance. It means diffusion is slower than normal,
+not absent.
+
+# The Variance Ratio Test Supplies the Missing Hypothesis Test
+
+An estimated Hurst exponent is only a point estimate. A value such as $H=0.49$
+may suggest weak mean reversion, but finite samples can easily produce values
+slightly below or above $0.5$ by chance.
+
+The Variance Ratio test asks whether the diffusion behavior is statistically
+distinguishable from the random-walk benchmark. Conceptually, it tests whether
+long-lag variance scales like one-period variance in the way a random walk would
+imply. In Chan's USD.CAD example, the Variance Ratio test returns a p-value of
+about $0.367$, so the random-walk null still cannot be rejected.
+
+That creates a useful tension:
+
+- ADF does not reject unit root
+- Hurst estimate is close to, but slightly below, 0.5
+- Variance Ratio also fails to reject random walk
+
+The lesson is that the series may be weakly mean reverting in sign, yet not
+statistically strong enough to pass a demanding academic threshold.
+
+# Half-Life Converts the Econometric Coefficient into Trading Time
+
+Chan's next move is the most useful one for trading. He asks not only whether
+$\lambda$ is significantly negative, but whether it is negative enough to make a
+strategy commercially worthwhile.
+
+Ignoring the deterministic drift and lagged-difference terms in Equation 2.1
+leads to the continuous-time approximation
+
+$$
+dy(t) = (\lambda y(t-1) + \mu)\,dt + d\varepsilon.
+\tag{2.5}
+$$
+
+This is the Ornstein-Uhlenbeck form for a mean-reverting process. Its expected
+solution is
+
+$$
+\mathbb{E}[y(t)]
+= y_0 e^{\lambda t} - \frac{\mu}{\lambda}(1-e^{\lambda t}).
+\tag{2.6}
+$$
+
+Because mean reversion requires $\lambda < 0$, the transient component
+$y_0 e^{\lambda t}$ decays exponentially. The half-life is therefore
+
+$$
+\text{half-life} = -\frac{\log 2}{\lambda}.
+$$
+
+This formula matters for three reasons:
+
+1. if $\lambda > 0$, the series is not mean reverting
+2. if $\lambda < 0$ but close to zero, half-life becomes very long
+3. half-life sets a natural time scale for signal construction
+
+Chan explicitly warns against using a lookback much shorter than the reversion
+time scale. If half-life is roughly 20 days, a 5-day moving average is usually
+too short to represent the equilibrium the strategy claims to trade.
+
+# The USD.CAD Half-Life Example Explains Why Failure to Reject Is Not the End
+
+Chan estimates $\lambda$ for USD.CAD by regressing $\Delta y(t)$ on $y(t-1)$.
+The reported half-life is about 115 days.
+
+This is a useful example precisely because it is awkward:
+
+- the series did not pass strict stationarity tests
+- but the estimated pullback coefficient is still negative
+- and the half-life is finite, though long
+
+The conclusion is not that USD.CAD is an ideal candidate. The conclusion is
+that strict rejection at the 90 or 95 percent level is not the only criterion a
+trader should care about. The trading horizon, turnover, and capital lock-up all
+depend on the half-life.
+
+# The Linear Strategy Uses Z-Score as the Position Rule
+
+Once a price series has a usable half-life, Chan proposes a deliberately simple
+linear strategy. Let the moving mean and moving standard deviation be computed
+over a lookback near the half-life. Define the Z-score as
+
+$$
+z_t
+= \frac{y_t - \operatorname{movingAvg}(y_t)}
+       {\operatorname{movingStd}(y_t)}.
+$$
+
+Then the position is set proportional to the negative Z-score:
+
+$$
+\text{position}_t \propto -z_t.
+$$
+
+This means:
+
+- above-mean prices create short exposure
+- below-mean prices create long exposure
+- larger deviations create larger positions
+
+Chan calls this "linear" because the number of units changes linearly with the
+normalized deviation. It is not necessarily practical in raw form because it
+can imply constant rebalancing and, without constraints, very large exposure.
+But as a teaching device it is powerful because it uses almost no free
+parameters.
+
+# Why Moving Averages and Moving Standard Deviations Still Matter
+
+An obvious objection is that a stationary process should already have a fixed
+mean and standard deviation, so why estimate them with moving windows at all?
+
+Chan's answer is pragmatic. Even if a price series is approximately stationary,
+its effective mean can drift slowly as economic conditions, policy regimes, or
+management decisions change. Its variance can also evolve with time. Using
+moving estimates allows the strategy to adapt to that slow evolution while still
+trading reversion over a shorter horizon.
+
+# Preliminary Statistical Tests Can Be More Powerful Than a Backtest
+
+Chan ends the section by explaining why these derivations are worth the effort.
+A direct backtest of one strategy generates statistics from completed trades
+only. A stationarity or half-life analysis uses almost every bar of the price
+history.
+
+That difference matters statistically. The preliminary tests may have more power
+than the Sharpe ratio of any single prototype strategy because they consume more
+observations and are not tied to one particular implementation choice. They do
+not replace backtesting, but they help decide whether a mean-reversion search is
+worth pursuing before the researcher starts tuning a trading rule.
+
+# Review Checklist
+
+- Does the current level enter the next-change equation with a plausibly
+  negative coefficient?
+- Is the negative coefficient statistically convincing under ADF or only weakly
+  suggestive?
+- Do Hurst and Variance Ratio evidence support the same qualitative reading?
+- What half-life does the estimated $\lambda$ imply?
+- Is the intended lookback aligned with that half-life rather than chosen by
+  brute-force search alone?
+
+# Reading Path
+
+- Previous: [1.4 When Not to Backtest a Strategy]({{< meta site-url >}}/chapters/chapter-01/sections/04-when-not-to-backtest-a-strategy/)
+- Next: [2.2 Cointegration]({{< meta site-url >}}/chapters/chapter-02/sections/02-cointegration/)

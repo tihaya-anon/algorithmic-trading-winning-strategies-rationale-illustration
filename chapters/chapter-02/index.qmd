@@ -1,0 +1,56 @@
+---
+title: "Chapter 02. The Basics of Mean Reversion"
+subtitle: "Overview"
+---
+
+# Objective
+
+This chapter introduces the core logic behind mean-reversion research:
+
+1. distinguish stationary price behavior from ordinary random-walk behavior
+2. use statistical tests and half-life to judge whether reversion is tradable
+3. create stationary portfolios from nonstationary assets through cointegration
+4. understand why mean-reversion strategies can look stable yet still fail badly
+
+# Sections
+
+## 2.1 Mean Reversion and Stationarity
+
+[Open web notes](sections/01-mean-reversion-and-stationarity/web-notes.qmd)
+
+The first section explains how mean reversion relates to stationarity, how ADF,
+Hurst, and Variance Ratio tests are used, and why half-life matters more to a
+trader than a purely academic pass-fail test.
+
+Alternate formats:
+[video](sections/01-mean-reversion-and-stationarity/video-lesson-slides.qmd),
+[PDF](sections/01-mean-reversion-and-stationarity/pdf-notes.qmd)
+
+## 2.2 Cointegration
+
+[Open web notes](sections/02-cointegration/web-notes.qmd)
+
+The second section shows how traders can build stationary portfolios from
+nonstationary assets, and compares CADF and Johansen tests for finding hedge
+ratios and cointegrating relationships.
+
+Alternate formats:
+[video](sections/02-cointegration/video-lesson-slides.qmd),
+[PDF](sections/02-cointegration/pdf-notes.qmd)
+
+## 2.3 Pros and Cons of Mean-Reverting Strategies
+
+[Open web notes](sections/03-pros-and-cons-of-mean-reverting-strategies/web-notes.qmd)
+
+The third section explains why mean-reversion strategies often have high Sharpe
+ratios and short drawdowns in normal times, and why those same features can
+invite overconfidence, overleverage, and severe breakdown risk.
+
+Alternate formats:
+[video](sections/03-pros-and-cons-of-mean-reverting-strategies/video-lesson-slides.qmd),
+[PDF](sections/03-pros-and-cons-of-mean-reverting-strategies/pdf-notes.qmd)
+
+# Output Links
+
+Each section owns its own video slides, web notes, and PDF notes. Use the
+section folders as the source of truth; shared chapter pages are only indexes.

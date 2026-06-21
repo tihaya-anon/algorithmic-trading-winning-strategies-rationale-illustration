@@ -1,0 +1,129 @@
+---
+title: "2.3 Pros and Cons of Mean-Reverting Strategies"
+subtitle: "PDF notes | Chapter 02. The Basics of Mean Reversion"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Mean Reversion Often Looks Better Than It Feels in a Crisis
+
+Chan ends the chapter by explaining why mean-reversion strategies are so
+attractive to traders and so dangerous to underestimate. Their attraction comes
+from consistency. When a strategy repeatedly sells temporary overreactions or
+buys temporary dislocations, it can produce many small gains, short drawdowns,
+and relatively high Sharpe ratios.
+
+These features are valuable in backtests and in live trading. A short time
+scale of reversion means more round trips per year, more data for statistical
+evaluation, and often a higher compounded growth rate. In ordinary market
+conditions, the strategy can appear calm, disciplined, and easy to trust.
+
+# The Advantage Creates a Behavioral Trap
+
+The same consistency that makes mean reversion attractive can create
+overconfidence. A trader who sees a long sequence of successful pullbacks can
+start treating the strategy as safer than it really is. The equity curve looks
+stable. Losing periods are brief. The model appears to confirm itself over and
+over again.
+
+This is exactly when leverage tends to rise. The trader feels least threatened
+after repeated success, so the strategy is often traded most aggressively at
+the point of greatest hidden vulnerability. Chan explicitly invokes the Long
+Term Capital Management lesson here: a mean-reversion strategy that has looked
+reliably profitable for a long time can still break violently.
+
+# The Structural Risk Is a Breakdown in the Relationship
+
+A mean-reversion trade assumes that the observed deviation is temporary. The
+spread, price, or relative relationship is supposed to move back toward its
+equilibrium. The danger is that the deviation may instead reflect a genuine
+structural change. What looks like a temporary dislocation can turn out to be a
+new regime.
+
+When that happens, the strategy's logic works against the trader. The position
+is often increased as the deviation grows because a larger deviation looks like
+a stronger bargain. In ordinary times that scaling can help. In a breakdown it
+magnifies the loss.
+
+# Rare Losses Hurt More Because They Arrive After Success
+
+Chan's warning is not that mean reversion loses a little every day. It is the
+opposite. The strategy can win frequently enough to lull the trader into
+maximum confidence, and the rare large loss then arrives when position size is
+largest.
+
+This is why the downside can be especially severe. A long sequence of ordinary
+success does not prepare the trader for a regime change. It often removes the
+psychological caution that would have reduced exposure.
+
+# Risk Management Is Harder Than It First Appears
+
+Mean reversion also creates a problem for conventional stop losses. Many
+strategies can justify exiting when price keeps moving in the wrong direction.
+For a mean-reversion trade, however, an adverse move is often the very
+condition that originally justified the entry. The strategy expects stress
+before recovery.
+
+That makes ordinary stop-loss rules awkward. A stop that is too tight can kill
+the trade precisely when the intended edge is strongest. A stop that is too
+loose can permit catastrophic escalation during a true breakdown. Chan
+therefore treats risk management for mean reversion as both essential and
+specialized, deferring the full treatment to Chapter 8.
+
+# The Right Conclusion Is Respect, Not Rejection
+
+The chapter's conclusion is balanced. Mean reversion remains attractive because
+it can produce frequent opportunities, strong statistical confidence, and
+favorable Sharpe ratios. But those virtues coexist with a specific tail-risk
+profile: rare, painful losses that often arrive after a long period of success.
+
+The practical response is not to abandon mean reversion. It is to recognize
+that strategies built on reversion need their own risk discipline, especially
+around leverage, structural monitoring, and the possibility that a relationship
+once thought stable may no longer hold.
+
+# Review Checklist
+
+- Does the strategy's attractive Sharpe ratio come from genuinely fast
+  reversion, or from leverage applied to a fragile relationship?
+- What structural change would invalidate the assumption that the spread or
+  price should revert?
+- Does the strategy scale in as losses grow, and if so, what prevents that from
+  becoming uncontrolled?
+- Are risk controls designed specifically for mean-reversion behavior rather
+  than copied from trend-following logic?
+- Is leverage low enough that a rare regime break is survivable?
+
+# Reading Path
+
+- Previous: [2.2 Cointegration]({{< meta site-url >}}/chapters/chapter-02/sections/02-cointegration/)
+- Next: [Chapter overview]({{< meta site-url >}}/chapters/)

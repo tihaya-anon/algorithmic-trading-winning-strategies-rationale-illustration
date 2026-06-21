@@ -1,0 +1,38 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 40, "rankSpacing": 54, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart TB
+  P["Observed price series"]
+
+  subgraph tests["Two testing views"]
+    direction LR
+    A["ADF test<br/>Does current level help predict<br/>the next move?"]
+    B["Hurst / Variance Ratio<br/>Does variance grow slower<br/>than a random walk?"]
+  end
+
+  L["Estimate lambda"]
+  H["Compute half-life<br/>-log(2) / lambda"]
+
+  subgraph decisions["Trading interpretation"]
+    direction LR
+    D1["lambda > 0<br/>not mean reverting"]
+    D2["lambda < 0 but long half-life<br/>too slow for horizon"]
+    D3["lambda < 0 and usable half-life<br/>build simple strategy"]
+  end
+
+  P --> A --> L --> H
+  P --> B --> H
+  H --> D1
+  H --> D2
+  H --> D3
+
+  classDef source fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef test fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;
+  classDef calc fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#334155;
+  classDef reject fill:#fef2f2,stroke:#b91c1c,stroke-width:2px,color:#7f1d1d;
+  classDef maybe fill:#fff7ed,stroke:#c2410c,stroke-width:2px,color:#7c2d12;
+  classDef go fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  class P source;
+  class A,B test;
+  class L,H calc;
+  class D1 reject;
+  class D2 maybe;
+  class D3 go;

@@ -1,0 +1,29 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 38, "rankSpacing": 48, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e", "clusterBkg": "#ffffff", "clusterBorder": "#cbd5e1"}}}%%
+flowchart LR
+  subgraph left["Random-walk style"]
+    direction TB
+    A1["Price shock<br/>moves away"]
+    A2["Next move<br/>not anchored to level"]
+    A3["Drift can continue<br/>without pullback force"]
+    A1 --> A2 --> A3
+  end
+
+  subgraph right["Mean-reverting style"]
+    direction TB
+    B1["Price shock<br/>moves away"]
+    B2["Current level now matters"]
+    B3["Next move tends to pull<br/>back toward mean"]
+    B1 --> B2 --> B3
+  end
+
+  C["Trading question<br/>does today's level help predict<br/>tomorrow's opposite move?"]
+
+  A2 -. "usually no" .-> C
+  B2 -. "yes" .-> C
+
+  classDef neutral fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef revert fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef question fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
+  class A1,A2,A3 neutral;
+  class B1,B2,B3 revert;
+  class C question;

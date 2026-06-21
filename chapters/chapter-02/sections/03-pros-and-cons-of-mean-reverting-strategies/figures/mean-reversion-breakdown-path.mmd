@@ -1,0 +1,19 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 38, "rankSpacing": 48, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart TB
+  A["Price or spread deviates"]
+  B["Trader reads it as temporary"]
+  C["Position is added<br/>because deviation is larger"]
+  D["Normal case<br/>relationship closes"]
+  E["Breakdown case<br/>equilibrium has shifted"]
+  F["Loss escalates under leverage"]
+
+  A --> B --> C
+  C --> D
+  C --> E --> F
+
+  classDef neutral fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef good fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef bad fill:#fef2f2,stroke:#b91c1c,stroke-width:3px,color:#7f1d1d;
+  class A,B,C neutral;
+  class D good;
+  class E,F bad;

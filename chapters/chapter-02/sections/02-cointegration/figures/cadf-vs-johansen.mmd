@@ -1,0 +1,34 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 36, "rankSpacing": 46, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e", "clusterBkg": "#ffffff", "clusterBorder": "#cbd5e1"}}}%%
+flowchart TB
+  subgraph cadf["CADF route"]
+    direction LR
+    A1["Pick dependent<br/>and independent series"]
+    A2["Regression fit<br/>one hedge ratio"]
+    A3["ADF on residual spread"]
+    A1 --> A2 --> A3
+  end
+
+  subgraph joh["Johansen route"]
+    direction LR
+    B1["Input full basket<br/>2 or more series"]
+    B2["System test<br/>estimate rank r"]
+    B3["Return eigenvectors<br/>as hedge ratios"]
+    B1 --> B2 --> B3
+  end
+
+  C1["Order dependent"]
+  C2["Order independent"]
+  C3["One relation at a time"]
+  C4["Can find multiple relations"]
+
+  A3 --> C1
+  A3 --> C3
+  B3 --> C2
+  B3 --> C4
+
+  classDef cadf fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef joh fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  classDef note fill:#fff7ed,stroke:#c2410c,stroke-width:2px,color:#7c2d12;
+  class A1,A2,A3 cadf;
+  class B1,B2,B3 joh;
+  class C1,C2,C3,C4 note;
