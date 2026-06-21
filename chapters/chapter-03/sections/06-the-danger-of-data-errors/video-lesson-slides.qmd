@@ -1,0 +1,63 @@
+---
+title: "3.6 The Danger of Data Errors"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+notes: |
+  Mean-reversion strategies are especially vulnerable to bad ticks because they
+  interpret one outlier print as a bargain. The resulting backtest profit can be
+  entirely fictitious, and the same logic can trigger losing live trades.
+
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    menu: false
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+filters:
+  - ../../../../scripts/lua/remove-reveal-notes.lua
+include-before-body:
+  - ../../../../styles/reveal-audience-only.html
+execute:
+  echo: true
+---
+
+## One bad tick can create a fake mean-reversion profit that never existed.
+
+| True path              | Corrupted path                        |
+| ---------------------- | ------------------------------------- |
+| 100, 100, 100          | 100, 110, 100                         |
+| no trade opportunity   | fake short and fake profit            |
+
+::: {.notes}
+Open with the simplest possible example. Mean reversion sees the bad tick as a
+temporary spike, enters, and appears to make money when the error disappears.
+:::
+
+## Spread strategies amplify data errors because the signal is a small difference of large prices.
+
+| Quote levels           | True spread | Error in one leg | Distorted spread |
+| ---------------------- | ----------- | ---------------- | ---------------- |
+| 100 and 105            | 5           | +1               | 6                |
+
+::: {.notes}
+This is the key reason pair trading is especially fragile. A one-dollar quote
+error is only a 1 percent price error on one leg, but a 20 percent error on a
+five-dollar spread.
+:::
+
+## Backtest inflation and live execution loss come from the same bad tick mechanism.
+
+::: {.notes}
+Close by making the risk symmetric. The same error that creates fake historical
+alpha can trigger a real losing live order.
+:::

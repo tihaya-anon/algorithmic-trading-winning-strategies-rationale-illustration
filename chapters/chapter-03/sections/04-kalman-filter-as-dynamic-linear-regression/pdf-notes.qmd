@@ -1,0 +1,306 @@
+---
+title: "3.4 Kalman Filter as Dynamic Linear Regression"
+subtitle: "PDF notes | Chapter 03. Implementing Mean Reversion Strategies"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Rolling Regression Has Two Opposite Failure Modes
+
+Chan introduces the Kalman filter as a response to a basic implementation
+problem. A short rolling window adapts quickly, but its estimates can change
+abruptly whenever one old observation leaves the sample and one new observation
+enters. A long window reduces that jumpiness, but it makes the hedge ratio,
+spread mean, and spread volatility slow to respond when the pair relation
+actually changes.
+
+The real issue is not just smoothing. It is how to adapt continuously without
+introducing an arbitrary cutoff date.
+
+# The Kalman Filter Rephrases the Problem as a State-Space Model
+
+For the pair-trading application, Chan treats one price series $y(t)$ as the
+observable variable and the regression coefficients as hidden variables. The
+measurement equation is
+
+$$
+y(t) = x(t)\beta(t) + \varepsilon(t),
+\tag{3.5}
+$$
+
+where:
+
+- $x(t)$ is the other price series, augmented with a constant term
+- $\beta(t)$ is the hidden state vector
+- $\varepsilon(t)$ is Gaussian measurement noise with variance $V_e$
+
+Because $x(t)$ is augmented with ones, the hidden state is two-dimensional:
+
+$$
+\beta(t)
+=
+\begin{bmatrix}
+\text{slope}_t \\
+\text{intercept}_t
+\end{bmatrix}.
+$$
+
+This is the first practical gain from the model: the filter estimates the
+dynamic hedge ratio and the current mean of the spread at the same time.
+
+# The State Transition Encodes Slow Drift Instead of Fixed Parameters
+
+Chan then assumes
+
+$$
+\beta(t) = \beta(t-1) + \omega(t-1),
+\tag{3.6}
+$$
+
+where $\omega(t-1)$ is Gaussian state noise with covariance $V_w$.
+
+This equation says the best prior guess for today's slope and intercept is
+yesterday's estimate, but with some allowance for drift. That allowance is
+critical. If $V_w$ were zero, the model would collapse to a fixed-parameter
+regression. If $V_w$ is too large, the estimates chase the newest tick too
+aggressively.
+
+Economically, the model says that the pair relation is neither frozen forever
+nor re-estimated from scratch each day. It evolves gradually.
+
+# The Covariance Matrices Measure Two Different Uncertainties
+
+The two covariance objects have different jobs:
+
+- $V_e$ measures noise in the observed relationship between $y(t)$ and the
+  current state estimate
+- $V_w$ measures how much the hidden state itself is allowed to wander from one
+  period to the next
+
+These are different questions. One asks how trustworthy the latest observation
+is. The other asks how stable the underlying regression relation is.
+
+Chan's simplified specification is
+
+$$
+V_w = \frac{\delta}{1-\delta} I,
+$$
+
+where $I$ is the $2 \times 2$ identity matrix and $\delta \in [0,1)$ is a
+scalar tuning parameter.
+
+This makes $\delta$ the adaptation control:
+
+- $\delta = 0$ implies no state drift, pushing the model toward ordinary least
+  squares
+- larger $\delta$ allows faster drift in slope and intercept
+
+In the chapter's EWA-EWC example, Chan uses $\delta = 0.0001$ and
+$V_e = 0.001$, explicitly noting that these choices benefit from hindsight.
+
+# The Recursive Logic Has a Clean Interpretation
+
+Chan denotes the prior estimate of the hidden state at time $t$ by
+$\hat{\beta}(t|t-1)$ and the posterior estimate after seeing the time-$t$
+observation by $\hat{\beta}(t|t)$.
+
+The recursion begins with the state prediction:
+
+$$
+\hat{\beta}(t|t-1) = \hat{\beta}(t-1|t-1),
+\tag{3.7}
+$$
+
+and the state-covariance prediction:
+
+$$
+R(t|t-1) = R(t-1|t-1) + V_w.
+\tag{3.8}
+$$
+
+The first equation says: absent new information, today's best guess is
+yesterday's posterior estimate. The second says: because the hidden state is
+allowed to drift, uncertainty must increase before the new observation arrives.
+
+Next comes the predicted measurement:
+
+$$
+\hat{y}(t|t-1) = x(t)\hat{\beta}(t|t-1),
+\tag{3.9}
+$$
+
+and its variance:
+
+$$
+Q(t) = x(t)'R(t|t-1)x(t) + V_e.
+\tag{3.10}
+$$
+
+This is the variance of the forecast error for the observable. The first term
+comes from uncertainty about the state, and the second comes from measurement
+noise in the observable relation itself.
+
+# The Forecast Error Is the Spread Mispricing Signal
+
+Define the forecast error as
+
+$$
+e(t) = y(t) - \hat{y}(t|t-1).
+$$
+
+This quantity has a direct trading interpretation. It is the deviation of the
+observed price from the model's predicted fair relation at time $t$. In Chan's
+pair-trading setting, it replaces the old notion of a spread minus its moving
+average.
+
+If $e(t)$ is strongly negative, the spread is below its predicted mean. If it is
+strongly positive, the spread is above its predicted mean.
+
+# The Kalman Gain Decides How Strongly to Trust the New Observation
+
+The update equations are
+
+$$
+\hat{\beta}(t|t)
+= \hat{\beta}(t|t-1) + K(t)e(t),
+\tag{3.11}
+$$
+
+$$
+R(t|t)
+= R(t|t-1) - K(t)x(t)R(t|t-1),
+\tag{3.12}
+$$
+
+with Kalman gain
+
+$$
+K(t) = \frac{R(t|t-1)x(t)}{Q(t)}.
+\tag{3.13}
+$$
+
+The economic meaning of $K(t)$ is central. It determines how much the posterior
+state should move in response to the newest forecast error:
+
+- high gain means the model trusts the new observation strongly
+- low gain means the model treats the new observation cautiously
+
+Gain rises when prior state uncertainty is large. Gain falls when measurement
+noise is large. So the filter naturally balances two forces:
+
+- uncertainty about what the hedge ratio and intercept currently are
+- uncertainty about whether the new observation is informative
+
+# What the Filter Gives a Trader That Rolling Methods Do Not
+
+Chan stresses that one Kalman recursion provides three outputs that rolling
+methods usually estimate separately:
+
+1. the dynamic slope, used as the hedge ratio
+2. the dynamic intercept, used as the current spread mean
+3. the forecast-error variance $Q(t)$, used as a dynamic volatility band
+
+This is a conceptual simplification even though the equations look more complex.
+Rolling OLS plus rolling mean plus rolling standard deviation are three distinct
+moving-window devices. The Kalman filter treats them as one coherent latent-state
+estimation problem.
+
+# The Entry Rule Is a Model-Based Bollinger Band
+
+Once $e(t)$ and $Q(t)$ are available, Chan turns them into a mean-reversion
+strategy using threshold rules:
+
+- go long when $e(t) < -\sqrt{Q(t)}$
+- go short when $e(t) > \sqrt{Q(t)}$
+
+The visible structure is identical to a Bollinger-band rule. The difference is
+that the center line and band width are not rolling-window estimates anymore.
+They are outputs of the state-space model.
+
+This also explains why the filter can be viewed as a dynamic generalization of
+the Bollinger-band strategy rather than a completely unrelated method.
+
+# Initialization and Practical Parameter Meaning
+
+Chan initializes the recursion at zero state and zero covariance:
+
+- $\hat{\beta}(1|0)=0$
+- $R(0|0)=0$
+
+This is not a claim that the true slope or intercept are literally zero. It is
+just a convenient starting point for the recursion. After enough observations,
+the filter's estimates are dominated by incoming data rather than by this
+initialization.
+
+The more important practical choice is not the initialization but the tuning of
+$\delta$ and $V_e$. Chan notes that more principled estimation methods exist,
+such as autocovariance least squares, but uses fixed values for simplicity in
+the chapter.
+
+# Why the EWA-EWC Example Works Well
+
+In the EWA-EWC implementation, the Kalman-updated slope oscillates around one
+while the intercept drifts over time. Those movements already show why the
+filter is useful: the pair relation is not frozen, but it does not jump wildly
+either.
+
+Chan then uses $e(t)$ and $Q(t)$ directly to define entries and exits. The
+reported results are much stronger than the earlier rolling methods in the
+chapter's example. The higher Sharpe ratio should not be read as a universal
+promise. It should be read as evidence that when a pair relation drifts
+gradually, a recursive estimator can describe it better than a hard rolling
+window.
+
+# A Compact Interpretation
+
+The Kalman filter in this chapter can be summarized as a recursively updated
+linear regression with three extra benefits:
+
+- no abrupt moving-window cutoff
+- simultaneous estimation of hedge ratio and mean
+- direct estimate of signal uncertainty for threshold construction
+
+That combination is what makes it especially attractive for mean-reversion
+implementation.
+
+# Review Checklist
+
+- Is the hidden state clearly defined as slope plus intercept?
+- Is $V_w$ encoding realistic drift in the pair relation?
+- Is $V_e$ encoding realistic observation noise?
+- Are entries driven by forecast error standardized by model-based uncertainty?
+- Is the extra complexity justified by a genuinely time-varying relation?
+
+# Reading Path
+
+- Previous: [3.3 Does Scaling-in Work?]({{< meta site-url >}}/chapters/chapter-03/sections/03-does-scaling-in-work/)
+- Next: [3.5 Kalman Filter as Market-Making Model]({{< meta site-url >}}/chapters/chapter-03/sections/05-kalman-filter-as-market-making-model/)

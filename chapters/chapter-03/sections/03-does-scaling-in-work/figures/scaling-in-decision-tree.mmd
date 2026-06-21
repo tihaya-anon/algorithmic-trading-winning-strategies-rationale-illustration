@@ -1,0 +1,22 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 40, "rankSpacing": 52, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart LR
+  A["Price reaches L1"]
+  B["Path 1 with probability p<br/>falls to L2 before reversion"]
+  C["Path 2 with probability 1-p<br/>reverts directly to F"]
+  D["All-in at L1"]
+  E["All-in at L2"]
+  F["Average-in<br/>one at L1, one at L2"]
+
+  A --> B
+  A --> C
+  B --> E
+  B --> F
+  C --> D
+  C --> F
+
+  classDef start fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef path fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;
+  classDef choice fill:#fff7ed,stroke:#c2410c,stroke-width:2px,color:#7c2d12;
+  class A start;
+  class B,C path;
+  class D,E,F choice;

@@ -1,0 +1,92 @@
+---
+title: "Chapter 03. Implementing Mean Reversion Strategies"
+subtitle: "Overview"
+---
+
+# Objective
+
+This chapter turns mean-reversion theory into concrete trading mechanics:
+
+1. choose between price spreads, log price spreads, and ratios as signal spaces
+2. replace unconstrained linear scaling with implementable Bollinger-style rules
+3. understand why scaling-in is intuitive but not always in-sample optimal
+4. use the Kalman filter to estimate time-varying hedge ratios and means
+5. reinterpret the Kalman filter as a market-making estimator of fair value
+6. recognize how data errors can systematically fake mean-reversion profits
+
+# Sections
+
+## 3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios
+
+[Open web notes](sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/web-notes.qmd)
+
+The first section compares three signal constructions for pairs trading and
+explains when fixed-share spreads, fixed-capital log spreads, or simple ratios
+are the more coherent choice.
+
+Alternate formats:
+[video](sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/video-lesson-slides.qmd),
+[PDF](sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/pdf-notes.qmd)
+
+## 3.2 Bollinger Bands
+
+[Open web notes](sections/02-bollinger-bands/web-notes.qmd)
+
+The second section converts the unconstrained linear strategy into a practical
+Bollinger-band rule with explicit entry and exit thresholds and bounded capital
+usage.
+
+Alternate formats:
+[video](sections/02-bollinger-bands/video-lesson-slides.qmd),
+[PDF](sections/02-bollinger-bands/pdf-notes.qmd)
+
+## 3.3 Does Scaling-in Work?
+
+[Open web notes](sections/03-does-scaling-in-work/web-notes.qmd)
+
+The third section analyzes averaging-in mathematically, shows why it is not
+in-sample optimal under a simple fixed-probability setup, and explains why it
+can still help out of sample.
+
+Alternate formats:
+[video](sections/03-does-scaling-in-work/video-lesson-slides.qmd),
+[PDF](sections/03-does-scaling-in-work/pdf-notes.qmd)
+
+## 3.4 Kalman Filter as Dynamic Linear Regression
+
+[Open web notes](sections/04-kalman-filter-as-dynamic-linear-regression/web-notes.qmd)
+
+The fourth section introduces the Kalman filter as a disciplined way to update
+time-varying hedge ratios, means, and forecast-error volatility without an
+arbitrary rolling cutoff.
+
+Alternate formats:
+[video](sections/04-kalman-filter-as-dynamic-linear-regression/video-lesson-slides.qmd),
+[PDF](sections/04-kalman-filter-as-dynamic-linear-regression/pdf-notes.qmd)
+
+## 3.5 Kalman Filter as Market-Making Model
+
+[Open web notes](sections/05-kalman-filter-as-market-making-model/web-notes.qmd)
+
+The fifth section specializes the Kalman filter to one mean-reverting price
+series and reframes it as a fair-value estimator for market making.
+
+Alternate formats:
+[video](sections/05-kalman-filter-as-market-making-model/video-lesson-slides.qmd),
+[PDF](sections/05-kalman-filter-as-market-making-model/pdf-notes.qmd)
+
+## 3.6 The Danger of Data Errors
+
+[Open web notes](sections/06-the-danger-of-data-errors/web-notes.qmd)
+
+The sixth section explains why bad ticks and quote errors are especially toxic
+for mean-reversion backtests and live spread trading.
+
+Alternate formats:
+[video](sections/06-the-danger-of-data-errors/video-lesson-slides.qmd),
+[PDF](sections/06-the-danger-of-data-errors/pdf-notes.qmd)
+
+# Output Links
+
+Each section owns its own video slides, web notes, and PDF notes. Use the
+section folders as the source of truth; shared chapter pages are only indexes.

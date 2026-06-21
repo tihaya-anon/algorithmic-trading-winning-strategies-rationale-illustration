@@ -1,0 +1,85 @@
+---
+title: "3.4 Kalman Filter as Dynamic Linear Regression"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+notes: |
+  Rolling regression updates hedge ratios with an arbitrary cutoff. The Kalman
+  filter replaces that cutoff with a recursive estimate that treats the hedge
+  ratio and intercept as hidden states updated by each new observation.
+
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    menu: false
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+filters:
+  - ../../../../scripts/lua/remove-reveal-notes.lua
+include-before-body:
+  - ../../../../styles/reveal-audience-only.html
+execute:
+  echo: true
+---
+
+## The Kalman filter updates hedge ratio and mean without an arbitrary rolling cutoff.
+
+| Rolling window problem     | Kalman filter response                 |
+| -------------------------- | -------------------------------------- |
+| old point suddenly removed | weights fade recursively instead       |
+| hedge ratio can jump       | state evolves continuously             |
+
+::: {.notes}
+Open on the problem first. Traders already know rolling regressions. The issue
+is that the moving cutoff is arbitrary and can make estimates jump when one bar
+drops out of the window.
+:::
+
+## For a pair, the hidden state is the intercept and slope of the regression.
+
+```text
+y(t) = x(t) * beta(t) + noise
+beta(t) = beta(t-1) + state noise
+```
+
+::: {.notes}
+Keep the visible structure compact. The intercept and hedge ratio become a
+two-dimensional hidden state, and the latest observation updates both at once.
+:::
+
+## The filter gives three things at once: dynamic hedge ratio, mean, and forecast uncertainty.
+
+| Output                  | Trading use                           |
+| ----------------------- | ------------------------------------- |
+| slope                   | dynamic hedge ratio                   |
+| intercept               | current mean of spread                |
+| forecast-error variance | dynamic Bollinger-style band width    |
+
+::: {.notes}
+This is the practical payoff. The Kalman filter is not only a smoother hedge
+ratio estimate. It also gives the moving mean and a model-based volatility
+proxy for signal thresholds.
+:::
+
+## On EWA-EWC, the Kalman filter turns prediction error into a tradable mean-reversion signal.
+
+::: {.visual-slide}
+::: {.visual-frame}
+![](figures/kalman-pair-update-flow.svg){fig-alt="Flow from observed x and y prices into hidden state beta, predicted spread mean, forecast error e, variance Q, and long-short entry decisions"}
+:::
+:::
+
+::: {.notes}
+Close the slides with the actual signal pipeline: observe prices, update beta,
+compute prediction error, compare error with its predicted standard deviation,
+and trade when the deviation is large enough.
+:::

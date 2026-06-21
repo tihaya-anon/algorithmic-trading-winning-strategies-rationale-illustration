@@ -46,6 +46,21 @@ generated output settings stay aligned with each file type.
 - [2.3 Pros and Cons of Mean-Reverting Strategies](chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/web-notes.qmd)  
   Alternate formats: [video](chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/video-lesson-slides.qmd), [PDF](chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/pdf-notes.qmd)
 
+## Chapter 03. Implementing Mean Reversion Strategies
+
+- [3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios](chapter-03/sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/web-notes.qmd)  
+  Alternate formats: [video](chapter-03/sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/video-lesson-slides.qmd), [PDF](chapter-03/sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/pdf-notes.qmd)
+- [3.2 Bollinger Bands](chapter-03/sections/02-bollinger-bands/web-notes.qmd)  
+  Alternate formats: [video](chapter-03/sections/02-bollinger-bands/video-lesson-slides.qmd), [PDF](chapter-03/sections/02-bollinger-bands/pdf-notes.qmd)
+- [3.3 Does Scaling-in Work?](chapter-03/sections/03-does-scaling-in-work/web-notes.qmd)  
+  Alternate formats: [video](chapter-03/sections/03-does-scaling-in-work/video-lesson-slides.qmd), [PDF](chapter-03/sections/03-does-scaling-in-work/pdf-notes.qmd)
+- [3.4 Kalman Filter as Dynamic Linear Regression](chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/web-notes.qmd)  
+  Alternate formats: [video](chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/video-lesson-slides.qmd), [PDF](chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/pdf-notes.qmd)
+- [3.5 Kalman Filter as Market-Making Model](chapter-03/sections/05-kalman-filter-as-market-making-model/web-notes.qmd)  
+  Alternate formats: [video](chapter-03/sections/05-kalman-filter-as-market-making-model/video-lesson-slides.qmd), [PDF](chapter-03/sections/05-kalman-filter-as-market-making-model/pdf-notes.qmd)
+- [3.6 The Danger of Data Errors](chapter-03/sections/06-the-danger-of-data-errors/web-notes.qmd)  
+  Alternate formats: [video](chapter-03/sections/06-the-danger-of-data-errors/video-lesson-slides.qmd), [PDF](chapter-03/sections/06-the-danger-of-data-errors/pdf-notes.qmd)
+
 # Authoring Convention
 
 - Create one folder per chapter: `chapters/chapter-02/`.

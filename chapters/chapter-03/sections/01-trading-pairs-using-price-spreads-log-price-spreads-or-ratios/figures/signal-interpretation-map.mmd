@@ -1,0 +1,15 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 40, "rankSpacing": 52, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart TB
+  A["Price spread<br/>fixed shares<br/>simpler holding"]
+  B["Log-price spread<br/>fixed capital weights<br/>requires rebalancing"]
+  C["Ratio<br/>scale-free signal<br/>useful when relation is proportional"]
+  D["Signal choice"]
+
+  D --> A
+  D --> B
+  D --> C
+
+  classDef hub fill:#fff7ed,stroke:#c2410c,stroke-width:3px,color:#7c2d12;
+  classDef node fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  class D hub;
+  class A,B,C node;

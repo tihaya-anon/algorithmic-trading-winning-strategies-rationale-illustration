@@ -1,0 +1,18 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 38, "rankSpacing": 48, "useMaxWidth": true}, "themeVariables": {"fontFamily": "Noto Sans, Arial, sans-serif", "primaryTextColor": "#1f2937", "lineColor": "#0f766e"}}}%%
+flowchart TB
+  A["Observed pair prices<br/>x(t), y(t)"]
+  B["Hidden state beta(t)<br/>slope + intercept"]
+  C["Predicted mean of y<br/>y-hat(t|t-1)"]
+  D["Forecast error e(t)"]
+  E["Forecast variance Q(t)"]
+  F["Trade rule<br/>long if e < -sqrt(Q)<br/>short if e > sqrt(Q)"]
+
+  A --> B --> C --> D --> F
+  B --> E --> F
+
+  classDef data fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+  classDef state fill:#ecfeff,stroke:#0f766e,stroke-width:2px,color:#134e4a;
+  classDef trade fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d;
+  class A data;
+  class B,C,D,E state;
+  class F trade;

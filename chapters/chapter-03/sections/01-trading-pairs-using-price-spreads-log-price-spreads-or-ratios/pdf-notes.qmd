@@ -1,0 +1,205 @@
+---
+title: "3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios"
+subtitle: "PDF notes | Chapter 03. Implementing Mean Reversion Strategies"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Signal Choice Is Portfolio Choice
+
+Chapter 2 ended with stationary portfolios and linear mean-reversion rules. The
+first implementation question in Chapter 3 is therefore not yet about entry or
+exit thresholds. It is about what object we want to call the signal.
+
+Chan compares three constructions:
+
+- price spreads
+- log price spreads
+- ratios
+
+These are not cosmetic alternatives. Each one implies a different portfolio
+interpretation, a different rebalancing burden, and a different robustness
+profile when the underlying pair is only approximately mean reverting.
+
+# Price Spreads Represent Fixed Share Counts
+
+If the portfolio price is defined as
+
+$$
+y = h_1 y_1 + h_2 y_2 + \cdots + h_n y_n,
+\tag{3.1}
+$$
+
+then the weights $h_i$ are interpreted as units or shares. For a two-asset pair,
+Chan writes this in the familiar spread form
+
+$$
+y = y_1 - h y_2.
+\tag{3.2}
+$$
+
+This is the simplest implementation choice because the portfolio can be held
+with fixed share counts during a trade. If the hedge ratio has already been
+estimated from OLS or Johansen, then the spread itself is the stationary
+unit-portfolio price from Chapter 2.
+
+The practical virtue is that price spreads are easy to execute: once the shares
+are chosen, the trader does not need to rebalance constantly just to preserve
+the signal definition.
+
+# Log Price Spreads Represent Fixed Capital Weights
+
+Suppose instead that the log prices satisfy
+
+$$
+\log q = h_1 \log y_1 + h_2 \log y_2 + \cdots + h_n \log y_n.
+\tag{3.3}
+$$
+
+Taking first differences gives
+
+$$
+\Delta \log q
+= h_1 \Delta \log y_1 + h_2 \Delta \log y_2 + \cdots + h_n \Delta \log y_n.
+\tag{3.4}
+$$
+
+Using the approximation $\Delta \log x \approx \Delta x / x$ for small changes,
+the right-hand side becomes approximately a weighted sum of asset returns. That
+means the $h_i$ no longer behave like share counts. They behave like capital
+weights.
+
+This distinction matters operationally. To keep capital weights fixed, the
+portfolio must be rebalanced as prices move. Chan's point is that the log-price
+spread is theoretically coherent, but it is not free. The coherence is paid for
+with turnover and implementation effort.
+
+# The Ratio Is a Special Case, Not a Generic Consequence
+
+Many traders default to ratios such as $y_1/y_2$. Chan shows why that move is
+not generally justified by cointegration alone.
+
+For a two-asset system, a ratio is naturally related to the log spread only in
+the special case where the normalized weights satisfy $h_1 = -h_2$. In that
+case, $\log(y_1/y_2)$ can be stationary. But there is no general reason to
+expect estimated hedge ratios to land exactly on that restriction.
+
+So the ratio is not the generic stationary object implied by pair
+cointegration. It is a special case.
+
+# Why Ratios Can Still Work Well in Practice
+
+Chan does not dismiss ratios. He argues that ratios can be useful precisely when
+the pair is not truly cointegrated but still exhibits short-horizon relative
+mean reversion.
+
+His intuitive example is simple:
+
+- if prices move from $(10, 5)$ to $(100, 50)$, the spread changes from $5$ to
+  $50$
+- but the ratio stays at $2$
+
+If the economic relation is about proportional comovement rather than absolute
+distance, the ratio can remain informative even while the spread grows with the
+level of prices.
+
+This makes ratios especially attractive in currency trading, where relative
+quoting is natural. Chan notes that EUR.GBP is already a ratio construction, and
+he suggests that even for synthetic crosses such as MXN.NOK, the ratio
+representation may be more useful than a raw spread when strict stationarity is
+absent.
+
+# Dynamic Hedge Ratios Rescue Nonideal Price Spreads
+
+The main alternative to ratios is not necessarily a fixed hedge ratio. Chan's
+GLD-USO example uses a dynamic hedge ratio estimated by rolling regression over
+a short lookback window. This lets the price spread adapt to changing asset
+levels even when the pair is not truly cointegrated in the strict Chapter 2
+sense.
+
+Mathematically, the regression is re-estimated over a moving window, giving
+$h_t$ that varies over time. The portfolio price then becomes
+
+$$
+y_{\text{port},t} = y_t - h_t x_t.
+$$
+
+This construction is more flexible than a fixed spread, but it introduces a new
+estimation problem: the hedge ratio itself becomes a time series that can jump
+as the rolling window advances.
+
+# The GLD-USO Example Is a Good Warning Against Overgeneralizing Theory
+
+Chan compares three signals on GLD and USO:
+
+- dynamic price spread
+- dynamic log price spread
+- ratio
+
+The result is instructive:
+
+- the dynamic price spread performs best in the example
+- the log-price spread performs slightly worse and carries higher rebalancing
+  cost
+- the ratio performs poorly
+
+This is exactly the kind of result that prevents the chapter from becoming a
+purely formal exercise. The most elegant theoretical representation is not
+automatically the best signal in practice. The right choice depends on what kind
+of relation the pair actually exhibits and how expensive the implementation is.
+
+# Implementation Rule of Thumb
+
+Chan's advice can be summarized this way:
+
+- if you want fixed numbers of shares during the trade, use price series
+- if you want fixed market values during the trade, use log price series
+- if the pair is not truly cointegrated but relative scaling appears stable, a
+  ratio may still be useful
+
+This is not a theorem. It is a design rule that keeps the signal definition
+aligned with how the live portfolio is actually being held.
+
+# Review Checklist
+
+- Do the signal weights represent shares or capital weights?
+- If a log-price spread is used, is rebalancing cost being ignored?
+- Is the ratio being used because the pair is proportionally stable, or just by
+  habit?
+- Does a dynamic hedge ratio improve the price-spread representation enough to
+  justify the extra estimation noise?
+- Which signal remains strongest after accounting for implementation burden?
+
+# Reading Path
+
+- Previous: [2.3 Pros and Cons of Mean-Reverting Strategies]({{< meta site-url >}}/chapters/chapter-02/sections/03-pros-and-cons-of-mean-reverting-strategies/)
+- Next: [3.2 Bollinger Bands]({{< meta site-url >}}/chapters/chapter-03/sections/02-bollinger-bands/)

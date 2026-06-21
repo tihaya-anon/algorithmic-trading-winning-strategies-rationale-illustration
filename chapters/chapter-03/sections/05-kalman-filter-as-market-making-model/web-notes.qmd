@@ -1,0 +1,153 @@
+---
+title: "3.5 Kalman Filter as Market-Making Model"
+subtitle: "Chapter 03. Implementing Mean Reversion Strategies"
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+    code-tools: false
+include-after-body:
+  - ../../../../styles/web-note-modal.html
+---
+
+# The Kalman Filter Can Estimate Fair Value for One Asset
+
+In Section 3.4, the hidden state contained the slope and intercept linking two
+assets. Chan now strips the model down to one latent variable: the current mean
+price of a single asset.
+
+The measurement equation becomes
+
+$$
+y(t) = m(t) + \varepsilon(t),
+\tag{3.14}
+$$
+
+where:
+
+- $y(t)$ is the observed transaction price
+- $m(t)$ is the hidden fair value or mean price
+- $\varepsilon(t)$ is measurement noise
+
+The state transition remains a random walk:
+
+$$
+m(t) = m(t-1) + \omega(t-1).
+\tag{3.15}
+$$
+
+So the fair value is assumed to drift gradually rather than stay fixed.
+
+# The Update Rule Has the Same Logic as Before
+
+The recursive update is
+
+$$
+m(t|t)
+= m(t|t-1) + K(t)\bigl(y(t)-m(t|t-1)\bigr),
+\tag{3.16}
+$$
+
+which says that the new mean estimate equals the old predicted mean plus a
+fraction of the latest pricing error.
+
+The forecast-error variance is
+
+$$
+Q(t) = \operatorname{Var}(m(t)) + V_e,
+\tag{3.17}
+$$
+
+the Kalman gain is
+
+$$
+K(t) = \frac{R(t|t-1)}{R(t|t-1)+V_e},
+\tag{3.18}
+$$
+
+and the state-variance update is
+
+$$
+R(t|t) = (1-K(t))R(t|t-1).
+\tag{3.19}
+$$
+
+These equations matter because they separate two uncertainties:
+
+- uncertainty about the latent fair value itself
+- uncertainty about whether the observed trade price is an accurate read of
+  that fair value
+
+# The Kalman Gain Is a Trust Coefficient on the Latest Trade
+
+In this one-asset version, the Kalman gain becomes especially intuitive.
+
+- If $V_e$ is small, the observed trade is trusted, so $K(t)$ is high and the
+  fair-value estimate moves strongly toward the new price.
+- If $V_e$ is large, the observed trade is considered noisy, so $K(t)$ is small
+  and the fair-value estimate moves only slightly.
+
+This is exactly the kind of update a market maker wants. A quote should react
+to information, but not every print should force a full repricing.
+
+# Why Trade Size Belongs in the Measurement Noise
+
+Chan's practical extension is to make $V_e$ depend on trade size. The basic
+intuition is simple: a large trade contains more information about current fair
+value than a tiny trade.
+
+If trade size is denoted by $T$ and some benchmark size by $T_{\max}$, then the
+measurement-noise term can shrink as $T$ grows. The qualitative effect is:
+
+- small trades imply larger measurement noise
+- large trades imply smaller measurement noise
+
+When $T$ reaches the benchmark size, the observation is treated as highly
+informative, the Kalman gain approaches one, and the updated mean moves very
+close to the observed price.
+
+# Why Chan Compares This with VWAP
+
+Chan compares the filter with VWAP because both methods attempt to estimate a
+fair trading price from observed transactions. But the Kalman version goes
+beyond a simple weighted average in two ways:
+
+- it gives more weight to larger trades
+- it also gives more weight to more recent trades through recursion
+
+So the filter behaves like a volume-and-time-weighted fair-value estimator
+rather than a static average.
+
+# Why This Counts as a Mean-Reversion Model
+
+At first glance, the market-making version looks different from the pair-trading
+version. The connection is that both models maintain a hidden fair relation and
+trade the deviation between the observed price and that hidden relation.
+
+In the pair setting, the hidden relation is the current linear fit between two
+assets. In the market-making setting, the hidden relation is the latent mean of
+one asset. In both cases, the tradable event is a large forecast error relative
+to current uncertainty.
+
+# Practical Interpretation
+
+This section is useful even if one never codes a full Kalman market-making
+model. It clarifies a general principle: not all trades deserve equal influence
+on the current estimate of fair value. Size and recency both matter, and the
+Kalman recursion provides a principled way to combine them.
+
+# Review Checklist
+
+- Is the hidden state the latent fair value rather than a hedge ratio?
+- Is the latest trade being over-trusted or under-trusted?
+- Should $V_e$ depend on trade size in this market?
+- Does the recursion update fair value smoothly enough for quoting, but fast
+  enough for information arrival?
+
+# Reading Path
+
+- Previous: [3.4 Kalman Filter as Dynamic Linear Regression]({{< meta site-url >}}/chapters/chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/)
+- Next: [3.6 The Danger of Data Errors]({{< meta site-url >}}/chapters/chapter-03/sections/06-the-danger-of-data-errors/)

@@ -1,0 +1,97 @@
+---
+title: "3.6 The Danger of Data Errors"
+subtitle: "PDF notes | Chapter 03. Implementing Mean Reversion Strategies"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Data Errors Systematically Favor Mean-Reversion Backtests
+
+Chan treats data quality as a special danger for mean-reversion strategies
+because outliers in the data often look exactly like the temporary deviations a
+mean-reversion system is designed to trade.
+
+If the true trade prices were
+
+$$
+100,\ 100,\ 100
+$$
+
+but the data record
+
+$$
+100,\ 110,\ 100,
+$$
+
+then a mean-reversion strategy may short at the false spike and cover at the
+next price, booking a fictitious profit. The strategy looks brilliant precisely
+because the error mimics a perfect reversal.
+
+# Why Spread Strategies Are Even More Sensitive
+
+For a spread trade, the signal is often a small difference between two large
+prices. That makes percentage distortion much worse.
+
+If the true prices are:
+
+- $X = 100$
+- $Y = 105$
+
+then the true spread is $Y-X = 5$. If a data error pushes $Y$ to $106$, the
+apparent spread becomes $6$. That is only about a 1 percent error on one price,
+but a 20 percent error on the spread.
+
+This is why pairs and arbitrage systems can be triggered by very small quote
+errors in one leg.
+
+# The Same Mechanism Pollutes Backtests and Live Trading
+
+The historical danger is fake alpha. The live danger is a real trade triggered
+by a bad bid or ask quote that never represented executable value. Chan notes
+that he observed this directly in live pair trading until he switched to a
+better data source.
+
+The practical lesson is that mean-reversion systems need unusually aggressive
+data cleaning and quote validation. Without that, the strategy will repeatedly
+confuse bad ticks with opportunities.
+
+# Review Checklist
+
+- Could one bad print create a complete false trade in backtest?
+- Is the signal a spread small enough that quote noise is magnified?
+- Are cancel-and-correct codes or other data-cleaning steps present?
+- Is the live feed trustworthy enough for spread-triggered execution?
+
+# Reading Path
+
+- Previous: [3.5 Kalman Filter as Market-Making Model]({{< meta site-url >}}/chapters/chapter-03/sections/05-kalman-filter-as-market-making-model/)
+- Next: [Chapter overview]({{< meta site-url >}}/chapters/)

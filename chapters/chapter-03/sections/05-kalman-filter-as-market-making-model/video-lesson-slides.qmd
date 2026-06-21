@@ -1,0 +1,64 @@
+---
+title: "3.5 Kalman Filter as Market-Making Model"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+notes: |
+  Once the Kalman filter is understood as a recursive fair-value estimator, it
+  no longer belongs only to pair trading. The same machinery can update the
+  hidden mean of one asset from recent trades, which is exactly the kind of
+  problem a market maker faces.
+
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    menu: false
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+filters:
+  - ../../../../scripts/lua/remove-reveal-notes.lua
+include-before-body:
+  - ../../../../styles/reveal-audience-only.html
+execute:
+  echo: true
+---
+
+## The same Kalman logic can estimate one asset's fair value, not just a pair hedge ratio.
+
+| Pair version            | Market-making version               |
+| ----------------------- | ----------------------------------- |
+| hidden state = slope/intercept | hidden state = fair value mean |
+| observable = paired price | observable = transaction price     |
+
+::: {.notes}
+Start by showing continuity rather than novelty. We are not learning a new
+algorithm; we are specializing the same algorithm to a simpler hidden state.
+:::
+
+## Trade size changes how much we should trust the latest observed price.
+
+| Small trade             | Large trade                          |
+| ----------------------- | ------------------------------------ |
+| more measurement noise  | less measurement noise               |
+| update mean cautiously  | update mean aggressively             |
+
+::: {.notes}
+This is the practical twist that makes the model market-making relevant. The
+latest print is not equally informative at all sizes.
+:::
+
+## Kalman fair value behaves like a volume-and-time-weighted moving mean.
+
+::: {.notes}
+Close the section by linking it to a familiar intuition: VWAP-like averaging,
+but with explicit recursion and a dynamic uncertainty update.
+:::

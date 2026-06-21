@@ -1,0 +1,87 @@
+---
+title: "3.2 Bollinger Bands"
+subtitle: "Video lesson slides"
+author: "Algorithmic Trading"
+notes: |
+  The linear strategy from Chapter 2 is elegant but operationally reckless:
+  exposure keeps growing as deviations grow. Bollinger bands turn the same mean
+  reversion logic into a bounded yes-or-no rule with explicit entry and exit
+  thresholds.
+
+format:
+  revealjs:
+    theme: default
+    css: ../../../../styles/reveal.css
+    slide-number: true
+    controls: true
+    progress: true
+    menu: false
+    transition: slide
+    transition-speed: fast
+    center: false
+    auto-stretch: true
+    auto-animate: true
+    show-notes: false
+    scrollable: true
+    embed-resources: false
+filters:
+  - ../../../../scripts/lua/remove-reveal-notes.lua
+include-before-body:
+  - ../../../../styles/reveal-audience-only.html
+execute:
+  echo: true
+---
+
+## Bollinger bands make linear mean reversion tradable by capping exposure at one unit.
+
+| Linear strategy        | Bollinger strategy                   |
+| ---------------------- | ------------------------------------ |
+| position grows with Z  | position is 0, +1, or -1             |
+| no bound on capital    | capital is easy to budget            |
+
+::: {.notes}
+Start from the practical failure of the unconstrained linear rule. It may be
+useful for demonstrating an edge, but it is hard to allocate capital against a
+strategy with no predefined exposure ceiling.
+:::
+
+## Entry and exit Z-scores turn one deviation measure into two decisions.
+
+```text
+enter long  when z < -entryZ
+exit long   when z >= -exitZ
+enter short when z >  entryZ
+exit short  when z <=  exitZ
+```
+
+::: {.notes}
+Keep the visible slide on signal logic, not code plumbing. The key shift is
+that the Z-score is no longer directly proportional to size. It is now a
+decision trigger.
+:::
+
+## The lookback can still come from half-life, even though the rule is now threshold based.
+
+| Quantity             | Role                                |
+| -------------------- | ----------------------------------- |
+| lookback             | estimate mean and volatility        |
+| entryZscore          | decide when deviation is large enough |
+| exitZscore           | decide when reversion is sufficient |
+
+::: {.notes}
+This slide keeps continuity with Chapter 2. We are not abandoning the half-life
+logic; we are keeping it for the time scale while adding two practical control
+knobs for entry and exit.
+:::
+
+## The GLD-USO example shows that bounded trading can outperform pure scaling.
+
+| Strategy compared     | Reported chapter result              |
+| --------------------- | ------------------------------------ |
+| linear spread rule    | lower APR and Sharpe                 |
+| Bollinger band rule   | better APR and Sharpe in example     |
+
+::: {.notes}
+Close by showing the operational payoff. The more practical rule is not merely
+easier to risk-manage; in Chan's example it also improves the backtest.
+:::

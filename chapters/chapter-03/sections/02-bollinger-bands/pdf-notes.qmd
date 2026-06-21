@@ -1,0 +1,136 @@
+---
+title: "3.2 Bollinger Bands"
+subtitle: "PDF notes | Chapter 03. Implementing Mean Reversion Strategies"
+
+format:
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "NotoSerifCJKsc-Regular.otf"
+    mainfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSerifCJKsc-Bold.otf"
+    sansfont: "NotoSansCJKsc-Regular.otf"
+    sansfontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=NotoSansCJKsc-Bold.otf"
+    monofont: "MapleMono-NF-CN-Regular.ttf"
+    monofontoptions:
+      - "Path=../../../../assets/fonts/"
+      - "BoldFont=MapleMono-NF-CN-Bold.ttf"
+      - "ItalicFont=MapleMono-NF-CN-Italic.ttf"
+      - "BoldItalicFont=MapleMono-NF-CN-BoldItalic.ttf"
+    mathfont: "latinmodern-math.otf"
+    toc: true
+    number-sections: true
+    colorlinks: true
+    linkcolor: blue
+    urlcolor: blue
+    filecolor: blue
+include-in-header:
+  text: |
+    \addtokomafont{disposition}{\rmfamily\bfseries}
+    \addtokomafont{title}{\rmfamily\bfseries}
+    \addtokomafont{author}{\rmfamily}
+    \addtokomafont{date}{\rmfamily}
+---
+
+# Bollinger Bands Turn a Demonstration Strategy into a Tradable Rule
+
+The linear strategy from Chapter 2 is intentionally simple: position size is
+proportional to the negative Z-score of the spread or portfolio price. That
+rule is useful because it is nearly parameterless and makes the mean-reversion
+logic transparent. But Chan emphasizes a practical defect: the strategy has no
+natural bound on capital usage. If the spread keeps moving away from the mean,
+the desired position keeps growing.
+
+Bollinger bands keep the same mean-and-volatility framework but convert it into
+a threshold rule with bounded exposure.
+
+# The Z-Score Stays the Same
+
+Let the portfolio price be $y_{\text{port}}$. Using a lookback window $L$, the
+standardized deviation is
+
+$$
+z_t
+= \frac{y_{\text{port},t} - \operatorname{movingAvg}(y_{\text{port},t};L)}
+         {\operatorname{movingStd}(y_{\text{port},t};L)}.
+$$
+
+This is the same Z-score used in the linear strategy. What changes is how it is
+mapped into trades.
+
+# Entry and Exit Thresholds Replace Continuous Scaling
+
+Choose an entry threshold $\text{entryZscore}$ and an exit threshold
+$\text{exitZscore}$ with
+
+$$
+\text{exitZscore} < \text{entryZscore}.
+$$
+
+Then the trading logic is:
+
+- enter long when $z_t < -\text{entryZscore}$
+- exit long when $z_t \ge -\text{exitZscore}$
+- enter short when $z_t > \text{entryZscore}$
+- exit short when $z_t \le \text{exitZscore}$
+
+If $\text{exitZscore}=0$, the strategy exits when the spread returns to the
+current estimated mean. If $\text{exitZscore}=-\text{entryZscore}$, the exit
+requires the spread to continue all the way through to the opposite band.
+
+At any moment the position is typically one of three states:
+
+- no position
+- long one unit portfolio
+- short one unit portfolio
+
+This is what makes the strategy easy to budget and risk-manage.
+
+# Lookback Still Comes from the Reversion Time Scale
+
+The threshold logic introduces new parameters, but the time-scale logic from
+Chapter 2 still applies. Chan allows the lookback to be either optimized on
+training data or anchored to the half-life of mean reversion.
+
+That is an important design choice. The half-life determines how quickly the
+spread forgets deviations. The lookback should therefore still reflect the
+reversion horizon, even if entries and exits are now discrete rather than
+continuous.
+
+# Why Bounded Exposure Can Improve Performance
+
+A common intuition is that the linear strategy should always be better because
+it scales harder into larger deviations. Chan's GLD-USO example shows why that
+intuition can fail. The bounded Bollinger rule produced better performance than
+the unconstrained linear rule in that case.
+
+The reason is not mysterious. The linear rule keeps adding exposure when the
+deviation widens, whether or not the widening is likely to revert soon. The
+Bollinger rule waits for a large-enough deviation to justify entry, then limits
+the trade to one unit. That can improve realized performance when large
+deviations are not reliably rewarded by still larger position sizes.
+
+# The Practical Appeal Is as Important as the Backtest
+
+Chan stresses a second benefit that is independent of the example's Sharpe
+ratio. The Bollinger strategy is easy to allocate capital to. A portfolio
+manager can reserve capital for one unit long or one unit short. This is much
+harder to do for a strategy whose exposure is an unbounded function of Z-score.
+
+That operational simplicity is part of the strategy design, not a minor
+implementation afterthought.
+
+# Review Checklist
+
+- Is the Z-score built from the same spread definition chosen in Section 3.1?
+- Is the lookback economically tied to the reversion horizon?
+- Are entry and exit thresholds clearly separated?
+- Is the portfolio sized in bounded units rather than open-ended scaling?
+- Does the practical capital budget match the one-unit assumption in the rule?
+
+# Reading Path
+
+- Previous: [3.1 Trading Pairs Using Price Spreads, Log Price Spreads, or Ratios]({{< meta site-url >}}/chapters/chapter-03/sections/01-trading-pairs-using-price-spreads-log-price-spreads-or-ratios/)
+- Next: [3.3 Does Scaling-in Work?]({{< meta site-url >}}/chapters/chapter-03/sections/03-does-scaling-in-work/)

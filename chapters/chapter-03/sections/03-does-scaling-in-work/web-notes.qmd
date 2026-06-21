@@ -1,0 +1,98 @@
+---
+title: "3.3 Does Scaling-in Work?"
+subtitle: "Chapter 03. Implementing Mean Reversion Strategies"
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+    code-tools: false
+include-after-body:
+  - ../../../../styles/web-note-modal.html
+---
+
+# Scaling-in Is Intuitive but Not Automatically Optimal
+
+Scaling-in, or averaging-in, is one of the most natural ideas in mean-reversion
+trading. If a spread deviates farther from the mean, the eventual reversion
+profit looks larger, so adding capital seems sensible.
+
+Chan points out that the intuition is incomplete. The relevant question is not
+whether larger deviations create larger potential payoff. They do. The question
+is whether splitting the entry into stages is better than going all-in early or
+waiting and going all-in later.
+
+# Chan's Two-Path Comparison
+
+Suppose the price has fallen to $L_1$ and is expected eventually to reach a
+higher value $F > L_1$. There is probability $p$ that price first falls further
+to $L_2 < L_1$ before reverting, and probability $1-p$ that it reverts
+immediately from $L_1$ to $F$.
+
+Assume enough buying power for exactly two contracts. Then compare:
+
+1. all-in at $L_1$
+2. all-in at $L_2$
+3. average-in: one contract at $L_1$, one at $L_2$
+
+The expected profits are:
+
+$$
+\text{I. } 2(F-L_1)
+$$
+
+$$
+\text{II. } 2p(F-L_2)
+$$
+
+$$
+\text{III. } p[(F-L_1)+(F-L_2)] + (1-p)(F-L_1)
+= (F-L_1) + p(F-L_2).
+$$
+
+# Why Average-in Never Wins in This Static Model
+
+If $p=0$, method I is clearly best because the lower level $L_2$ never arrives.
+If $p=1$, method II is best because waiting guarantees the better entry.
+
+More generally, there is a transition probability
+
+$$
+\hat{p} = \frac{F-L_1}{F-L_2}
+$$
+
+such that:
+
+- if $p < \hat{p}$, all-in at $L_1$ is better than waiting
+- if $p > \hat{p}$, all-in at $L_2$ is better than entering early
+
+Chan's important conclusion is that average-in never becomes the best of the
+three. It is always dominated by one of the all-in choices in this stylized
+in-sample setup.
+
+# Why This Does Not Kill Scaling-in in Live Trading
+
+The argument above assumes the probability structure is fixed. Real markets are
+not like that. Volatility changes, the odds of further deviation change, and the
+trader often cares about realized Sharpe ratio and out-of-sample stability, not
+just in-sample average profit under a frozen model.
+
+That is why Chan still defends scaling-in as a practical technique. Even if it
+is never in-sample optimal under the static arithmetic model, it may still
+produce better realized risk-adjusted performance out of sample when the market
+environment changes.
+
+# Review Checklist
+
+- Is the case for scaling-in based on fixed arithmetic or on changing market
+  conditions?
+- Would one all-in threshold outperform the multistage rule in sample?
+- Is the goal maximum expected profit, or smoother realized Sharpe?
+- Does scaling-in reduce market impact enough to matter in live execution?
+
+# Reading Path
+
+- Previous: [3.2 Bollinger Bands]({{< meta site-url >}}/chapters/chapter-03/sections/02-bollinger-bands/)
+- Next: [3.4 Kalman Filter as Dynamic Linear Regression]({{< meta site-url >}}/chapters/chapter-03/sections/04-kalman-filter-as-dynamic-linear-regression/)
