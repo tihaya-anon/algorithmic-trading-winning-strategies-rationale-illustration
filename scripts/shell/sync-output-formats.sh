@@ -136,6 +136,42 @@ trim_trailing_blank_lines() {
   ' "$input"
 }
 
+trim_leading_blank_lines() {
+  local input="$1"
+
+  awk '
+    started { print; next }
+    $0 ~ /^[[:space:]]*$/ { next }
+    { started = 1; print }
+  ' "$input"
+}
+
+strip_generated_web_links() {
+  local input="$1"
+  local output="$2"
+
+  awk '
+    BEGIN { skip = 0 }
+    /^:::[[:space:]]+\{\.section-output-links\}[[:space:]]*$/ { skip = 1; next }
+    skip && /^:::[[:space:]]*$/ { skip = 0; next }
+    !skip { print }
+  ' "$input" > "$output"
+}
+
+web_links_block() {
+  cat <<'QMD'
+::: {.section-output-links}
+[Slides](video-lesson-slides.qmd){.action-video aria-label="Open video lesson slides" data-modal="video" data-label="Video lesson slides" data-tooltip="Slides"}
+<span aria-hidden="true">/</span>
+[PDF](pdf-notes.qmd){.action-pdf aria-label="Open PDF notes" data-tooltip="PDF"}
+<span aria-hidden="true">/</span>
+[Markdown](downloads/section.json){.action-markdown aria-label="Open raw markdown viewer" data-modal="markdown" data-label="Markdown" data-tooltip="Markdown" data-markdown-src="downloads/section.json"}
+<span aria-hidden="true">/</span>
+[Bundle](downloads/section-bundle.zip){.action-bundle aria-label="Download markdown bundle" data-tooltip="Bundle"}
+:::
+QMD
+}
+
 format_block_for() {
   local filename="$1"
 
@@ -225,15 +261,23 @@ generate_qmd() {
   local metadata="$tmp_dir/metadata.yml"
   local filtered_metadata="$tmp_dir/filtered-metadata.yml"
   local body="$tmp_dir/body.qmd"
+  local filtered_body="$tmp_dir/body-filtered.qmd"
   local filename
 
   filename="$(basename -- "$source")"
   : > "$metadata"
   : > "$filtered_metadata"
   : > "$body"
+  : > "$filtered_body"
 
   split_qmd "$source" "$metadata" "$body"
   strip_generated_metadata "$metadata" "$filtered_metadata"
+
+  if [[ "$filename" == "web-notes.qmd" ]]; then
+    strip_generated_web_links "$body" "$filtered_body"
+  else
+    cp "$body" "$filtered_body"
+  fi
 
   {
     printf '%s\n' '---'
@@ -241,7 +285,12 @@ generate_qmd() {
     printf '\n'
     format_block_for "$filename"
     printf '%s\n' '---'
-    cat "$body"
+    if [[ "$filename" == "web-notes.qmd" ]]; then
+      printf '\n'
+      web_links_block
+      printf '\n'
+    fi
+    trim_leading_blank_lines "$filtered_body"
   } > "$output"
 }
 

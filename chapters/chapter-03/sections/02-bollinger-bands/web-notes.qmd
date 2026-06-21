@@ -13,6 +13,16 @@ include-after-body:
   - ../../../../styles/web-note-modal.html
 ---
 
+::: {.section-output-links}
+[Slides](video-lesson-slides.qmd){.action-video aria-label="Open video lesson slides" data-modal="video" data-label="Video lesson slides" data-tooltip="Slides"}
+<span aria-hidden="true">/</span>
+[PDF](pdf-notes.qmd){.action-pdf aria-label="Open PDF notes" data-tooltip="PDF"}
+<span aria-hidden="true">/</span>
+[Markdown](downloads/section.json){.action-markdown aria-label="Open raw markdown viewer" data-modal="markdown" data-label="Markdown" data-tooltip="Markdown" data-markdown-src="downloads/section.json"}
+<span aria-hidden="true">/</span>
+[Bundle](downloads/section-bundle.zip){.action-bundle aria-label="Download markdown bundle" data-tooltip="Bundle"}
+:::
+
 # Bollinger Bands Turn a Demonstration Strategy into a Tradable Rule
 
 The linear strategy from Chapter 2 is intentionally simple: position size is
