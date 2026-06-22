@@ -283,6 +283,38 @@ management decisions change. Its variance can also evolve with time. Using
 moving estimates allows the strategy to adapt to that slow evolution while still
 trading reversion over a shorter horizon.
 
+# Jupyter Lab Makes the Tests Easier to Inspect Than Static Equations Alone
+
+This section becomes much clearer when the tests are run interactively. The
+`notebooks/` folder packages the main ideas into small, separate experiments:
+
+- `adf-test.ipynb` tests whether current price level helps predict the next move
+- `variance-ratio-test.ipynb` checks whether diffusion still looks like a
+  random walk
+- `half-life.ipynb` converts the estimated pullback coefficient into trading
+  time
+
+From this section directory, the practical workflow is:
+
+```bash
+jupyter lab
+```
+
+Then open the notebooks one by one and read them in the same order as the
+chapter's logic:
+
+1. start with ADF to ask whether pullback exists at all
+2. compare that answer with Variance Ratio evidence
+3. finish with half-life to decide whether the reversion is fast enough to
+   matter
+
+Jupyter Lab is useful here not because it changes the mathematics, but because
+it lets the learner inspect intermediate outputs instead of only final
+statistics. You can see the regression inputs, sample windows, test statistics,
+and plots in one workspace, then modify the asset, date range, or lookback and
+watch the conclusion change. That makes the chapter's main lesson more concrete:
+mean reversion is not a slogan, but a sequence of testable claims.
+
 # Preliminary Statistical Tests Can Be More Powerful Than a Backtest
 
 Chan ends the section by explaining why these derivations are worth the effort.

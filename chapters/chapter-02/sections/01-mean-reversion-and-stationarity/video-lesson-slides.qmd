@@ -186,6 +186,27 @@ distance from the mean. Chan uses it to show that strong ideas do not require a
 large parameter set.
 :::
 
+## Jupyter Lab turns the chapter's tests into one inspectable research workflow.
+
+| Notebook                  | Research question                         |
+| ------------------------- | ----------------------------------------- |
+| `adf-test.ipynb`          | does current level predict the next move? |
+| `variance-ratio-test.ipynb` | does diffusion still look random walk?  |
+| `half-life.ipynb`         | is the pullback fast enough to trade?     |
+
+```bash
+jupyter lab
+```
+
+::: {.notes}
+Use this slide to connect the formulas to actual research practice. The point
+is not software for its own sake. Jupyter Lab keeps the price series, test
+output, plots, and code edits in one place, so the learner can inspect each
+claim instead of treating the chapter as a black box. Read the notebook order
+as a decision path: first test for pullback, then test diffusion, then convert
+the coefficient into trading time.
+:::
+
 ## Preliminary tests matter because they use more data than a finished backtest.
 
 | Preliminary test uses | Direct backtest uses                  |
