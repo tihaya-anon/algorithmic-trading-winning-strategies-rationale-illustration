@@ -7,5 +7,52 @@
     "**/Thumbs.db": true,
     ".quarto": true
   },
-  "hide-files.files": []
+  "hide-files.files": [],
+  "mcpConfigManager.servers": [
+    {
+      "id": "1782143943100-a63355",
+      "name": "jupyter-mcp",
+      "type": "stream",
+      "meta": {
+        "group": "default"
+      },
+      "stream": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "JUPYTER_URL",
+          "-e",
+          "ALLOW_IMG_OUTPUT",
+          "datalayer/jupyter-mcp-server:latest"
+        ],
+        "env": {
+          "JUPYTER_URL": "http://host.docker.internal:8888",
+          "ALLOW_IMG_OUTPUT": "true"
+        }
+      }
+    },
+    {
+      "id": "1782143943101-bookknowledge",
+      "name": "book-knowledge",
+      "type": "stream",
+      "meta": {
+        "group": "default"
+      },
+      "stream": {
+        "command": "uv",
+        "args": [
+          "run",
+          "--directory",
+          "../knowledge",
+          "knowledge-mcp"
+        ],
+        "env": {
+          "UV_CACHE_DIR": "/tmp/uv-cache"
+        }
+      }
+    }
+  ]
 }
