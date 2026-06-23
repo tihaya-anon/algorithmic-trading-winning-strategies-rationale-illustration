@@ -1,0 +1,18 @@
+{
+  "source": "binance-monthly-archive",
+  "url": "https://data.binance.vision/data/spot/monthly/klines",
+  "downloaded_at_utc": "2026-06-23T03:48:08+00:00",
+  "start": "2024-01-01",
+  "end": "2024-06-30",
+  "interval": "1d",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT"
+  ],
+  "rows_by_symbol": {
+    "BTCUSDT": 182,
+    "ETHUSDT": 182,
+    "BNBUSDT": 182
+  }
+}

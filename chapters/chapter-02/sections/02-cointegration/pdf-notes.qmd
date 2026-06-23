@@ -254,6 +254,27 @@ transaction costs may matter, and a statistically cointegrated relation can
 still become economically unstable. Cointegration is therefore best read as a
 construction principle and a filtering device, not as a guarantee of profits.
 
+# Crypto Notebooks Separate Data Refresh from Statistical Inspection
+
+The `notebooks/` folder applies the same CADF and Johansen logic to shared
+crypto close-price fixtures:
+
+- `cadf-crypto-pairs.ipynb` estimates pair hedge ratios and compares both CADF
+  orderings
+- `johansen-crypto-basket.ipynb` tests a multivariate crypto basket and uses an
+  eigenvector as portfolio weights
+
+The notebooks read `fixtures/crypto/crypto_daily_close.csv` instead of
+downloading prices during the lesson. Refresh the shared fixture data from the
+repository root with:
+
+```bash
+python3 scripts/python/download-crypto-fixtures.py --source binance-monthly-archive
+```
+
+This separation keeps the notebooks reproducible while still letting the data
+be updated when the network is available.
+
 # Review Checklist
 
 - What exact linear combination is being tested?

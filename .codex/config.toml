@@ -1,4 +1,17 @@
-# MCP configuration lives in .vscode/settings.json.
+# Codex MCP config
+[mcp_servers.jupyter-mcp]
+command = "docker"
+args = ["run", "-i", "--rm", "-e", "JUPYTER_URL", "-e", "ALLOW_IMG_OUTPUT", "datalayer/jupyter-mcp-server:latest"]
+env = { JUPYTER_URL = "http://host.docker.internal:8888", ALLOW_IMG_OUTPUT = "true" }
+
+[mcp_servers.jupyter-mcp.tools.connect_to_jupyter]
+approval_mode = "approve"
+
+[mcp_servers.jupyter-mcp.tools.use_notebook]
+approval_mode = "approve"
+
+[mcp_servers.jupyter-mcp.tools.execute_code]
+approval_mode = "approve"
 
 [mcp_servers.book-knowledge]
 command = "uv"
