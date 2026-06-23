@@ -267,7 +267,7 @@ def main() -> None:
         help="Public data source to use.",
     )
     parser.add_argument("--start", default="2024-01-01", help="UTC start date, YYYY-MM-DD.")
-    parser.add_argument("--end", default="2024-06-30", help="UTC end date, YYYY-MM-DD.")
+    parser.add_argument("--end", default="2024-12-31", help="UTC end date, YYYY-MM-DD.")
     parser.add_argument("--interval", default="1d", help="Daily candle interval, such as 1d.")
     parser.add_argument("--symbols", nargs="+", default=None, help="Symbols to download.")
     args = parser.parse_args()
