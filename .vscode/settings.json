@@ -8,6 +8,9 @@
     ".quarto": true
   },
   "hide-files.files": [],
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.diagnosticMode": "openFilesOnly",
+  "python.analysis.autoImportCompletions": false,
   "mcpConfigManager.servers": [
     {
       "id": "1782143943100-a63355",

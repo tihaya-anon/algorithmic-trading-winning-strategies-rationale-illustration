@@ -25,3 +25,4 @@ Thumbs.db
 
 /.quarto/
 **/*.quarto_ipynb
+.ipynb_checkpoints/
