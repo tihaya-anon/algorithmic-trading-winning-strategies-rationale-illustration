@@ -13,7 +13,28 @@ approval_mode = "approve"
 [mcp_servers.jupyter-mcp.tools.execute_code]
 approval_mode = "approve"
 
+[mcp_servers.jupyter-mcp.tools.restart_notebook]
+approval_mode = "approve"
+
+[mcp_servers.jupyter-mcp.tools.execute_cell]
+approval_mode = "approve"
+
+[mcp_servers.jupyter-mcp.tools.edit_cell_source]
+approval_mode = "approve"
+
+[mcp_servers.jupyter-mcp.tools.overwrite_cell_source]
+approval_mode = "approve"
+
 [mcp_servers.book-knowledge]
 command = "uv"
 args = ["run", "--directory", "../knowledge", "knowledge-mcp"]
 env = { UV_CACHE_DIR = "/tmp/uv-cache" }
+
+[mcp_servers.book-knowledge.tools.list_documents]
+approval_mode = "approve"
+
+[mcp_servers.book-knowledge.tools.search_chunks]
+approval_mode = "approve"
+
+[mcp_servers.book-knowledge.tools.read_page_range]
+approval_mode = "approve"
